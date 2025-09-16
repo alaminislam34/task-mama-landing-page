@@ -5,12 +5,14 @@ import { ChevronRight } from "lucide-react";
 
 const AccordionItem = ({ title, content, isOpen, onClick }) => {
   return (
-    <div className="border border-base-300 rounded-lg">
-      <button
-        onClick={onClick}
-        className="w-full flex justify-between items-center px-4 py-3 font-semibold"
-      >
-        <span>{title}</span>
+    <div
+      onClick={onClick}
+      className="border-[3px] border-[#0000001F] rounded-[26px] space-y-6 lg:space-y-[30px] py-4 px-6 md:py-6 md:px-8 lg:py-[34px] lg:px-9"
+    >
+      <button className="w-full flex justify-between items-center font-semibold">
+        <span className="font-lato font-medium text-sm md:text-lg lg:text-xl">
+          {title}
+        </span>
         <ChevronRight
           className={`w-5 h-5 transition-transform duration-300 ${
             isOpen ? "rotate-90" : ""
@@ -18,7 +20,9 @@ const AccordionItem = ({ title, content, isOpen, onClick }) => {
         />
       </button>
       {isOpen && (
-        <div className="px-4 pb-3 text-sm text-gray-600">{content}</div>
+        <div className="text-xs md:text-sm lg:text-[15px] text-[#00000069] leading-normal">
+          {content}
+        </div>
       )}
     </div>
   );
@@ -29,21 +33,25 @@ export default function Accordion() {
 
   const faqs = [
     {
-      q: "How do I create an account?",
-      a: "Click the 'Sign Up' button in the top right corner and follow the registration process.",
+      q: "1. How does TaskMama’s AI help me plan my day?",
+      a: "TaskMama’s AI looks at your family tasks, business to-dos, and personal goals, then suggests a realistic schedule you can adjust anytime.",
     },
     {
-      q: "I forgot my password. What should I do?",
+      q: "2. Can my kids use the app too?",
       a: "Click on 'Forgot Password' on the login page and follow the instructions sent to your email.",
     },
     {
-      q: "How do I update my profile information?",
+      q: "3. Do I need multiple apps to use all the features?",
+      a: "Go to 'My Account' settings and select 'Edit Profile' to make changes.",
+    },
+    {
+      q: "4.Does TaskMama work with Google Calendar and other tools?",
       a: "Go to 'My Account' settings and select 'Edit Profile' to make changes.",
     },
   ];
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4 md:space-y-5 lg:space-y-7">
       {faqs.map((faq, idx) => (
         <AccordionItem
           key={idx}
