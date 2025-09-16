@@ -7,7 +7,8 @@ import FAQSection from "./components/HomePage/FAQSection/FAQSection";
 import FeaturesSection from "./components/HomePage/FeaturesSection";
 import HeroSection from "./components/HomePage/HeroSection";
 import PricingSection from "./components/HomePage/PricingSection";
-import Testimonial from "./components/HomePage/Testimonial";
+import SliderSection from "./components/HomePage/Sldier/SliderSection";
+// import Testimonial from "./components/HomePage/Testimonial";
 
 export default function Home() {
   return (
@@ -24,7 +25,8 @@ export default function Home() {
       <AppMode/>
       <ChatbotSection/>
       <PricingSection/>
-      <Testimonial/>
+      {/* <Testimonial/> */}
+      <SliderSection/>
       <FAQSection/>
     </div>
   );

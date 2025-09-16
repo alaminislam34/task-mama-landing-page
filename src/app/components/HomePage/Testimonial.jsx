@@ -1,14 +1,14 @@
 'use client'
 
 import React from 'react'
+import TestimonialSection from './Slider'
 
 function Testimonial() {
   return (
-    <div>
+    <div className='py-8 lg:py-12'>
         <div>
-            <div>
-                <h1 className='font-lato font-bold text-2xl md:text-4xl lg:text-[54px] text-center py-6'>Reviews/<span className='text-primary'>testimonials</span></h1>
-            </div>
+            
+            <TestimonialSection/>
         </div>
     </div>
   )
