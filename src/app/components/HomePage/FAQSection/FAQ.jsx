@@ -38,15 +38,15 @@ export default function Accordion() {
     },
     {
       q: "2. Can my kids use the app too?",
-      a: "Click on 'Forgot Password' on the login page and follow the instructions sent to your email.",
+      a: "Yes! Task Mama is designed for the whole family. Kids can log in with their own profiles, see their chores— all in a safe, parent-controlled environment.",
     },
     {
       q: "3. Do I need multiple apps to use all the features?",
-      a: "Go to 'My Account' settings and select 'Edit Profile' to make changes.",
+      a: "Nope — everything is built into Task Mama. From the family calendar to chores, meal planning, and inventory tracking, you get all the tools in one simple app.",
     },
     {
-      q: "4.Does TaskMama work with Google Calendar and other tools?",
-      a: "Go to 'My Account' settings and select 'Edit Profile' to make changes.",
+      q: "4. Which devices does Task Mama work on?",
+      a: "Task Mama works on both iOS and Android devices, including smartphones and tablets. This means every family member can stay connected and organized, no matter what device they use.",
     },
   ];
 
