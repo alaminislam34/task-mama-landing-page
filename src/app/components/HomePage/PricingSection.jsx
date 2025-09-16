@@ -52,7 +52,7 @@ function PricingSection() {
 
       {/* pricing card section */}
       <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-0 max-w-[1440px] w-11/12 mx-auto py-12 lg:py-20">
-        <div className="bg-[#242430] rounded-[20px] text-white p-4 lg:p-6 md:-mr-4 z-0 lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
+        <div className="bg-[#242430] rounded-[20px] text-white p-5 lg:p-6 md:-mr-4 z-0 lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
           <p className="text-base md:text-lg lg:text-[25px] font-medium tracking-tight mb-4">
             Starter
           </p>
@@ -91,7 +91,7 @@ function PricingSection() {
             </li>
           </ul>
         </div>
-        <div className="bg-[#242430] rounded-[20px] text-white p-4 lg:p-6 z-10 bg-gradient-to-b from-[#B0A2DA] to-[#9E8CD4] lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
+        <div className="bg-[#242430] rounded-[20px] text-white p-5 lg:p-6 z-10 bg-gradient-to-b from-[#B0A2DA] to-[#9E8CD4] lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
           <p className="text-base md:text-lg lg:text-[25px] font-medium tracking-tight mb-4">
             Monthly Premium plan
           </p>
@@ -138,7 +138,7 @@ function PricingSection() {
             </li>
           </ul>
         </div>
-        <div className="bg-[#7D778E] rounded-[20px] text-white p-4 lg:p-6 md:-ml-4 z-0 lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
+        <div className="bg-[#7D778E] rounded-[20px] text-white p-5 lg:p-6 md:-ml-4 z-0 lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
           <p className="text-base md:text-lg lg:text-[25px] font-medium tracking-tight mb-4">
             Yearly Premium plan
           </p>
