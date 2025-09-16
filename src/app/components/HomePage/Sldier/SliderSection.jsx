@@ -81,7 +81,7 @@ export default function TestimonialSlider() {
                     width={200}
                     height={200}
                     alt={slide.name}
-                    className={`rounded-full object-cover ${
+                    className={`rounded-full object-cover duration-300 ${
                       isCenter
                         ? "-mt-[67px] h-[133px] w-[133px]"
                         : "-mt-[40px] h-[80px] w-[80px]"
