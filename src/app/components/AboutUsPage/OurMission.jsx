@@ -1,9 +1,7 @@
-"use client";
-
 import Image from "next/image";
 import React from "react";
 
-function SuperMom() {
+function OurMission() {
   return (
     <section className="">
       <div className="max-w-[1440px] w-11/12 mx-auto flex flex-col lg:flex-row gap-16 items-center py-12 lg:py-28 relative">
@@ -42,4 +40,4 @@ function SuperMom() {
   );
 }
 
-export default SuperMom;
+export default OurMission;

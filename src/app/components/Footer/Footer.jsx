@@ -5,8 +5,8 @@ import React from "react";
 
 function Footer() {
   return (
-    <div className="bg-[#2A2A2A] py-8 lg:py-10 ">
-      <footer className="max-w-[1440px] w-11/12 mx-auto flex flex-col md:flex-row  items-center gap-8 lg:gap-12 px-8 md:px-10 lg:px-[60px]">
+    <div className="bg-[#2A2A2A] py-8 lg:py-10">
+      <footer className="max-w-[1440px] w-11/12 mx-auto flex flex-col md:flex-row  items-center gap-8 lg:gap-12">
         <div>
           <Image
             src={"/logo.png"}
