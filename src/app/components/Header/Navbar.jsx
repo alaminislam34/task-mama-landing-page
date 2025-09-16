@@ -1,0 +1,128 @@
+"use client";
+
+import Link from "next/link";
+import React, { useState } from "react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { TextAlignJustifyIcon, X } from "lucide-react";
+
+const links = [
+  { name: "Home", href: "/" },
+  { name: "About us", href: "/about" },
+  { name: "Contact", href: "/contact" },
+];
+
+function Navbar() {
+  const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  return (
+    <div>
+      <nav className="grid grid-cols-2 lg:grid-cols-3 items-start py-[27px] max-w-[1440px] mx-auto w-11/12">
+        {/* logo */}
+        <div>
+          <Link href={"/"}>
+            <Image
+              src={"/logo.png"}
+              height={200}
+              width={300}
+              className="w-[122px] h-[74px]"
+              alt="Task mama logo"
+            />
+          </Link>
+        </div>
+
+        {/* nav links for desktop */}
+        <div className="lg:flex items-center justify-center hidden">
+          <ul className="flex items-center gap-6 md:gap-8 lg:gap-[43px]">
+            {links.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className={`${pathname == link.href ? "font-bold" : "font-light"}`}
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* download link input or button for desktop */}
+        <div className="hidden lg:flex gap-2 items-center justify-end">
+          <div className="relative">
+            <Image
+              src={"/icons/mail.png"}
+              height={14}
+              width={14}
+              alt="Email icon"
+              className="absolute left-4 top-1/2 -translate-y-1/2"
+            />
+            <input
+              type="email"
+              placeholder="Enter your mail..."
+              className="py-[9px] px-4 pl-[35px] focus:outline-primary rounded-xl bg-secondary text-xs font-normal"
+            />
+          </div>
+          <button className="cursor-pointer py-[9px] px-[30px] rounded-xl bg-primary text-white text-xs">
+            Get Download link
+          </button>
+        </div>
+
+        {/* mobile menu button */}
+        <div className="flex items-center justify-end lg:hidden">
+          <button
+            className="bg-primary p-2 rounded-xl text-white cursor-pointer"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <X size={24} /> : <TextAlignJustifyIcon />}
+          </button>
+        </div>
+      </nav>
+
+      {/* mobile modal */}
+      {menuOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur bg-opacity-80 z-50 flex flex-col items-center justify-center gap-8 p-6 lg:hidden">
+          {/* nav links */}
+          <button onClick={()=> setMenuOpen(false)} className="absolute top-4 right-4 text-white">X</button>
+          <ul className="flex flex-col items-center gap-6 text-white text-lg">
+            {links.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`${pathname == link.href ? "font-bold" : "font-light"}`}
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          {/* download input + button */}
+          <div className="flex flex-col gap-3 w-full max-w-sm">
+            <div className="relative w-full">
+              <Image
+                src={"/icons/mail.png"}
+                height={14}
+                width={14}
+                alt="Email icon"
+                className="absolute left-4 top-1/2 -translate-y-1/2"
+              />
+              <input
+                type="email"
+                placeholder="Enter your mail..."
+                className="w-full py-[9px] px-4 pl-[35px] focus:outline-primary rounded-xl bg-secondary text-xs font-normal"
+              />
+            </div>
+            <button className="cursor-pointer py-[9px] px-[30px] rounded-xl bg-primary text-white text-xs w-full">
+              Get Download link
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default Navbar;
