@@ -35,39 +35,25 @@ export async function POST(req) {
         to: email,
         subject: "Download TaskMama App",
         html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #333; line-height: 1.5; padding: 20px; max-width: 600px; background-color: #f9f9f9; border-radius: 12px;">
-            <h2 style="color: #B0A2DA; margin-bottom: 10px;">Hello!</h2>
-            <p style="margin-bottom: 20px;">Thank you for your interest in <strong>TaskMama</strong>. Download the app using the links below:</p>
+          <div style="font-family: sans-serif; color: #333; line-height: 1.5; padding: 20px; max-width: 600px;">
+            <h2 style="color: #B0A2DA;">Hello!</h2>
+            <p>Thank you for your interest in <strong>TaskMama</strong>. Download the app using the links below:</p>
             
-            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-              
-              <!-- Apple Store Button -->
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
               <a href="https://apps.apple.com/app/idYOUR_APPLE_ID" target="_blank" 
-                 style="display: inline-flex; align-items: center; padding: 10px 18px; background-color: #000; color: #fff; border-radius: 12px; text-decoration: none; font-weight: 600; transition: background 0.3s;">
-                <i class="fa-brands fa-apple" style="font-size: 24px; margin-right: 10px;"></i>
-                <div style="display: flex; flex-direction: column; line-height: 1.1;">
-                  <span style="font-size: 10px;">Download on the</span>
-                  <span style="font-size: 16px;">App Store</span>
-                </div>
+                 style="display: flex; align-items: center; gap: 8px; padding: 10px 15px; background-color: #B0A2DA; color: #fff; border-radius: 8px; text-decoration: none; font-weight: bold;">
+                <img src="http://localhost:3000/icons/applestore.png" alt="Apple Store" width="20" />
+                Apple Store
               </a>
-
-              <!-- Play Store Button -->
-              <a href="https://play.google.com/store/apps/details?id=YOUR_APP_PACKAGE" target="_blank" 
-                 style="display: inline-flex; align-items: center; padding: 10px 18px; background-color: #fff; color: #000; border-radius: 12px; border: 1px solid #ddd; text-decoration: none; font-weight: 600; transition: background 0.3s;">
-                <i class="fa-brands fa-google-play" style="font-size: 24px; margin-right: 10px;"></i>
-                <div style="display: flex; flex-direction: column; line-height: 1.1;">
-                  <span style="font-size: 10px;">Get it on</span>
-                  <span style="font-size: 16px;">Google Play</span>
-                </div>
+              <a href="https://play.google.com/store/apps/details?id=YOUR_APP_PACKAGE" target="_blank"
+                 style="display: flex; align-items: center; gap: 8px; padding: 10px 15px; background-color: #B0A2DA; color: #fff; border-radius: 8px; text-decoration: none; font-weight: bold;">
+                <img src="http://localhost:3000/icons/playstore.png" alt="Google Play" width="20" />
+                Google Play
               </a>
-
             </div>
 
             <p style="margin-top: 30px; font-size: 14px; color: #555;">Enjoy TaskMama – your micro-tasking & earning app!</p>
           </div>
-
-          <!-- Font Awesome CDN for icons (works in browser, not email clients) -->
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         `,
       };
     } else if (type === "contact") {
@@ -80,10 +66,10 @@ export async function POST(req) {
 
       mailOptions = {
         from: `"Contact Form" <${process.env.SMTP_USER}>`,
-        to: process.env.SMTP_USER,
+        to: process.env.SMTP_USER, // your email
         subject: `Contact Form: ${subject}`,
         html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #333; line-height: 1.5; padding: 20px; max-width: 600px; background-color: #f9f9f9; border-radius: 12px;">
+          <div style="font-family: sans-serif; color: #333; line-height: 1.5; padding: 20px; max-width: 600px;">
             <h2 style="color: #B0A2DA;">New Contact Form Submission</h2>
             <p><strong>From:</strong> ${email}</p>
             <p><strong>Subject:</strong> ${subject}</p>
