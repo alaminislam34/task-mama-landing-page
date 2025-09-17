@@ -7,9 +7,9 @@ const AccordionItem = ({ title, content, isOpen, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className="border-[3px] border-[#0000001F] rounded-[26px] space-y-6 lg:space-y-[30px] py-4 px-6 md:py-6 md:px-8 lg:py-[34px] lg:px-9"
+      className="border-[3px] border-[#0000001F] rounded-[26px] space-y-6 lg:space-y-[30px] py-4 px-6 md:py-6 md:px-8 lg:py-[34px] lg:px-9 cursor-pointer"
     >
-      <button className="w-full flex justify-between items-center font-semibold">
+      <button className="w-full flex justify-between items-center font-semibold cursor-pointer">
         <span className="font-lato font-medium text-sm md:text-lg lg:text-xl">
           {title}
         </span>

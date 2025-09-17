@@ -167,7 +167,7 @@ function PricingSection() {
               </li>
             </ul>
           </div>
-          <div className="bg-[#7D778E] rounded-[20px] text-white p-5 lg:p-6 md:-ml-4 z-0 lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
+          <div className="bg-[#71678a] rounded-[20px] text-white p-5 lg:p-6 md:-ml-4 z-0 lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
             <p className="text-base md:text-lg lg:text-[25px] font-medium tracking-tight mb-4">
               Yearly Premium plan
             </p>
@@ -263,7 +263,7 @@ function PricingSection() {
               </li>
             </ul>
           </div>
-          <div className="bg-[#7D778E] rounded-[20px] text-white p-5 lg:p-6 z-0 lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
+          <div className="bg-[#71678a] rounded-[20px] text-white p-5 lg:p-6 z-0 lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
             <p className="text-base md:text-lg lg:text-[25px] font-medium tracking-tight mb-4">
               Yearly Premium plan
             </p>
