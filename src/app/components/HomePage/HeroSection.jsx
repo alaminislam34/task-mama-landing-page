@@ -28,7 +28,7 @@ function HeroSection() {
       </h1>
 
       {/* sub title */}
-      <p className="font-roboto text-center mb-10 font-medium text-lg lg:text-2xl text-[#4A4A4A]">
+      <p className="font-roboto text-center mb-10 text-lg lg:text-2xl text-[#4A4A4A]">
         Plan your day across roles with AI suggestions, shared family calendars,
         and simple business tools
       </p>

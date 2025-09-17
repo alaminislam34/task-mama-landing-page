@@ -1,10 +1,15 @@
 'use client'
 
 import React from 'react'
+import HeroSection from './components/HeroSection'
+import ContactForm from './components/ContactForm'
 
 function Contact() {
   return (
-    <div>Contact</div>
+    <section>
+      <HeroSection/>
+      <ContactForm/>
+    </section>
   )
 }
 

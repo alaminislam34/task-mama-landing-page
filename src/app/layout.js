@@ -1,8 +1,6 @@
 import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Header/Navbar";
 import "./globals.css";
-import LoadingPage from "./loading";
-import NotFoundPage from "./not-found";
 
 export const metadata = {
   title: "TaskMama",
@@ -18,8 +16,6 @@ export default function RootLayout({ children }) {
         <Navbar/>
         {children}
         <Footer/>
-        <LoadingPage/>
-        <NotFoundPage/>
       </body>
     </html>
   );
