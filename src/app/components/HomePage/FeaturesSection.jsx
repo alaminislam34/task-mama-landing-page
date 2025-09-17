@@ -32,11 +32,11 @@ function FeaturesSection() {
         </h1>
 
         {/* Card */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center gap-6 space-y-6 py-12 *:w-full">
           {cards.map((card) => (
             <div
               key={card.path}
-              className="lg:w-[420px] lg:h-[302px] w-[350px] h-[280px] rounded-2xl shadow-[0px_40px_40px_0px_#00000030] py-6 px-[42px] flex flex-col justify-center bg-white mx-auto"
+            className="lg:min-w-[420px] lg:min-h-[302px] w-[350px] h-[280px] rounded-2xl shadow-[0px_40px_40px_0px_#00000030] py-6 px-[42px] flex flex-col justify-center bg-white mx-auto"
             >
               <Image
                 src={card.path}

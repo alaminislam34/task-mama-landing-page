@@ -4,6 +4,7 @@ import AboutPageHeroSection from "../components/AboutUsPage/AboutPageHeroSection
 import SuperMom from "../components/AboutUsPage/SuperMom";
 import WhatWeStandFor from "../components/AboutUsPage/WhatWeStandFor";
 import OurMission from "../components/AboutUsPage/OurMission";
+import WhatGuides from "../components/AboutUsPage/WhatGuidesUs";
 
 function AboutUs() {
   return (
@@ -13,6 +14,7 @@ function AboutUs() {
       <SuperMom/>
       <WhatWeStandFor/>
       <OurMission/>
+      <WhatGuides/>
     </section>
   );
 }
