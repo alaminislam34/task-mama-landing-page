@@ -17,25 +17,23 @@ function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // email
+  // email state
   const [email, setEmail] = useState("");
-  // send email handler
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!email) return toast.error("Please enter your email!");
-  };
+  const [loading, setLoading] = useState(false);
+
   const handleSendEmail = async () => {
     if (!email) {
       toast.error("Please Enter your email!", {
         pauseOnHover: true,
         progress: undefined,
-        style: {
-          backgroundColor: "#E6E6FA",
-          color: "#00000069",
-        },
+        style: { backgroundColor: "#E6E6FA", color: "#00000069" },
         hideProgressBar: true,
       });
+      return;
     }
+
+    setLoading(true);
+
     try {
       const res = await fetch("/api/send-email", {
         method: "POST",
@@ -44,32 +42,36 @@ function Navbar() {
       });
 
       const data = await res.json();
-      if (res.ok)
+
+      if (res.ok) {
         toast.success(data.message, {
           pauseOnHover: true,
           progress: undefined,
-          style: {
-            backgroundColor: "#E6E6FA",
-            color: "#00000069",
-          },
+          style: { backgroundColor: "#E6E6FA", color: "#00000069" },
           hideProgressBar: true,
         });
-      else
+        setEmail("");
+      } else {
         toast.error(data.error || "Failed to send email", {
           pauseOnHover: true,
           progress: undefined,
-          style: {
-            backgroundColor: "#E6E6FA",
-            color: "#00000069",
-          },
+          style: { backgroundColor: "#E6E6FA", color: "#00000069" },
           hideProgressBar: true,
         });
-    } catch {
-      toast.error("Something went wrong!");
+      }
+    } catch (err) {
+      console.error("Send email error:", err);
+      toast.error("Something went wrong!", {
+        pauseOnHover: true,
+        progress: undefined,
+        style: { backgroundColor: "#E6E6FA", color: "#00000069" },
+        hideProgressBar: true,
+      });
     } finally {
-      setEmail("");
+      setLoading(false);
     }
   };
+
   return (
     <div>
       <nav className="grid grid-cols-2 lg:grid-cols-3 items-start py-[27px] max-w-[1440px] mx-auto w-11/12">
@@ -94,7 +96,7 @@ function Navbar() {
                 <Link
                   href={link.href}
                   className={`${
-                    pathname == link.href ? "font-bold" : "font-light"
+                    pathname === link.href ? "font-bold" : "font-light"
                   }`}
                 >
                   {link.name}
@@ -123,10 +125,11 @@ function Navbar() {
             />
           </div>
           <button
+            disabled={loading}
             onClick={handleSendEmail}
             className="cursor-pointer py-[9px] px-[30px] rounded-xl bg-primary text-white text-xs"
           >
-            Get Download link
+            {loading ? "App link Sending..." : "Get Download Link"}
           </button>
         </div>
 
@@ -136,7 +139,7 @@ function Navbar() {
             className="bg-primary p-2 rounded-xl text-white cursor-pointer"
             onClick={() => setMenuOpen(!menuOpen)}
           >
-            {menuOpen ? <X size={24} /> : <TextAlignJustifyIcon />}
+            {menuOpen ? <X size={24} /> : <TextAlignJustifyIcon size={24} />}
           </button>
         </div>
       </nav>
@@ -158,7 +161,7 @@ function Navbar() {
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
                   className={`${
-                    pathname == link.href ? "font-bold" : "font-light"
+                    pathname === link.href ? "font-bold" : "font-light"
                   }`}
                 >
                   {link.name}
@@ -179,12 +182,18 @@ function Navbar() {
               />
               <input
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your mail..."
                 className="w-full py-[9px] px-4 pl-[35px] focus:outline-primary rounded-xl bg-secondary text-xs font-normal"
               />
             </div>
-            <button className="cursor-pointer py-[9px] px-[30px] rounded-xl bg-primary text-white text-xs w-full">
-              Get Download link
+            <button
+              onClick={handleSendEmail}
+              disabled={loading}
+              className="cursor-pointer py-[9px] px-[30px] rounded-xl bg-primary text-white text-xs w-full"
+            >
+              {loading ? "App link Sending..." : "Get Download link"}
             </button>
           </div>
         </div>
