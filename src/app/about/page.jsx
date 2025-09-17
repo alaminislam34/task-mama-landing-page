@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import AboutPageHeroSection from "./components/AboutPageHeroSection";
 import SuperMom from "./components/SuperMom";

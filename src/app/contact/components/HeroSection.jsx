@@ -35,7 +35,7 @@ function HeroSection() {
         </h1>
 
         {/* sub title */}
-        <p className="font-roboto lg:max-w-[875px] max-w-[450px] sm:max-w-2xl md:max-w-3xl  mx-auto text-center mb-10 text-lg lg:text-2xl text-[#4A4A4A]">
+        <p className="font-roboto lg:max-w-[900px] max-w-[450px] sm:max-w-2xl md:max-w-3xl mx-auto text-center mb-10 text-lg lg:text-2xl text-[#4A4A4A]">
           Have questions or ideas? TaskMama is here to listen, support, and
           help—whether it’s about the app, our courses, or joining the movement.
         </p>
