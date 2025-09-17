@@ -70,29 +70,37 @@ export default function TestimonialSlider() {
                 className="keen-slider__slide flex justify-center pt-14 px-4 pb-4"
               >
                 <div
-                  className={`flex flex-col items-center gap-2 rounded-3xl shadow-[4px_4px_4px_0px_#00000025] px-6 py-4 transition-all duration-500 ease-in-out w-full  ${
-                    isCenter
-                      ? "lg:max-w-[396px] min-h-[242px] scale-100"
-                      : "max-w-[338px] scale-90 opacity-90"
-                  }`}
+                  className={`flex flex-col items-center gap-2 rounded-3xl shadow-[4px_4px_4px_0px_#00000025] px-6 py-4 transition-all duration-500 ease-in-out w-full
+    max-w-[338px] scale-90 opacity-90   /* default for small screens */
+    ${
+      isCenter
+        ? "lg:max-w-[396px] lg:min-h-[242px] lg:scale-100 lg:opacity-100"
+        : ""
+    }
+  `}
                 >
                   <Image
                     src={slide.image}
                     width={200}
                     height={200}
                     alt={slide.name}
-                    className={`rounded-full object-cover duration-300 ${
-                      isCenter
-                        ? "-mt-[67px] h-[133px] w-[133px]"
-                        : "-mt-[40px] h-[80px] w-[80px]"
-                    }`}
+                    className={`rounded-full object-cover duration-300 
+    h-[80px] w-[80px] -mt-[40px]         /* default for small screens */
+    ${
+      isCenter ? "lg:h-[133px] lg:w-[133px] lg:-mt-[67px]" : ""
+    }  /* override only lg */
+  `}
                   />
                   <div className="flex gap-1 items-center">
                     {[...Array(4)].map((_, i) => (
                       <FaStar key={i} className="text-amber-400" />
                     ))}
                   </div>
-                  <p className={`text-sm tracking-tight leading-normal ${!isCenter && 'text-[#0000007D]'}`}>
+                  <p
+                    className={`text-sm tracking-tight leading-normal ${
+                      !isCenter && "text-[#0000007D]"
+                    }`}
+                  >
                     {slide.text}
                   </p>
                   <h3 className="text-sm text-[#2596BE] text-center">

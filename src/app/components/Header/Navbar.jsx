@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { TextAlignJustifyIcon, X } from "lucide-react";
+import { toast } from "react-toastify";
 
 const links = [
   { name: "Home", href: "/" },
@@ -16,6 +17,59 @@ function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // email
+  const [email, setEmail] = useState("");
+  // send email handler
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email) return toast.error("Please enter your email!");
+  };
+  const handleSendEmail = async () => {
+    if (!email) {
+      toast.error("Please Enter your email!", {
+        pauseOnHover: true,
+        progress: undefined,
+        style: {
+          backgroundColor: "#E6E6FA",
+          color: "#00000069",
+        },
+        hideProgressBar: true,
+      });
+    }
+    try {
+      const res = await fetch("/api/send-email", {
+        method: "POST",
+        body: JSON.stringify({ type: "download", email }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await res.json();
+      if (res.ok)
+        toast.success(data.message, {
+          pauseOnHover: true,
+          progress: undefined,
+          style: {
+            backgroundColor: "#E6E6FA",
+            color: "#00000069",
+          },
+          hideProgressBar: true,
+        });
+      else
+        toast.error(data.error || "Failed to send email", {
+          pauseOnHover: true,
+          progress: undefined,
+          style: {
+            backgroundColor: "#E6E6FA",
+            color: "#00000069",
+          },
+          hideProgressBar: true,
+        });
+    } catch {
+      toast.error("Something went wrong!");
+    } finally {
+      setEmail("");
+    }
+  };
   return (
     <div>
       <nav className="grid grid-cols-2 lg:grid-cols-3 items-start py-[27px] max-w-[1440px] mx-auto w-11/12">
@@ -39,7 +93,9 @@ function Navbar() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className={`${pathname == link.href ? "font-bold" : "font-light"}`}
+                  className={`${
+                    pathname == link.href ? "font-bold" : "font-light"
+                  }`}
                 >
                   {link.name}
                 </Link>
@@ -60,11 +116,16 @@ function Navbar() {
             />
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your mail..."
               className="py-[9px] px-4 pl-[35px] focus:outline-primary rounded-xl bg-secondary text-xs font-normal"
             />
           </div>
-          <button className="cursor-pointer py-[9px] px-[30px] rounded-xl bg-primary text-white text-xs">
+          <button
+            onClick={handleSendEmail}
+            className="cursor-pointer py-[9px] px-[30px] rounded-xl bg-primary text-white text-xs"
+          >
             Get Download link
           </button>
         </div>
@@ -84,14 +145,21 @@ function Navbar() {
       {menuOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur bg-opacity-80 z-50 flex flex-col items-center justify-center gap-8 p-6 lg:hidden">
           {/* nav links */}
-          <button onClick={()=> setMenuOpen(false)} className="absolute top-4 right-4 text-white">X</button>
+          <button
+            onClick={() => setMenuOpen(false)}
+            className="absolute top-4 right-4 text-white"
+          >
+            X
+          </button>
           <ul className="flex flex-col items-center gap-6 text-white text-lg">
             {links.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className={`${pathname == link.href ? "font-bold" : "font-light"}`}
+                  className={`${
+                    pathname == link.href ? "font-bold" : "font-light"
+                  }`}
                 >
                   {link.name}
                 </Link>
