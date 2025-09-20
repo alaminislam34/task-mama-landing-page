@@ -27,11 +27,30 @@ function AppMode() {
             className="w-[80px] h-[80px] lg:w-[102px] lg:h-[102px]"
           />
         </div>
-
+        <div className="text-center py-12 space-y-6">
+          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold font-lato leading-normal">
+            For Moms Who Do It All-and{" "}
+            <span className="text-primary">Own It</span>
+          </h1>
+          <p className="text-base md:text-xl lg:text-2xl text-[#5C5C5C] leading-normal md:leading-[40px]">
+            Being a mom is one of the hardest and most rewarding-jobs in the
+            world. At TaskMama, we see you. We see the late nights, the endless
+            to-do lists, the hustle, and the love you pour into everyone else.
+            TaskMama was created by a mom, for moms-to help women take back
+            control of their time, energy, and focus. Our tools and community
+            empower you to organize your life, tackle your goals, and celebrate
+            your wins-big and small. TaskMama is more than an app. It's a
+            movement. A tribe of unstoppable moms who lift each other up,
+            embrace their power, and redefine what it means to thrive in
+            motherhood. You don't just manage tasks-you lead your life. Join
+            TaskMama, and step into the power, confidence, and freedom every mom
+            deserves."
+          </p>
+        </div>
         {/* app mode screen shot */}
         <div className="grid grid-cols-1 md:grid-cols-2 justify-between gap-16 items-center">
           <div className="flex flex-col gap-12 items-center justify-center">
-            <h1 className="font-lato font-bold text-[32px] md:text-4xl lg:text-5xl text-center leading-normal">
+            <h1 className="font-lato font-bold text-2xl md:text-3xl lg:text-4xl text-center leading-normal">
               Mama Mode
             </h1>
             <Image
@@ -43,7 +62,7 @@ function AppMode() {
             />
           </div>
           <div className="flex flex-col gap-12 items-center justify-center">
-            <h1 className="font-lato font-bold text-[32px] md:text-4xl lg:text-5xl text-center leading-normal">
+            <h1 className="font-lato font-bold text-2xl md:text-3xl lg:text-4xl text-center leading-normal">
               Business Mode
             </h1>
             <Image
@@ -56,10 +75,10 @@ function AppMode() {
           </div>
         </div>
       </div>
-        <p className="text-base md:text-xl lg:text-[32px] text-center font-medium leading-normal py-10 md:py-16 lg:py-20 max-w-6xl mx-auto w-11/12 text-[#5C5C5C]">
-          Switch views instantly — see family tasks and meal plans in Mama Mode,
-          then flip to Boss Mode for client tasks and invoices.”
-        </p>
+      <p className="text-base md:text-xl lg:text-[32px] text-center font-medium leading-normal py-10 md:py-16 lg:py-20 max-w-6xl mx-auto w-11/12 text-[#5C5C5C]">
+        Switch views instantly — see family tasks and meal plans in Mama Mode,
+        then flip to Boss Mode for client tasks and invoices.”
+      </p>
     </div>
   );
 }
