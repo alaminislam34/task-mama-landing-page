@@ -42,12 +42,12 @@ export async function POST(req) {
             <div style="display: flex; gap: 15px; margin-top: 20px;">
               <a href="https://apps.apple.com/app/idYOUR_APPLE_ID" target="_blank" 
                  style="display: flex; align-items: center; gap: 8px; padding: 10px 15px; background-color: #B0A2DA; color: #fff; border-radius: 8px; text-decoration: none; font-weight: bold;">
-                <img src="http://localhost:3000/icons/applestore.png" alt="Apple Store" width="20" />
+                <img src="https://taskmama-landing-page.vercel.app/icons/applestore.png" alt="Apple Store" width="20" />
                 Apple Store
               </a>
               <a href="https://play.google.com/store/apps/details?id=YOUR_APP_PACKAGE" target="_blank"
                  style="display: flex; align-items: center; gap: 8px; padding: 10px 15px; background-color: #B0A2DA; color: #fff; border-radius: 8px; text-decoration: none; font-weight: bold;">
-                <img src="http://localhost:3000/icons/playstore.png" alt="Google Play" width="20" />
+                <img src="https://taskmama-landing-page.vercel.app/icons/playstore.png" alt="Google Play" width="20" />
                 Google Play
               </a>
             </div>
