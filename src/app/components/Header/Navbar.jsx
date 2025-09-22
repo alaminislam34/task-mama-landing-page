@@ -145,59 +145,75 @@ function Navbar() {
       </nav>
 
       {/* mobile modal */}
-      {menuOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur bg-opacity-80 z-50 flex flex-col items-center justify-center gap-8 p-6 lg:hidden">
-          {/* nav links */}
-          <button
-            onClick={() => setMenuOpen(false)}
-            className="absolute top-4 right-4 text-white"
-          >
-            X
-          </button>
-          <ul className="flex flex-col items-center gap-6 text-white text-lg">
-            {links.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  className={`${
-                    pathname === link.href ? "font-bold" : "font-light"
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
+      <div
+        className={`fixed inset-0 bg-black/60 backdrop-blur bg-opacity-80 z-40 
+    transition-opacity duration-300 
+    ${menuOpen ? "opacity-100" : "opacity-0 pointer-events-none"} 
+    lg:hidden`}
+      />
 
-          {/* download input + button */}
-          <div className="flex flex-col gap-3 w-full max-w-sm">
-            <div className="relative w-full">
-              <Image
-                src={"/icons/mail.png"}
-                height={14}
-                width={14}
-                alt="Email icon"
-                className="absolute left-4 top-1/2 -translate-y-1/2"
-              />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your mail..."
-                className="w-full py-[9px] px-4 pl-[35px] focus:outline-primary rounded-xl bg-secondary text-xs font-normal"
-              />
-            </div>
-            <button
-              onClick={handleSendEmail}
-              disabled={loading}
-              className="cursor-pointer py-[9px] px-[30px] rounded-xl bg-primary text-white text-xs w-full"
-            >
-              {loading ? "App link Sending..." : "Get Download link"}
-            </button>
+      {/* modal content */}
+      <div
+        className={`fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 p-6 lg:hidden
+    transform transition-all duration-300 delay-200
+    ${
+      menuOpen
+        ? "scale-100 opacity-100"
+        : "scale-90 opacity-0 pointer-events-none"
+    }`}
+      >
+        {/* close button */}
+        <button
+          onClick={() => setMenuOpen(false)}
+          className="absolute top-4 right-4 p-2 rounded-xl border border-primary bg-primary/20 text-white cursor-pointer"
+        >
+          <X/>
+        </button>
+
+        {/* nav links */}
+        <ul className="flex flex-col items-center gap-6 text-white text-lg">
+          {links.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className={`${
+                  pathname === link.href ? "font-bold" : "font-light"
+                }`}
+              >
+                {link.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* download input + button */}
+        <div className="flex flex-col gap-3 w-full max-w-sm">
+          <div className="relative w-full">
+            <Image
+              src={"/icons/mail.png"}
+              height={14}
+              width={14}
+              alt="Email icon"
+              className="absolute left-4 top-1/2 -translate-y-1/2"
+            />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your mail..."
+              className="w-full py-[9px] px-4 pl-[35px] focus:outline-primary rounded-xl bg-secondary text-xs font-normal"
+            />
           </div>
+          <button
+            onClick={handleSendEmail}
+            disabled={loading}
+            className="cursor-pointer py-[9px] px-[30px] rounded-xl bg-primary text-white text-xs w-full"
+          >
+            {loading ? "App link Sending..." : "Get Download link"}
+          </button>
         </div>
-      )}
+      </div>
     </div>
   );
 }
