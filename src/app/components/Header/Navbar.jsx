@@ -11,6 +11,7 @@ const links = [
   { name: "Home", href: "/" },
   { name: "About us", href: "/about" },
   { name: "Contact", href: "/contact" },
+  { name: "Affiliate", href: "/affiliate" },
 ];
 
 function Navbar() {
