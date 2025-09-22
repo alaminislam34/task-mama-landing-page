@@ -40,44 +40,38 @@ function PricingSection() {
           </div>
         </div>
       </div>
+      
       {/* section title description */}
-      <div className="relative">
-        <div className="absolute top-0 left-0 w-full h-full -z-10 bg-[#E6E6FA8F] blur-lg"></div>
-        <div className="text-center max-w-6xl w-11/12 mx-auto py-12 lg:py-20 space-y-6 lg:space-y-10">
-          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold font-lato leading-normal">
-            Our Pricing <span className="text-primary">Plans</span>
-          </h1>
-          <p className="text-base md:text-xl lg:text-[32px] font-medium leading-normal text-[#5C5C5C]">
-            Pick an account plan that fits your workflow
-          </p>
-        </div>
-        {/* toggle mood tab */}
+      <div className="relative bg-[#E3D8D8] rounded-[22px] shadow-[inner_2px_2px_2px_0px_rgb(0,0,0,0.1)] flex mx-auto max-w-sm my-12">
+        {/* Animated Background Indicator */}
+        <div
+          className={`absolute top-1 left-1 h-[calc(100%-8px)] w-[calc(50%-4px)] rounded-[22px] bg-[#B0A2DA] transition-transform duration-300 ease-in-out`}
+          style={{
+            transform: isMamaMood ? "translateX(0)" : "translateX(100%)",
+          }}
+        />
 
-        <div className="flex items-center justify-center">
-          <div className="bg-[#E3D8D8] rounded-2xl shadow-[inner_2px_2px_2px_0px_rgb(0,0,0,0.1)]">
-            <button
-              onClick={() => setIsMamaMood(true)}
-              className={`cursor-pointer py-[14px] px-7 font-poppins text-xs ${
-                isMamaMood
-                  ? "font-semibold text-white rounded-[22px] bg-[#B0A2DA] relative z-10"
-                  : "text-[#3B3472]"
-              } `}
-            >
-              Mama Mood
-            </button>
-            <button
-              onClick={() => setIsMamaMood(false)}
-              className={`cursor-pointer py-[14px] px-7 font-poppins text-xs ${
-                !isMamaMood
-                  ? "font-semibold text-white rounded-[22px] bg-[#B0A2DA] relative z-10"
-                  : "text-[#3B3472]"
-              } `}
-            >
-              Boss Mood
-            </button>
-          </div>
-        </div>
+        {/* Mama Mood */}
+        <button
+          onClick={() => setIsMamaMood(true)}
+          className={`relative z-10 cursor-pointer py-[14px] px-7 font-poppins text-xs w-1/2 transition-colors duration-300 ${
+            isMamaMood ? "font-semibold text-white" : "text-[#3B3472]"
+          }`}
+        >
+          Mama Mood
+        </button>
+
+        {/* Boss Mood */}
+        <button
+          onClick={() => setIsMamaMood(false)}
+          className={`relative z-10 cursor-pointer py-[14px] px-7 font-poppins text-xs w-1/2 transition-colors duration-300 ${
+            !isMamaMood ? "font-semibold text-white" : "text-[#3B3472]"
+          }`}
+        >
+          Boss Mood
+        </button>
       </div>
+
       {isMamaMood ? (
         <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-0 max-w-[1440px] w-11/12 mx-auto py-12 lg:py-20">
           <div className="bg-[#242430] rounded-[20px] text-white p-5 lg:p-6 md:-mr-4 z-0 lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
