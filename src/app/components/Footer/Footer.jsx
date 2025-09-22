@@ -24,7 +24,7 @@ function Footer() {
         </div>
 
           {/* Download Buttons */}
-        <div className="flex items-center justify-center w-full">
+        <div className="flex items-center justify-center w-full md:w-1/4">
           <div className="flex-1 flex flex-col items-center mx-auto">
             <h2 className="text-sm md:text-lg lg:text-xl font-medium text-white mb-4 text-center">
               Download it now

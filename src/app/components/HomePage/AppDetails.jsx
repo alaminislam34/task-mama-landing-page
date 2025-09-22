@@ -21,8 +21,6 @@ const details = [
 function AppDetails() {
   return (
     <div className="max-w-[1440px] mx-auto w-11/12 py-6 md:py-8 lg:py-12">
-        {/* course section */}
-        <div className="h-[800px] w-full"></div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
         <div className="w-full mx-auto lg:mx-0">
           <div
@@ -60,7 +58,8 @@ function AppDetails() {
           <ol className="list-disc space-y-[30px] lg:space-y-[36px] mx-auto w-11/12 ">
             {details.map(({ bold, det }, i) => (
               <li key={i} className="text-base md:text-lg lg:text-2xl">
-                <span className="font-medium">{bold} </span> <span className="text-[#5C5C5C]">{det}</span>
+                <span className="font-medium">{bold} </span>{" "}
+                <span className="text-[#5C5C5C]">{det}</span>
               </li>
             ))}
           </ol>

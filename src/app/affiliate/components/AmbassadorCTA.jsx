@@ -16,7 +16,7 @@ function AmbassadorCTA() {
             Together, we can grow the movement — and create a ripple of balance,
             confidence, and support for moms everywhere.
           </p>
-          <div className="mt-6">
+          <div className="mt-8 lg:mt-12">
             <p className="text-xl md:text-2xl lg:text-3xl font-medium font-roboto leading-[150%]">
               Your Earnings at a Glance
             </p>
