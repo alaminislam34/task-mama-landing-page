@@ -95,7 +95,7 @@ function Navbar() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className={`${
+                  className={`hover:font-bold duration-300 ${
                     pathname === link.href ? "font-bold" : "font-light"
                   }`}
                 >
@@ -127,7 +127,7 @@ function Navbar() {
           <button
             disabled={loading}
             onClick={handleSendEmail}
-            className="cursor-pointer py-[9px] px-[30px] rounded-xl bg-primary text-white text-xs"
+            className="cursor-pointer py-[9px] px-[30px] rounded-xl bg-primary text-white text-xs border hover:border-primary hover:bg-primary/20 hover:text-primary duration-300"
           >
             {loading ? "App link Sending..." : "Get Download Link"}
           </button>
