@@ -11,7 +11,7 @@ function AboutPageHeroSection() {
       <div className="flex flex-col lg:flex-row gap-20 justify-between items-center max-w-[1440px] w-11/12 mx-auto">
         <div className="text-center lg:text-left flex flex-col items-center justify-center lg:justify-start lg:items-start">
           {/* about us page title */}
-          <h1 className="text-[30px] md:text-4xl lg:text-[56px] font-bold font-lato lg:w-7/12 mb-7 leading-normal">
+          <h1 className="text-[30px] md:text-4xl lg:text-[56px] font-bold font-lato mb-7 leading-normal">
             Built by Moms, for <span className="text-primary">Moms</span>
           </h1>
 
@@ -56,6 +56,7 @@ function AboutPageHeroSection() {
               height={600}
               width={600}
               alt="Hero section Image"
+              loading="lazy"
               className="h-[350px] md:h-[500px] w-[350px] md:w-[500px] lg:h-[525px] lg:w-[525px] object-cover"
             />
           </div>

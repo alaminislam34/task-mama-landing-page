@@ -27,14 +27,16 @@ function HeroSection() {
               height={800}
               width={800}
               alt="Mom Image"
-              className="absolute top-0 right-4 lg:right-6 h-[300px] md:h-[353px] w-[380px] md:w-[560px] object-cover mx-auto rounded-[45px] -mt-4 lg:-mt-6 blur -z-10"
+              quality={75}
+              className="absolute top-0 right-4 lg:right-6 h-[300px] md:h-[353px] w-[340px] sm:w-[400px] md:w-[560px] object-cover mx-auto rounded-[45px] -mt-4 lg:-mt-6 blur -z-10"
             />
             <Image
               src={"/images/groupGirlUsingLaptop.jpg"}
               height={800}
               width={800}
+              quality={75}
               alt="Mom Image"
-              className=" h-[300px] md:h-[353px] w-[380px] md:w-[560px] object-cover mx-auto rounded-[45px]"
+              className=" h-[300px] md:h-[353px] w-[340px] sm:w-[400px] md:w-[560px] object-cover mx-auto rounded-[45px]"
             />
           </div>
         </div>

@@ -16,7 +16,7 @@ function HeroSection() {
       <div className="py-12 lg:py-14 relative">
 
         {/* star icon */}
-      <div className="absolute top-0 lg:top-4 -z-10 right-2 lg:right-8">
+      <div className="absolute -top-6 lg:top-4 -z-10 right-2 lg:right-8">
         <Image src={'/icons/star1.png'} width={400} height={400} alt="Star icon" className="w-[80px] h-[80px] lg:w-[102px] lg:h-[102px]"/>
       </div>
       <div className="absolute -bottom-8 lg:bottom-4 left-0 lg:left-12 -z-10">

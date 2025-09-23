@@ -30,7 +30,7 @@ function WhatGuides() {
           height={200}
           width={200}
           alt="Star icon"
-          className="absolute h-[80px] md:h-[90px] lg:h-[102px] w-[80px] md:w-[90px] lg:w-[102px] top-0 right-0"
+          className="absolute h-[80px] md:h-[90px] lg:h-[102px] w-[80px] md:w-[90px] lg:w-[102px] -top-16 right-0 -z-10"
         />
         {/* heading */}
         <h1 className="font-lato font-bold text-[32px] md:text-4xl lg:text-5xl text-center lg:text-left leading-normal mb-6">
@@ -54,7 +54,7 @@ function WhatGuides() {
                 height={100}
                 width={100}
                 alt="Calender icon"
-                className="w-12 h-12 lg:w-16 lg:h-16 mb-6 md:mb-8 lg:mb-10 mx-auto"
+                className="w-12 h-12 lg:w-16 lg:h-16 mb-6 md:mb-8 lg:mb-10"
               />
               <h1 className="font-bold text-lg md:text-xl lg:text-[25px] font-lato mb-4">
                 {card.title}

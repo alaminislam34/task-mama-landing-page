@@ -1,5 +1,5 @@
 {
-  "name": "taskmama-landing-page",
+  "name": "saymymeds-landing-page",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,16 +9,14 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "graphql-request": "^7.2.0",
     "keen-slider": "^6.8.6",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.544.0",
     "next": "15.5.3",
-    "nodemailer": "^7.0.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-icons": "^5.5.0",
-    "react-toastify": "^11.0.5",
-    "swiper": "^12.0.1"
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

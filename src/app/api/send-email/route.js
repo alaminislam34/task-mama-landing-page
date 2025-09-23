@@ -42,7 +42,7 @@ export async function POST(req) {
     Thank you for your interest in <strong>TaskMama</strong>. Download the app using the links below:
   </p>
 
-  <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 25px;">
+  <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 25px; width: 100%">
     <a href="https://apps.apple.com/app/idYOUR_APPLE_ID" target="_blank" rel="noopener noreferrer">
       <img src="https://taskmama-landing-page.vercel.app/icons/applestore.png" alt="Apple Store" style="width: 120px; cursor: pointer; transition: transform 0.2s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
     </a>
@@ -52,7 +52,7 @@ export async function POST(req) {
   </div>
 
   <p style="font-size: 14px; color: #777;">
-    Enjoy <strong>TaskMama</strong>
+    Enjoy <strong>TaskMama App</strong>
   </p>
 </div>
 

@@ -18,7 +18,7 @@ function AppMode() {
             className="w-[80px] h-[80px] lg:w-[102px] lg:h-[102px]"
           />
         </div>
-        <div className="absolute bottom-6 right-0 -z-10">
+        <div className="absolute -bottom-6 right-0 -z-10">
           <Image
             src={"/icons/star1.png"}
             width={400}

@@ -17,7 +17,7 @@ function OurMission() {
         <div className="lg:max-w-3xl">
           <h1 className="text-[30px] md:text-4xl lg:text-[56px] font-bold font-lato mb-5 md:mb-7 lg:mb-10 leading-normal">
             Our
-            <span className="text-primary">Mission & Vision</span>
+            <span className="text-primary"> Mission & Vision</span>
           </h1>
           <p className="font-roboto text-lg lg:text-2xl text-[#4A4A4A]">
             At TaskMama, our mission is to give moms the tools they need to stay

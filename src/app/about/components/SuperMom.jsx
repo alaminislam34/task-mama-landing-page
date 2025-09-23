@@ -12,7 +12,7 @@ function SuperMom() {
           height={200}
           width={200}
           alt="Star icon"
-          className="absolute h-[80px] md:h-[90px] lg:h-[102px] w-[80px] md:w-[90px] lg:w-[102px] bottom-0 right-0"
+          className="absolute h-[80px] md:h-[90px] lg:h-[102px] w-[80px] md:w-[90px] lg:w-[102px] -bottom-6 lg:bottom-0 right-0"
         />
         <div>
           <h1 className="text-[30px] md:text-4xl lg:text-[56px] font-bold font-lato mb-5 md:mb-7 lg:mb-10 leading-normal">
