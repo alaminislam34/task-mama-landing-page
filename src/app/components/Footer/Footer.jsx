@@ -7,6 +7,7 @@ function Footer() {
   return (
     <footer className="bg-[#2A2A2A] py-8 lg:py-10">
       <div className="max-w-[1440px] w-11/12 mx-auto flex flex-col md:flex-row items-start md:items-center md:justify-between gap-8 lg:gap-12">
+
         {/* Logo + Description */}
         <div className="flex-1">
           <Image

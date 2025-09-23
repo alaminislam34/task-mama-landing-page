@@ -103,6 +103,7 @@ export default function TestimonialSlider() {
           })}
         </div>
 
+        {/* left Arrow */}
         <button
           onClick={() => instanceRef.current?.prev()}
           className="cursor-pointer absolute top-1/2 -translate-y-1/2 left-0"

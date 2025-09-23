@@ -8,6 +8,7 @@ function AppMode() {
     <div className="relative">
       <div className="absolute w-full h-full bg-[#E6E6FA8F] blur-lg -z-10"></div>
       <div className="max-w-[1440px] mx-auto w-11/12 py-12 lg:py-20 relative">
+      
         {/* star icon */}
         <div className="absolute top-6 -z-10 left-0">
           <Image

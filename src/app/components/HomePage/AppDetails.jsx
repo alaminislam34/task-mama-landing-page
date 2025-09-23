@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import React from "react";
+
+
 const details = [
   {
     bold: "Shared Family Calendar —",

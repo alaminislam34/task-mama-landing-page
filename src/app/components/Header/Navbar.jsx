@@ -7,6 +7,8 @@ import { usePathname } from "next/navigation";
 import { TextAlignJustifyIcon, X } from "lucide-react";
 import { toast } from "react-toastify";
 
+
+// nav bar links
 const links = [
   { name: "Home", href: "/" },
   { name: "About us", href: "/about" },
@@ -22,6 +24,8 @@ function Navbar() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
+
+  // email send handler
   const handleSendEmail = async () => {
     if (!email) {
       toast.error("Please Enter your email!", {
@@ -76,6 +80,7 @@ function Navbar() {
   return (
     <div>
       <nav className="grid grid-cols-2 lg:grid-cols-3 items-start py-[27px] max-w-[1440px] mx-auto w-11/12">
+      
         {/* logo */}
         <div>
           <Link href={"/"}>
