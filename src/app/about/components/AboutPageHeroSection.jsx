@@ -17,8 +17,9 @@ function AboutPageHeroSection() {
 
           {/* about us page subtitle */}
           <p className="font-roboto lg:max-w-2/3 mb-10 text-lg lg:text-2xl text-[#4A4A4A]">
-            TaskMama was created to help mompreneurs balance the beautiful chaos
-            of family and business — all in one calming app.
+            TaskMama was created to help every mom turn the beautiful chaos of
+            family, work, and life into balance - all in one calming, empowering
+            app.
           </p>
 
           {/* app link */}
@@ -49,8 +50,20 @@ function AboutPageHeroSection() {
         <div>
           <div className="relative h-[350px] md:h-[500px] w-[350px] md:w-[500px] lg:h-[525px] lg:w-[525px]">
             <div className="bg-[#9B84E1] absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-2/4 h-2/4 blur-2xl -z-10"></div>
-            <Image src={'/icons/star1.png'} height={200} width={200} alt="Star icon" className="absolute h-[80px] md:h-[90px] lg:h-[102px] w-[80px] md:w-[90px] lg:w-[102px] -top-5 -left-5"/>
-            <Image src={'/icons/star1.png'} height={200} width={200} alt="Star icon" className="absolute h-[80px] md:h-[90px] lg:h-[102px] w-[80px] md:w-[90px] lg:w-[102px] -bottom-5 -right-5"/>
+            <Image
+              src={"/icons/star1.png"}
+              height={200}
+              width={200}
+              alt="Star icon"
+              className="absolute h-[80px] md:h-[90px] lg:h-[102px] w-[80px] md:w-[90px] lg:w-[102px] -top-5 -left-5"
+            />
+            <Image
+              src={"/icons/star1.png"}
+              height={200}
+              width={200}
+              alt="Star icon"
+              className="absolute h-[80px] md:h-[90px] lg:h-[102px] w-[80px] md:w-[90px] lg:w-[102px] -bottom-5 -right-5"
+            />
             <Image
               src={"/images/aboutPageImage.png"}
               height={600}

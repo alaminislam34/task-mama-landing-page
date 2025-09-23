@@ -15,8 +15,8 @@ const cards = [
   },
   {
     path: "/icons/image.png",
-    title: "Built for Mompreneurs",
-    des: "We focus on the unique challenges of moms running both households and businesses — because no one else was building for you",
+    title: "Built for Every Mom",
+    des: "We focus on the real challenges of motherhood, running a home, building a career, and raising a family, because no one else was creating tools made just for you.",
   },
 ];
 function WhatGuides() {

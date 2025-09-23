@@ -7,7 +7,6 @@ function Footer() {
   return (
     <footer className="bg-[#2A2A2A] py-8 lg:py-10">
       <div className="max-w-[1440px] w-11/12 mx-auto flex flex-col md:flex-row items-start md:items-center md:justify-between gap-8 lg:gap-12">
-
         {/* Logo + Description */}
         <div className="flex-1">
           <Image
@@ -18,13 +17,13 @@ function Footer() {
             className="mb-7"
           />
           <p className="text-[#ADADAD] text-sm md:text-lg lg:text-xl">
-            TaskMama is the all-in-one app for mompreneurs — combining family
-            calendars, chores, meal planning, and business tools with AI Daily
-            Balance to keep life organized and stress-free.
+            TaskMama was created to help every mom turn the beautiful chaos of
+            family, work, and life into balance - all in one calming, empowering
+            app.
           </p>
         </div>
 
-          {/* Download Buttons */}
+        {/* Download Buttons */}
         <div className="flex items-center justify-center w-full md:w-1/4">
           <div className="flex-1 flex flex-col items-center mx-auto">
             <h2 className="text-sm md:text-lg lg:text-xl font-medium text-white mb-4 text-center">
