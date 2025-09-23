@@ -11,14 +11,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body
-        className={`antialiased`}
-      >
-        <Navbar/>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Navbar />
         {children}
-        <Footer/>
-        <ScrollToTop/>
+        <Footer />
+        <ScrollToTop />
         <ToastContainer position="top-right" autoClose={1500} />
       </body>
     </html>

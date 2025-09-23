@@ -57,6 +57,7 @@ function AboutPageHeroSection() {
               width={600}
               alt="Hero section Image"
               loading="lazy"
+              quality={75}
               className="h-[350px] md:h-[500px] w-[350px] md:w-[500px] lg:h-[525px] lg:w-[525px] object-cover"
             />
           </div>
