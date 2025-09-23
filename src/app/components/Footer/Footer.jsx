@@ -17,9 +17,10 @@ function Footer() {
             className="mb-7"
           />
           <p className="text-[#ADADAD] text-sm md:text-lg lg:text-xl">
-            TaskMama was created to help every mom turn the beautiful chaos of
-            family, work, and life into balance - all in one calming, empowering
-            app.
+            TaskMama is the all-in-one app for every mom - from stay-at-home to
+            working, new to seasoned - combining family calendars, chores, meal
+            planning, and business tools with Al Daily Balance to keep life
+            organized and stress-free.
           </p>
         </div>
 
