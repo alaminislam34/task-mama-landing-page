@@ -2,36 +2,49 @@
 export async function POST(req) {
   const query = `
   {
-    products(first: 50) {
-      edges {
-        node {
-          id
-          title
-          handle
-          description
-          images(first: 1) {
-            edges {
-              node {
-                url
-                altText
-              }
-            }
-          }
-          variants(first: 1) {
-            edges {
-              node {
-                id
-                priceV2 {
-                  amount
-                  currencyCode
-                }
-              }
+  products(first: 50) {
+    edges {
+      node {
+        id
+        title
+        handle
+        description
+        descriptionHtml
+        productType
+        vendor
+        availableForSale
+        tags
+        images(first: 5) {
+          edges {
+            node {
+              url
+              altText
             }
           }
         }
+        options {
+          name
+          values
+        }
+        variants(first: 10) {
+          edges {
+            node {
+              id
+              title
+              priceV2 {
+                amount
+                currencyCode
+              }
+              availableForSale
+            }
+          }
+        }
+        createdAt
+        updatedAt
       }
     }
-  }`;
+  }
+}`;
 
   try {
     const response = await fetch(
@@ -40,7 +53,8 @@ export async function POST(req) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-Shopify-Storefront-Access-Token": process.env.NEXT_PUBLIC_STOREFRONT_ACCESS_TOKEN,
+          "X-Shopify-Storefront-Access-Token":
+            process.env.NEXT_PUBLIC_STOREFRONT_ACCESS_TOKEN,
         },
         body: JSON.stringify({ query }),
       }

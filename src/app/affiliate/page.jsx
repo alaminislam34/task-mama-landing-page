@@ -4,15 +4,14 @@ import React from "react";
 import HeroSection from "./components/HeroSection";
 import TaskMamaBenifit from "./components/TaskMamaBenifit";
 import AmbassadorCTA from "./components/AmbassadorCTA";
-import ShopifyProduct from "./components/ShopifyProduct";
+import ShopifyProducts from "./components/ShopifyProducts/ShopifyProducts";
 
 function Affiliate() {
   return (
     <section>
-     <HeroSection/>
-     <TaskMamaBenifit/>
-     <AmbassadorCTA/>
-     <ShopifyProduct/>
+      <HeroSection />
+      <TaskMamaBenifit />
+      <AmbassadorCTA />
     </section>
   );
 }
