@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 function Footer() {
@@ -57,7 +58,19 @@ function Footer() {
 
       {/* Copyright */}
       <p className="text-center text-[#ADADAD] text-xs md:text-sm pt-6 lg:pt-8">
-        Copyright © 2025 TaskMama - All Rights Reserved.
+        Copyright © 2025 TaskMama - All Rights Reserved.{" "}
+        <a
+          href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:underline"
+        >
+          Terms & Conditions
+        </a>{" "}
+        |{" "}
+        <Link href="/privacy-policy" className="hover:underline">
+          Privacy Policy
+        </Link>
       </p>
     </footer>
   );

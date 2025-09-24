@@ -3,6 +3,7 @@
 import AppDetails from "./components/HomePage/AppDetails";
 import AppMode from "./components/HomePage/AppMode";
 import ChatbotSection from "./components/HomePage/ChatbotSection";
+import CourseSectionDemo from "./components/HomePage/CoursesSection";
 import FAQSection from "./components/HomePage/FAQSection/FAQSection";
 import FeaturesSection from "./components/HomePage/FeaturesSection";
 import HeroSection from "./components/HomePage/HeroSection";
@@ -21,13 +22,13 @@ export default function Home() {
       </section>
 
       <FeaturesSection />
-      <AppDetails/>
-      <AppMode/>
-      <ChatbotSection/>
-      <PricingSection/>
-      {/* <Testimonial/> */}
-      <SliderSection/>
-      <FAQSection/>
+      <CourseSectionDemo />
+      <AppDetails />
+      <AppMode />
+      <ChatbotSection />
+      <PricingSection />
+      <SliderSection />
+      <FAQSection />
     </div>
   );
 }

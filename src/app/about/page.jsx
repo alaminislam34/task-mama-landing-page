@@ -6,6 +6,7 @@ import SuperMom from "./components/SuperMom";
 import WhatWeStandFor from "./components/WhatWeStandFor";
 import OurMission from "./components/OurMission";
 import WhatGuides from "./components/WhatGuidesUs";
+import JoinAffiliate from "./components/JoinAffiliate";
 
 function AboutUs() {
   return (
@@ -16,6 +17,7 @@ function AboutUs() {
       <WhatWeStandFor />
       <OurMission />
       <WhatGuides />
+      <JoinAffiliate/>
     </section>
   );
 }
