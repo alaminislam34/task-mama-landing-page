@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { TextAlignJustifyIcon, X } from "lucide-react";
 import { toast } from "react-toastify";
+import { useSession, signIn, signOut } from "next-auth/react";
 
-
-// nav bar links
 const links = [
   { name: "Home", href: "/" },
   { name: "About us", href: "/about" },
@@ -19,13 +18,28 @@ const links = [
 function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowModal(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // email state
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // session
+  const { data: session, status } = useSession();
+  console.log(session);
 
-  // email send handler
   const handleSendEmail = async () => {
     if (!email) {
       toast.error("Please Enter your email!", {
@@ -79,8 +93,7 @@ function Navbar() {
 
   return (
     <div>
-      <nav className="grid grid-cols-2 lg:grid-cols-3 items-start py-[27px] max-w-[1440px] mx-auto w-11/12">
-      
+      <nav className="grid grid-cols-2 lg:grid-cols-3 items-center py-[27px] max-w-[1440px] mx-auto w-11/12">
         {/* logo */}
         <div>
           <Link href={"/"}>
@@ -112,8 +125,9 @@ function Navbar() {
           </ul>
         </div>
 
-        {/* download link input or button for desktop */}
-        <div className="hidden lg:flex gap-2 items-center justify-end">
+        {/* right side */}
+        <div className="hidden lg:flex items-center justify-end gap-4">
+          {/* download input */}
           <div className="relative">
             <Image
               src={"/icons/mail.png"}
@@ -137,6 +151,58 @@ function Navbar() {
           >
             {loading ? "App link Sending..." : "Get Download Link"}
           </button>
+          {/* user login/logout */}
+          {status === "loading" ? (
+            <p>Loading...</p>
+          ) : session ? (
+            <div ref={dropdownRef} className="flex items-center gap-2 relative">
+              <Image
+                onClick={() => setShowModal(!showModal)}
+                src={session.user?.image || "/default-avatar.png"}
+                alt="user"
+                width={32}
+                height={32}
+                className="rounded-full cursor-pointer"
+              />
+
+              {showModal && (
+                <div className="absolute top-12 right-0 w-44 bg-white rounded-xl shadow-lg p-4 z-50 border border-gray-100">
+                  {/* Greeting */}
+                  <div className="mb-3">
+                    <p className="text-sm text-gray-500">Hello,</p>
+                    <p className="text-sm font-semibold text-gray-800 truncate">
+                      {session.user?.name || session.user?.email}
+                    </p>
+                  </div>
+
+                  {/* Links */}
+                  <div className="flex flex-col gap-2 mb-3">
+                    <Link
+                      href="/coursepanel"
+                      className="text-sm text-primary hover:bg-primary/10 rounded px-2 py-1 transition"
+                    >
+                      My Courses
+                    </Link>
+                  </div>
+
+                  {/* Logout */}
+                  <button
+                    onClick={() => signOut()}
+                    className="w-full text-sm bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition cursor-pointer"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              href={"/signin"}
+              className="cursor-pointer py-[9px] px-[30px] rounded-xl bg-primary text-white text-xs border hover:border-primary hover:bg-primary/20 hover:text-primary duration-300"
+            >
+              Login
+            </Link>
+          )}
         </div>
 
         {/* mobile menu button */}
@@ -149,77 +215,6 @@ function Navbar() {
           </button>
         </div>
       </nav>
-
-      {/* mobile modal */}
-      <div
-        className={`fixed inset-0 bg-black/60 backdrop-blur bg-opacity-80 z-40 
-    transition-opacity duration-300 
-    ${menuOpen ? "opacity-100" : "opacity-0 pointer-events-none"} 
-    lg:hidden`}
-      />
-
-      {/* modal content */}
-      <div
-        className={`fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 p-6 lg:hidden
-    transform transition-all duration-300 delay-200
-    ${
-      menuOpen
-        ? "scale-100 opacity-100"
-        : "scale-90 opacity-0 pointer-events-none"
-    }`}
-      >
-        {/* close button */}
-        <button
-          onClick={() => setMenuOpen(false)}
-          className="absolute top-4 right-4 p-2 rounded-xl border border-primary bg-primary/20 text-white cursor-pointer"
-        >
-          <X/>
-        </button>
-
-        {/* nav links */}
-        <ul className="flex flex-col items-center gap-6 text-white text-lg">
-          {links.map((link) => (
-            <li key={link.href}>
-              <Link
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className={`${
-                  pathname === link.href ? "font-bold" : "font-light"
-                }`}
-              >
-                {link.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-
-        {/* download input + button */}
-        <div className="flex flex-col gap-3 w-full max-w-sm">
-          <div className="relative w-full">
-            <Image
-              src={"/icons/mail.png"}
-              height={14}
-              width={14}
-              alt="Email icon"
-              className="absolute left-4 top-1/2 -translate-y-1/2"
-            />
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your mail..."
-              className="w-full py-[9px] px-4 pl-[35px] focus:outline-primary rounded-xl bg-secondary text-xs font-normal"
-            />
-          </div>
-          <button
-            onClick={handleSendEmail}
-            disabled={loading}
-            className="cursor-pointer py-[9px] px-[30px] rounded-xl bg-primary text-white text-xs w-full"
-          >
-            {loading ? "App link Sending..." : "Get Download link"}
-          </button>
-        </div>
-      </div>
     </div>
   );
 }

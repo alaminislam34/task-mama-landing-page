@@ -1,13 +1,28 @@
-import { getServerSession } from "next-auth/next";
+import clientPromise from "@/lib/Mongodb";
 import { NextResponse } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function GET(req) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
-  }
+  try {
+    const { searchParams } = new URL(req.url);
+    const email = searchParams.get("email");
 
-  // Here you can fetch courses from DB if needed
-  return NextResponse.json({ courses: ["course1", "course2"] });
+    if (!email) {
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
+    }
+
+    const db = (await clientPromise).db("TaskMamaDB");
+
+    const user = await db.collection("users").findOne({ email });
+
+    // শুধুমাত্র purchased courses return করবো
+    const purchasedCourses = user?.purchasedCourses || [];
+
+    return NextResponse.json({ purchasedCourses });
+  } catch (err) {
+    console.error("Error fetching user courses:", err);
+    return NextResponse.json(
+      { error: "Failed to fetch user courses" },
+      { status: 500 }
+    );
+  }
 }

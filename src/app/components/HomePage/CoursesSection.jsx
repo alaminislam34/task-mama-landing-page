@@ -1,72 +1,129 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { toast } from "react-toastify";
 import Modal from "react-modal";
+import Image from "next/image";
+import { FcGoogle } from "react-icons/fc";
+import { RiAppleLine } from "react-icons/ri";
+import { useRouter } from "next/navigation";
 
 const courses = [
-  { id: "course1", title: "Mom CEO Mode", price: 59.99 },
-  { id: "course2", title: "Time Mastery for Working Moms", price: 59.99 },
+  {
+    id: "course1",
+    image: "/images/MomCEOMode.jpg",
+    title: "Mom CEO Mode",
+    price: 59.99,
+  },
+  {
+    id: "course2",
+    image: "/images/mastermom.jpg",
+    title: "Time Mastery for Working Moms",
+    price: 59.99,
+  },
 ];
 
 export default function CourseSectionDemo() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [purchasedCourses, setPurchasedCourses] = useState([]);
+
+  // Fetch user's purchased courses
+  useEffect(() => {
+    if (session?.user?.email) {
+      fetch(`/api/my-courses?email=${session.user.email}`)
+        .then((res) => res.json())
+        .then((data) => setPurchasedCourses(data.purchasedCourses?.map(c => c.id) || []));
+    }
+  }, [session]);
+
+  // Trigger checkout automatically after login
+  useEffect(() => {
+    if (session && selectedCourse) {
+      handlePurchase(selectedCourse);
+      setModalOpen(false);
+      setSelectedCourse(null);
+    }
+  }, [session]);
 
   const handlePurchase = async (course) => {
     if (!session) {
       setSelectedCourse(course);
-      setModalOpen(true); // show login modal
+      setModalOpen(true);
       return;
     }
 
-    // ✅ Call your API to create Stripe checkout session
-    const res = await fetch("/api/checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: session.user.email, courseId: course.id }),
-    });
+    // If already purchased, redirect to course panel
+    if (purchasedCourses.includes(course.id)) {
+      router.push("/coursepanel");
+      return;
+    }
 
-    const data = await res.json();
-    if (res.ok && data.id) {
-      // Redirect to Stripe checkout
-      const stripe = (await import("@stripe/stripe-js")).loadStripe(
-        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-      );
-      (await stripe).redirectToCheckout({ sessionId: data.id });
-    } else {
-      toast.error("Something went wrong with checkout!");
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: session.user.email,
+          courseId: course.id,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.id) {
+        const stripe = (await import("@stripe/stripe-js")).loadStripe(
+          process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+        );
+        (await stripe).redirectToCheckout({ sessionId: data.id });
+      } else {
+        toast.error("Something went wrong with checkout!");
+      }
+    } catch (error) {
+      toast.error("Checkout failed. Please try again.");
     }
   };
 
   return (
-    <section className="py-12 md:py-16 lg:py-20">
+    <section className="py-12">
       <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-4xl font-bold text-center mb-16 text-gray-800">
+        <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold font-lato leading-normal text-center mb-6 lg:mb-12">
           Our Courses
         </h2>
-        <div className="grid md:grid-cols-2 gap-10 justify-items-center">
+
+        <div className="grid md:grid-cols-2 gap-10 justify-items-center py-6">
           {courses.map((course) => (
             <div
               key={course.id}
-              className="w-full max-w-md bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-transform transform hover:-translate-y-3 duration-300 p-8 flex flex-col justify-between"
+              className="w-full max-w-md bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 flex flex-col justify-between"
             >
-              <h3 className="text-2xl font-semibold mb-6 text-gray-900 text-center">
+              <Image
+                width={400}
+                height={200}
+                src={course.image}
+                alt={course.title}
+                className="rounded-2xl mb-4 bg-center object-cover h-[250px] w-full"
+              />
+              <h3 className="text-2xl font-semibold mb-2 text-gray-900 text-center py-6">
                 {course.title}
               </h3>
-              <div className="flex items-center justify-between mt-4">
-                <span className="text-xl font-bold text-gray-900">
-                  ${course.price}
-                </span>
-                <button
-                  onClick={() => handlePurchase(course)}
-                  className="bg-primary text-white py-2 px-6 rounded-full cursor-pointer transition-colors duration-300"
-                >
-                  Buy Now
-                </button>
-              </div>
+              <span className="text-xl font-bold text-gray-900 mb-4 text-center">
+                ${course.price}
+              </span>
+
+              <button
+                onClick={() => handlePurchase(course)}
+                className={`py-2 px-6 rounded-full cursor-pointer transition-transform duration-300 ${
+                  purchasedCourses.includes(course.id)
+                    ? "bg-green-500 text-white hover:bg-green-600"
+                    : "bg-gradient-to-r from-primary/80 to-primary text-white"
+                }`}
+              >
+                {purchasedCourses.includes(course.id) ? "Continue Course" : "Buy Now"}
+              </button>
             </div>
           ))}
         </div>
@@ -76,36 +133,42 @@ export default function CourseSectionDemo() {
       <Modal
         isOpen={modalOpen}
         onRequestClose={() => setModalOpen(false)}
-        className="max-w-md mx-auto mt-20 bg-white p-6 rounded-lg shadow-lg"
+        ariaHideApp={false}
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
       >
-        <h2 className="text-xl font-bold mb-4 text-center">
-          Please Login to Continue
-        </h2>
+        <div className="max-w-xl w-full mx-auto bg-white p-8 rounded-2xl shadow-2xl relative">
+          <h2 className="text-2xl font-semibold mb-4 text-center text-gray-800">
+            Welcome Back 👋
+          </h2>
+          <p className="text-sm text-gray-500 text-center mb-6">
+            Please login to continue
+          </p>
 
-        <div className="flex flex-col gap-4">
-          {/* Email Login */}
-          <button
-            onClick={() => signIn("email")}
-            className="w-full py-3 bg-blue-600 text-white rounded hover:opacity-90"
-          >
-            Login / Signup with Email
-          </button>
+          <div className="flex flex-col gap-4">
+            <button
+              onClick={() => signIn("google")}
+              className="w-full py-3 rounded-xl flex items-center justify-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 shadow-sm transition duration-200 cursor-pointer"
+            >
+              <FcGoogle className="w-5 h-5" />
+              <span className="text-gray-700">Continue with Google</span>
+            </button>
 
-          {/* Google Login */}
+            <button
+              onClick={() => signIn("apple")}
+              className="w-full py-3 rounded-xl flex items-center justify-center gap-2 bg-black text-white hover:opacity-90 transition duration-200 cursor-pointer"
+            >
+              <RiAppleLine className="w-5 h-5" />
+              Continue with Apple
+            </button>
+          </div>
+
           <button
-            onClick={() => signIn("google")}
-            className="w-full py-3 bg-red-500 text-white rounded hover:opacity-90"
+            onClick={() => setModalOpen(false)}
+            className="w-full mt-6 py-2 text-sm text-gray-600 border border-gray-300 rounded-xl hover:bg-gray-50 transition duration-200 cursor-pointer"
           >
-            Login with Google
+            Cancel
           </button>
         </div>
-
-        <button
-          onClick={() => setModalOpen(false)}
-          className="mt-6 w-full py-2 border rounded hover:bg-gray-100"
-        >
-          Cancel
-        </button>
       </Modal>
     </section>
   );

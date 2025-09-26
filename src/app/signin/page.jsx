@@ -1,33 +1,39 @@
 "use client";
 
-import { getProviders, signIn } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { signIn } from "next-auth/react";
+import { FcGoogle } from "react-icons/fc";
+import { RiAppleLine } from "react-icons/ri";
 
 export default function SignInPage() {
-  const [providers, setProviders] = useState({});
-
-  useEffect(() => {
-    getProviders().then((prov) => setProviders(prov));
-  }, []);
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center mb-6">Login / Signup</h1>
+    <div className="min-h-[70vh] flex items-center justify-center p-6">
+      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
+        <h1 className="text-2xl font-semibold mb-2 text-center text-gray-800">
+          Sign in
+        </h1>
+        <p className="text-sm text-gray-500 mb-6 text-center">
+          Sign in with your preferred provider
+        </p>
 
-        {Object.values(providers).map((provider) => (
+        <div className="flex flex-col gap-4">
+          {/* Google Login */}
           <button
-            key={provider.name}
-            onClick={() => signIn(provider.id)}
-            className={`w-full py-3 mb-4 rounded text-white ${
-              provider.name === "Email" ? "bg-blue-600" : "bg-red-500"
-            } hover:opacity-90 transition`}
+            onClick={() => signIn("google", { callbackUrl: "/" })}
+            className="w-full py-3 rounded-xl bg-white border flex items-center justify-center gap-2 cursor-pointer hover:bg-gray-50 transition"
           >
-            {provider.name === "Email"
-              ? "Login / Signup with Email"
-              : `Login with ${provider.name}`}
+            <FcGoogle className="text-2xl" />
+            Continue with Google
           </button>
-        ))}
+
+          {/* Apple Login (disabled) */}
+          <button
+            disabled
+            className="w-full py-3 rounded-xl bg-black text-white flex items-center justify-center gap-2 opacity-50 cursor-not-allowed"
+          >
+            <RiAppleLine className="text-2xl" />
+            Continue with Apple
+          </button>
+        </div>
       </div>
     </div>
   );

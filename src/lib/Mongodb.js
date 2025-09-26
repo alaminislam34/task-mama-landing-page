@@ -1,24 +1,24 @@
 import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGO_URI;
-const options = {};
+if (!uri) throw new Error("Add MONGO_URI to your environment variables");
 
 let client;
 let clientPromise;
 
-if (!process.env.MONGO_URI) {
-  throw new Error("Please add your Mongo URI to .env.local");
-}
+const options = {
+  maxPoolSize: 10, // connection pool for production
+  serverSelectionTimeoutMS: 5000,
+  // useNewUrlParser and useUnifiedTopology are default in latest drivers
+};
 
 if (process.env.NODE_ENV === "development") {
-  // In development, use a global variable
   if (!global._mongoClientPromise) {
     client = new MongoClient(uri, options);
     global._mongoClientPromise = client.connect();
   }
   clientPromise = global._mongoClientPromise;
 } else {
-  // In production, it's fine to not use global
   client = new MongoClient(uri, options);
   clientPromise = client.connect();
 }

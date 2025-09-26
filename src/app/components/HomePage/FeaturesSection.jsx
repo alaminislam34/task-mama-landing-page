@@ -32,7 +32,7 @@ function FeaturesSection() {
         </h1>
 
         {/* Card */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center gap-6 space-y-6 py-12 *:w-full">
+        <div className="flex flex-wrap justify-center gap-6 space-y-6 mt-8 md:mt-10 lg:mt-12">
           {cards.map((card) => (
             <div
               key={card.path}
