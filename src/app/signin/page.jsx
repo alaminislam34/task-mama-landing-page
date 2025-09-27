@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { RiAppleFill, RiLoginBoxLine } from "react-icons/ri";
@@ -87,13 +88,20 @@ export default function SignInPage() {
         {/* Footer Terms */}
         <footer className="text-xs text-gray-400 mt-8 text-center px-4">
           By continuing, you agree to our{" "}
-          <a href="/terms" className="underline hover:text-indigo-600">
-            Terms of Service
-          </a>{" "}
-          and{" "}
-          <a href="/privacy" className="underline hover:text-indigo-600">
-            Privacy Policy
+          <a
+            href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
+            target="_blank"
+            className="underline hover:text-indigo-600"
+          >
+            Terms and Conditions
           </a>
+          &
+          <Link
+            href="/privacy-policy"
+            className="underline hover:text-indigo-600"
+          >
+            Privacy Policy
+          </Link>
           .
         </footer>
       </div>
