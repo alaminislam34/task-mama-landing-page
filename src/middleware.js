@@ -1,34 +1,28 @@
 // /middleware.js
-import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
-
-const secret = process.env.NEXTAUTH_SECRET;
+import { jwtVerify } from "jose"; // jwtVerify ব্যবহার করলে Next.js Edge Compatible হয়
 
 export async function middleware(req) {
-  const url = req.nextUrl.clone();
+  const token = req.cookies.get("token")?.value;
 
-  // শুধু /coursepanel route protect করা হবে
-  if (url.pathname.startsWith("/coursepanel")) {
-    try {
-      const session = await getToken({ req, secret });
-
-      if (!session) {
-        // User logged in না → redirect to signin
-        url.pathname = "/signin";
-        return NextResponse.redirect(url);
-      }
-    } catch (err) {
-      console.error("Middleware error:", err);
-      url.pathname = "/signin";
-      return NextResponse.redirect(url);
-    }
+  // যদি token না থাকে → login page এ redirect
+  if (!token) {
+    return NextResponse.redirect(new URL("/signin", req.url));
   }
 
-  // baki routes e normal access
-  return NextResponse.next();
+  try {
+    // JWT verify (Edge friendly)
+    await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET));
+
+    // Valid token → next()
+    return NextResponse.next();
+  } catch (err) {
+    console.error("Middleware token error:", err.message);
+    return NextResponse.redirect(new URL("/signin", req.url));
+  }
 }
 
-// শুধুমাত্র /coursepanel route apply হবে
+// Middleware configuration: কোন routes এ লাগবে
 export const config = {
-  matcher: ["/coursepanel/:path*"],
+  matcher: ["/coursepanel/:path*"], // /coursepanel এবং তার subroutes
 };

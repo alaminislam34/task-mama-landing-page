@@ -1,16 +1,41 @@
 "use client";
 
-import { SessionProvider } from "next-auth/react";
+import { createContext, useContext, useEffect, useState } from "react";
 
-export default function Providers({ children, session }) {
-  console.log(session)
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      setLoading(true); // loading শুরু
+
+      try {
+        const res = await fetch("/api/user"); 
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user); // fresh user data
+        } else {
+          setUser(null); // login নাই
+        }
+      } catch (err) {
+        console.error("Auth fetch error:", err);
+        setUser(null);
+      } finally {
+        setLoading(false); // loading শেষ
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   return (
-    <SessionProvider
-      session={session} // initial session from server
-      refetchInterval={60} // optional: refetch every 60s
-      refetchOnWindowFocus={true} // refetch on tab focus
-    >
+    <AuthContext.Provider value={{ user, loading }}>
       {children}
-    </SessionProvider>
+    </AuthContext.Provider>
   );
-}
+};
+
+export const useAuth = () => useContext(AuthContext);

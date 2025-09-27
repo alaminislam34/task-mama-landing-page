@@ -6,7 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { TextAlignJustifyIcon, X } from "lucide-react";
 import { toast } from "react-toastify";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useAuth } from "@/context/SessionProvider";
 
 const links = [
   { name: "Home", href: "/" },
@@ -21,6 +21,10 @@ function Navbar() {
   const [showModal, setShowModal] = useState(false);
   const dropdownRef = useRef(null);
 
+  const { user, loading } = useAuth(); // ✅ useAuth context
+  const [email, setEmail] = useState("");
+  const [loadingEmail, setLoadingEmail] = useState(false);
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -32,14 +36,7 @@ function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // email state
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  // session
-  const { data: session, status } = useSession();
-  console.log(session);
-
+  // Email send handler
   const handleSendEmail = async () => {
     if (!email) {
       toast.error("Please Enter your email!", {
@@ -51,7 +48,7 @@ function Navbar() {
       return;
     }
 
-    setLoading(true);
+    setLoadingEmail(true);
 
     try {
       const res = await fetch("/api/send-email", {
@@ -87,15 +84,19 @@ function Navbar() {
         hideProgressBar: true,
       });
     } finally {
-      setLoading(false);
+      setLoadingEmail(false);
     }
+  };
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/signin"; // redirect after logout
   };
 
   return (
     <div>
       <nav className="grid grid-cols-2 lg:grid-cols-3 items-center py-[27px] max-w-[1440px] mx-auto w-11/12">
         {/* logo */}
-        <div>
+        <div className="flex items-start justify-start">
           <Link href={"/"}>
             <Image
               src={"/logo.png"}
@@ -145,50 +146,40 @@ function Navbar() {
             />
           </div>
           <button
-            disabled={loading}
+            disabled={loadingEmail}
             onClick={handleSendEmail}
             className="cursor-pointer py-[9px] px-[30px] rounded-xl bg-primary text-white text-xs border hover:border-primary hover:bg-primary/20 hover:text-primary duration-300"
           >
-            {loading ? "App link Sending..." : "Get Download Link"}
+            {loadingEmail ? "App link Sending..." : "Get Download Link"}
           </button>
+
           {/* user login/logout */}
-          {status === "loading" ? (
+          {loading ? (
             <p>Loading...</p>
-          ) : session ? (
+          ) : user ? (
             <div ref={dropdownRef} className="flex items-center gap-2 relative">
               <Image
                 onClick={() => setShowModal(!showModal)}
-                src={session.user?.image || "/default-avatar.png"}
+                src={user.image || "/default-avatar.png"}
                 alt="user"
                 width={32}
                 height={32}
                 className="rounded-full cursor-pointer"
               />
-
               {showModal && (
-                <div className="absolute top-12 right-0 w-44 bg-white rounded-xl shadow-lg p-4 z-50 border border-gray-100">
-                  {/* Greeting */}
-                  <div className="mb-3">
-                    <p className="text-sm text-gray-500">Hello,</p>
-                    <p className="text-sm font-semibold text-gray-800 truncate">
-                      {session.user?.name || session.user?.email}
-                    </p>
-                  </div>
-
-                  {/* Links */}
-                  <div className="flex flex-col gap-2 mb-3">
-                    <Link
-                      href="/coursepanel"
-                      className="text-sm text-primary hover:bg-primary/10 rounded px-2 py-1 transition"
-                    >
+                <div className="absolute top-12 right-0 w-44 bg-white rounded-xl shadow-lg p-4 z-50 border border-gray-100 space-y-4">
+                  <p className="text-sm text-gray-500">Hello,</p>
+                  <p className="text-sm font-semibold text-gray-800 truncate">
+                    {user.name || user.email}
+                  </p>
+                  <div>
+                    <Link href={"/coursepanel"} className="text-primary">
                       My Courses
                     </Link>
                   </div>
-
-                  {/* Logout */}
                   <button
-                    onClick={() => signOut()}
-                    className="w-full text-sm bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition cursor-pointer"
+                    onClick={handleLogout}
+                    className="w-full text-sm mt-6 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition cursor-pointer text-center"
                   >
                     Logout
                   </button>
