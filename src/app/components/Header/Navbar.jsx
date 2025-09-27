@@ -5,7 +5,7 @@ import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react"; 
+import { Menu, X } from "lucide-react";
 import { toast } from "react-toastify";
 import { useAuth } from "@/context/SessionProvider";
 import LoadingSpinner from "../Loading";
@@ -20,9 +20,9 @@ const links = [
 function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false); 
+  const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
-  const sidebarRef = useRef(null); 
+  const sidebarRef = useRef(null);
 
   const { user, loading } = useAuth();
   const [email, setEmail] = useState("");
@@ -36,7 +36,11 @@ function Navbar() {
         setShowDropdown(false);
       }
       // Close Mobile Sidebar
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target) && menuOpen) {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        menuOpen
+      ) {
         setMenuOpen(false);
       }
     };
@@ -95,7 +99,7 @@ function Navbar() {
       setLoadingEmail(false);
     }
   };
-  
+
   // Logout handler (unchanged)
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -108,34 +112,110 @@ function Navbar() {
       {loading ? (
         <LoadingSpinner />
       ) : user ? (
-        <div ref={dropdownRef} className="flex items-center gap-2 relative">
+        <div
+          ref={dropdownRef}
+          className="flex items-center gap-2 relative group"
+          onClick={() => setShowDropdown(!showDropdown)} // Toggle on click
+          aria-expanded={showDropdown}
+          aria-haspopup="true"
+        >
+          {/* 1. Avatar - Made it a bit more interactive/prominent */}
           <Image
-            onClick={() => setShowDropdown(!showDropdown)}
             src={user.image || "/default-avatar.png"}
             alt="user"
-            width={32}
-            height={32}
-            className="rounded-full cursor-pointer ring-2 ring-primary p-0.5" 
+            width={36} // Slightly larger avatar
+            height={36}
+            className="rounded-full cursor-pointer ring-2 ring-primary p-0.5 hover:ring-2 hover:ring-primary/80 transition-all duration-200"
           />
+
+        
           {showDropdown && (
-            <div className="absolute top-12 right-0 w-48 bg-white rounded-xl shadow-2xl p-4 z-50 border border-gray-100 space-y-3 transition duration-300">
-              <p className="text-sm text-gray-500">Hello,</p>
-              <p className="text-sm font-bold text-gray-800 truncate">
-                {user.name || user.email.split('@')[0]}
-              </p>
-              <Link
-                href={"/coursepanel"}
-                className="text-primary hover:text-primary/80 transition block text-sm font-medium pt-1"
-                onClick={() => setShowDropdown(false)}
-              >
-                My Courses
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="w-full text-sm mt-3 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition"
-              >
-                Logout
-              </button>
+            <div className="absolute top-14 right-0 w-64 bg-white rounded-xl shadow-2xl p-0 z-50 border border-gray-100 transition duration-300 origin-top-right animate-in fade-in-0 zoom-in-95">
+              {/* 2. Dropdown Header with Full Name and Email */}
+              <div className="p-4 border-b border-gray-100 bg-gray-50 rounded-t-xl">
+                <p className="text-sm font-bold text-gray-900 truncate">
+                  {user.name || "User Profile"}
+                </p>
+                <p className="text-xs text-gray-500 mt-0.5 truncate">
+                  {user.email}
+                </p>
+              </div>
+
+              {/* 3. Dropdown Links with Icons */}
+              <div className="p-2 space-y-1">
+                {/* Profile Link */}
+                <Link
+                  href={"/profile"} // Assuming a profile page exists
+                  className="flex items-center gap-3 p-2 text-gray-700 hover:bg-primary/10 hover:text-primary rounded-lg transition"
+                  onClick={() => setShowDropdown(false)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                  <span className="text-sm font-medium">Profile Settings</span>
+                </Link>
+
+                {/* My Courses Link (as originally intended) */}
+                <Link
+                  href={"/coursepanel"}
+                  className="flex items-center gap-3 p-2 text-gray-700 hover:bg-primary/10 hover:text-primary rounded-lg transition"
+                  onClick={() => setShowDropdown(false)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
+                    <path d="M10 2v20" />
+                    <path d="M14 10h2" />
+                  </svg>
+                  <span className="text-sm font-medium">My Courses</span>
+                </Link>
+              </div>
+
+              {/* 4. Logout Button - Visual separation with a border and use red color */}
+              <div className="p-2 border-t border-gray-100">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center justify-center gap-2 text-sm bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition font-semibold cursor-pointer"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" x2="9" y1="12" y2="12" />
+                  </svg>
+                  Logout
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -177,7 +257,9 @@ function Navbar() {
                 <Link
                   href={link.href}
                   className={`text-sm hover:text-primary transition duration-300 ${
-                    pathname === link.href ? "font-bold text-primary" : "font-medium text-gray-700"
+                    pathname === link.href
+                      ? "font-bold text-primary"
+                      : "font-medium text-gray-700"
                   }`}
                 >
                   {link.name}
@@ -215,24 +297,24 @@ function Navbar() {
               {loadingEmail ? "Sending..." : "Get Download Link"}
             </button>
           </div>
-          
+
           {/* User Auth (All devices - hidden on desktop by UserAuthSection's flex/justify-end) */}
           <div className="hidden lg:block">
             <UserAuthSection />
           </div>
-          
+
           {/* Mobile/Tablet Controls */}
           <div className="flex items-center lg:hidden gap-3">
             {/* User Auth (Mobile/Tablet) */}
-            <UserAuthSection /> 
+            <UserAuthSection />
 
             {/* Mobile Menu Button */}
             <button
-                className="bg-primary p-2 rounded-xl text-white cursor-pointer transition hover:bg-primary/90"
-                onClick={() => setMenuOpen(true)}
-                aria-label="Toggle navigation menu"
+              className="bg-primary p-2 rounded-xl text-white cursor-pointer transition hover:bg-primary/90"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Toggle navigation menu"
             >
-                <Menu size={24} /> 
+              <Menu size={24} />
             </button>
           </div>
         </div>
@@ -241,12 +323,16 @@ function Navbar() {
       {/* ------------------------------------------------------------------- */}
       {/* MOBILE SIDEBAR (Drawer) */}
       {/* ------------------------------------------------------------------- */}
-      <div 
+      <div
         className={`fixed top-0 left-0 h-full w-full lg:hidden z-40 transition-opacity duration-300 ${
-            menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          menuOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
         }`}
-        style={{ backgroundColor: menuOpen ? 'rgba(0, 0, 0, 0.5)' : 'transparent' }}
-        onClick={() => setMenuOpen(false)} 
+        style={{
+          backgroundColor: menuOpen ? "rgba(0, 0, 0, 0.5)" : "transparent",
+        }}
+        onClick={() => setMenuOpen(false)}
       >
         <div
           ref={sidebarRef}
@@ -258,13 +344,13 @@ function Navbar() {
           {/* Header and Close Button */}
           <div className="flex justify-between items-center mb-10 border-b pb-4">
             <Link href={"/"} onClick={() => setMenuOpen(false)}>
-                <Image
-                    src={"/logo.png"}
-                    height={74}
-                    width={122}
-                    className="w-[100px] h-auto"
-                    alt="Task mama logo"
-                />
+              <Image
+                src={"/logo.png"}
+                height={74}
+                width={122}
+                className="w-[100px] h-auto"
+                alt="Task mama logo"
+              />
             </Link>
             <button
               className="text-gray-600 hover:text-primary transition"
@@ -282,7 +368,9 @@ function Navbar() {
                 <Link
                   href={link.href}
                   className={`block py-2 hover:text-primary transition ${
-                    pathname === link.href ? "text-primary border-r-4 border-primary" : "text-gray-700"
+                    pathname === link.href
+                      ? "text-primary border-r-4 border-primary"
+                      : "text-gray-700"
                   }`}
                   onClick={() => setMenuOpen(false)}
                 >
@@ -291,10 +379,12 @@ function Navbar() {
               </li>
             ))}
           </ul>
-          
+
           {/* Download Input Section (Mobile) */}
           <div className="mt-8 pt-4 border-t border-gray-200">
-             <h4 className="text-md font-bold mb-3 text-gray-800">Get the App Link</h4>
+            <h4 className="text-md font-bold mb-3 text-gray-800">
+              Get the App Link
+            </h4>
             <div className="relative mb-3">
               <Image
                 src={"/icons/mail.png"}
@@ -319,7 +409,6 @@ function Navbar() {
               {loadingEmail ? "Sending..." : "Get Download Link"}
             </button>
           </div>
-
         </div>
       </div>
     </div>

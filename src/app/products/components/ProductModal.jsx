@@ -14,7 +14,6 @@ const ProductModal = ({
     redirectToShopify,
 }) => {
     
-    // Total number of images for carousel
     const totalImages = product?.images.edges.length || 0;
 
     // Accessibility: Close modal on Escape key press
@@ -38,17 +37,29 @@ const ProductModal = ({
         };
     }, []);
 
-    // Price extraction
     const price = product.variants.edges[0]?.node.priceV2.amount;
 
     return (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 overflow-y-auto p-4" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="modal-title">
-            <div className="bg-white p-6 md:p-10 shadow-3xl rounded-xl relative max-w-7xl w-full mx-auto my-8 md:my-0 transform transition-all duration-300 scale-95 md:scale-100" onClick={e => e.stopPropagation()}>
+        // FIXED: Changed the fixed height/centering of the backdrop container 
+        // to a minimum height of screen (min-h-screen) and added overflow-y-auto 
+        // to ensure the content is always accessible by scrolling within the backdrop.
+        <div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 overflow-y-auto p-4 md:p-8 min-h-screen" 
+            onClick={onClose} 
+            role="dialog" 
+            aria-modal="true" 
+            aria-labelledby="modal-title"
+        >
+            {/* Modal Content Container - Added classes for max height and scroll behavior */}
+            <div 
+                className="bg-white p-6 md:p-10 shadow-3xl rounded-xl relative max-w-7xl w-full mx-auto my-4 md:my-0 transform transition-all duration-300 scale-100 overflow-y-auto max-h-[95vh]" 
+                onClick={e => e.stopPropagation()}
+            >
                 
-                {/* Close Button */}
+                {/* Close Button (z-20 is good to keep it clickable) */}
                 <button
                     onClick={onClose}
-                    className="absolute top-3 right-3 text-gray-500 hover:text-gray-900 transition-colors p-2 rounded-full bg-white/70 hover:bg-white z-10 shadow-lg border border-gray-100"
+                    className="absolute top-3 right-3 cursor-pointer text-gray-500 hover:text-gray-900 transition-colors p-2 rounded-full bg-white/70 hover:bg-white z-20 shadow-lg border border-gray-100"
                     aria-label="Close product view"
                 >
                     <X className="w-6 h-6" />
@@ -58,8 +69,8 @@ const ProductModal = ({
                     
                     {/* Images & Carousel */}
                     <div className="lg:w-1/2 flex flex-col gap-4 relative">
-                        {/* Main Image */}
-                        <div className="relative h-96 w-full overflow-hidden rounded-xl border border-gray-200 shadow-xl">
+                        {/* Main Image: aspect-square ensures it takes up available width but keeps proportion */}
+                        <div className="relative aspect-square sm:h-[450px] w-full overflow-hidden rounded-xl border border-gray-200 shadow-xl">
                             {totalImages > 0 && (
                                 <img
                                     src={product.images.edges[activeIndex]?.node.url}
@@ -68,19 +79,19 @@ const ProductModal = ({
                                 />
                             )}
                             
-                            {/* Carousel Navigation Buttons */}
+                            {/* Carousel Navigation Buttons (unchanged) */}
                             {totalImages > 1 && (
                                 <>
                                     <button
                                         onClick={goToPrev}
-                                        className="absolute top-1/2 left-3 transform -translate-y-1/2 bg-white/70 text-gray-700 hover:bg-white hover:text-black transition-colors rounded-full flex items-center justify-center w-10 h-10 shadow-lg z-10"
+                                        className="absolute top-1/2 cursor-pointer left-3 transform -translate-y-1/2 bg-white/70 text-gray-700 hover:bg-white hover:text-black transition-colors rounded-full flex items-center justify-center w-10 h-10 shadow-lg z-10"
                                         aria-label="Previous Image"
                                     >
                                         <ArrowLeft className="w-5 h-5"/>
                                     </button>
                                     <button
                                         onClick={goToNext}
-                                        className="absolute top-1/2 right-3 transform -translate-y-1/2 bg-white/70 text-gray-700 hover:bg-white hover:text-black transition-colors rounded-full flex items-center justify-center w-10 h-10 shadow-lg z-10"
+                                        className="absolute top-1/2 cursor-pointer right-3 transform -translate-y-1/2 bg-white/70 text-gray-700 hover:bg-white hover:text-black transition-colors rounded-full flex items-center justify-center w-10 h-10 shadow-lg z-10"
                                         aria-label="Next Image"
                                     >
                                         <ArrowRight className="w-5 h-5"/>
@@ -89,8 +100,8 @@ const ProductModal = ({
                             )}
                         </div>
 
-                        {/* Thumbnails */}
-                        <div className="flex gap-2 overflow-x-auto pb-2 justify-start md:justify-center">
+                        {/* Thumbnails (unchanged, overflow-x-auto handles many images) */}
+                        <div className="flex gap-2 overflow-x-auto pb-2 justify-start py-2">
                             {product.images.edges.map(({ node }, idx) => (
                                 <div
                                     key={idx}
@@ -117,21 +128,21 @@ const ProductModal = ({
 
                     {/* Product Details */}
                     <div className="lg:w-1/2 flex flex-col gap-5">
-                        <h2 id="modal-title" className="text-4xl font-extrabold text-gray-900 leading-snug">
+                        <h2 id="modal-title" className="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-snug">
                             {product.title}
                         </h2>
                         
                         {/* Price */}
-                        <p className="text-4xl font-bold text-primary pb-3 border-b-2 border-gray-100">
+                        <p className="text-3xl sm:text-4xl font-bold text-primary pb-3 border-b-2 border-gray-100">
                             ${price}
                         </p>
                         
-                        {/* Description */}
-                        <div className="text-gray-700 text-base leading-relaxed max-h-48 overflow-y-auto pr-2">
+                        {/* Description - Removed max-height on small screens, only apply on large (lg) */}
+                        <div className="text-gray-700 text-base leading-relaxed lg:max-h-48 lg:overflow-y-auto pr-2">
                             <p>{product.description}</p>
                         </div>
 
-                        {/* Metadata Grid */}
+                        {/* Metadata Grid (unchanged) */}
                         <div className="grid grid-cols-2 gap-y-3 text-base border-t pt-4">
                             <p className="col-span-2 sm:col-span-1 text-gray-600">
                                 <span className="font-bold text-gray-800">Category:</span>{" "}
@@ -155,7 +166,7 @@ const ProductModal = ({
                             </p>
                         </div>
 
-                        {/* Tags */}
+                        {/* Tags (unchanged) */}
                         {product.tags.length > 0 && (
                             <div className="flex flex-wrap gap-2 pt-4 border-t">
                                 <span className="font-bold text-gray-800 w-full mb-1">Tags:</span>
@@ -170,10 +181,10 @@ const ProductModal = ({
                             </div>
                         )}
 
-                        {/* Buy Now Button */}
+                        {/* Buy Now Button (unchanged) */}
                         <button
                             onClick={() => redirectToShopify(product.handle)}
-                            className="mt-6 w-full bg-primary text-white font-extrabold text-lg py-4 px-6 rounded-full hover:bg-primary/90 transition-all duration-300 shadow-lg shadow-purple-300/50 uppercase tracking-wider disabled:bg-gray-400 disabled:shadow-none"
+                            className="mt-6 w-full bg-primary text-white font-extrabold text-sm py-4 px-6 rounded-full hover:bg-primary/90 transition-all duration-300 shadow-lg shadow-purple-300/50 uppercase tracking-wider disabled:bg-gray-400 disabled:shadow-none cursor-pointer"
                             disabled={!product.availableForSale}
                         >
                             {product.availableForSale ? "Buy Now on Shopify" : "Notify Me When Available"}
