@@ -88,7 +88,7 @@ export default function CourseSectionDemo() {
   async function handleGoogleLogin() {
     try {
       const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID; // make sure NEXT_PUBLIC
-      const redirectUri = `${process.env.NEXTAUTH_URL}/api/auth/callback/google`;
+      const redirectUri = `https://taskmama-landing-page.vercel.app/api/auth/callback/google`;
       const scope = encodeURIComponent("email profile openid");
       const responseType = "code";
       const googleUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;

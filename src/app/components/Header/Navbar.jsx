@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { TextAlignJustifyIcon, X } from "lucide-react";
 import { toast } from "react-toastify";
 import { useAuth } from "@/context/SessionProvider";
+import LoadingSpinner from "../Loading";
 
 const links = [
   { name: "Home", href: "/" },
@@ -155,7 +156,7 @@ function Navbar() {
 
           {/* user login/logout */}
           {loading ? (
-            <p>Loading...</p>
+            <LoadingSpinner />
           ) : user ? (
             <div ref={dropdownRef} className="flex items-center gap-2 relative">
               <Image

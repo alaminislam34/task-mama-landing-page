@@ -1,18 +1,25 @@
+// /app/api/auth/callback/google/route.js
 import { NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
 import jwt from "jsonwebtoken";
 
+/**
+ * Google OAuth Callback Route
+ * Exchanges authorization code for access token,
+ * fetches user profile, upserts user in MongoDB,
+ * and returns a JWT cookie for authentication.
+ */
 export async function GET(req) {
   try {
     const url = new URL(req.url);
     const code = url.searchParams.get("code");
 
     if (!code) {
-      return NextResponse.json({ error: "No code found" }, { status: 400 });
+      return NextResponse.json({ error: "No authorization code provided." }, { status: 400 });
     }
 
-    // 🔹 Token Exchange
-    const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+    // 🔹 Exchange authorization code for access token
+    const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
@@ -24,24 +31,37 @@ export async function GET(req) {
       }),
     });
 
-    const tokenData = await tokenRes.json();
+    const tokenData = await tokenResponse.json();
+
     if (tokenData.error) {
-      return NextResponse.json({ error: tokenData }, { status: 500 });
+      console.error("Google Token Error:", tokenData);
+      return NextResponse.json(
+        { error: tokenData.error_description || tokenData.error },
+        { status: 500 }
+      );
     }
 
-    // 🔹 Fetch User Info
-    const userRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+    // 🔹 Fetch user's Google profile
+    const profileResponse = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
       headers: { Authorization: `Bearer ${tokenData.access_token}` },
     });
 
-    const profile = await userRes.json();
+    const profile = await profileResponse.json();
 
-     // 🔹 Connect MongoDB
-    const client = await MongoClient.connect(process.env.MONGO_URI);
+    if (!profile.email) {
+      return NextResponse.json({ error: "Failed to fetch user profile from Google." }, { status: 500 });
+    }
+
+    // 🔹 Connect to MongoDB
+    const client = await MongoClient.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
     const db = client.db("TaskMamaDB");
     const usersCol = db.collection("users");
 
-    // 🔹 Upsert user
+    // 🔹 Upsert user data (create if not exists)
     const filter = { email: profile.email };
     const update = {
       $set: {
@@ -55,32 +75,42 @@ export async function GET(req) {
         hasPaid: false,
       },
     };
+
     await usersCol.updateOne(filter, update, { upsert: true });
 
-    // 🔹 Create JWT
+    // 🔹 Fetch the user document after upsert
+    const user = await usersCol.findOne(filter);
+
+    // 🔹 Generate JWT for authentication
     const jwtToken = jwt.sign(
       {
-        email: profile.email,
-        name: profile.name,
-        image: profile.picture,
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        image: user.image,
+        hasPaid: user.hasPaid,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "7d" } // JWT expiration
     );
 
-    // 🔹 Redirect to home with cookie
+    // 🔹 Set JWT as HttpOnly cookie and redirect to home
     const response = NextResponse.redirect(new URL("/", req.url));
     response.cookies.set("token", jwtToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 604800,
+      httpOnly: true, // cannot be accessed by JS
+      secure: process.env.NODE_ENV === "production", // only HTTPS in production
+      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
       path: "/",
+      sameSite: "lax", // CSRF protection
     });
+
+    // Close MongoDB connection
+    await client.close();
 
     return response;
 
   } catch (err) {
-    console.error("❌ Callback Error:", err);
-    return NextResponse.json({ error: err.message || "Server Error" }, { status: 500 });
+    console.error("❌ Google OAuth Callback Error:", err);
+    return NextResponse.json({ error: err.message || "Internal Server Error" }, { status: 500 });
   }
 }
