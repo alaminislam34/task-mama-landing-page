@@ -3,16 +3,107 @@
 
 import { useAuth } from "@/context/SessionProvider";
 import { useEffect, useState } from "react";
-import { FaBookOpen, FaUserCircle, FaSignOutAlt } from "react-icons/fa"; 
+import { FaBookOpen, FaUserCircle, FaSignOutAlt, FaTimes } from "react-icons/fa"; // Added FaTimes for modal close
 import CoursePanelSkeleton from "./components/CoursePanelSkeleton";
 import CourseCard from "./components/CourseCard";
-// import CourseCard from "./CourseCard"; 
-// import CoursePanelSkeleton from "./CoursePanelSkeleton"; 
 
+// ------------------------------------------------
+// UTILITY: Convert standard YouTube URL to embed URL
+// This is needed by the modal to correctly embed the video
+// ------------------------------------------------
+const getEmbedUrl = (url) => {
+  try {
+    // Regex to find the video ID from various YouTube URL formats
+    const videoIdMatch = url.match(
+      /(?:\/embed\/|watch\?v=|youtu\.be\/|\/v\/|\/e\/|embed\/|v=|vi=|\/v%3D|e%3D|\.be\/)([^"&?\/ ]{11})/i
+    );
+    const videoId = videoIdMatch ? videoIdMatch[1] : null;
+
+    if (!videoId) return null;
+
+    // Added &autoplay=1 to start the video automatically when the modal opens
+    return `https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&autoplay=1`;
+  } catch (e) {
+    return null;
+  }
+};
+
+// ------------------------------------------------
+// NEW COMPONENT: Video Modal
+// ------------------------------------------------
+const VideoModal = ({ course, onClose }) => {
+    const embedUrl = getEmbedUrl(course.youtubeLink);
+
+    if (!embedUrl) return null;
+
+    // Logic to close modal on ESC key press
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') onClose();
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [onClose]);
+
+    // Prevent body scroll when modal is open
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
+
+    return (
+        // Modal Backdrop
+        <div 
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex justify-center items-center p-4 transition-opacity duration-300" 
+            onClick={onClose}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="video-modal-title"
+        >
+            {/* Modal Content */}
+            <div 
+                className="bg-white rounded-xl shadow-2xl relative w-full max-w-4xl transform transition-transform duration-300 scale-95" 
+                onClick={(e) => e.stopPropagation()} // Stop click from closing modal
+            >
+                {/* Close Button */}
+                <button
+                    onClick={onClose}
+                    className="absolute -top-3 -right-3 p-3 bg-red-600 text-white rounded-full shadow-lg hover:bg-red-700 transition z-10"
+                    aria-label="Close video player"
+                >
+                    <FaTimes className="w-5 h-5"/>
+                </button>
+
+                {/* Video Title */}
+                <h3 id="video-modal-title" className="text-xl font-bold text-gray-800 p-4 border-b">
+                    Currently Watching: {course.title}
+                </h3>
+
+                {/* Video Player */}
+                <div className="aspect-video w-full">
+                    <iframe
+                        className="w-full h-full rounded-b-xl"
+                        src={embedUrl}
+                        title={`Course Video: ${course.title}`}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        loading="eager"
+                    />
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
+// ------------------------------------------------
+// MAIN COMPONENT: CoursesPanel
+// ------------------------------------------------
 const handleLogout = async () => {
-  // Assuming useAuth provides a clean logout method
   await fetch("/api/auth/logout", { method: "POST" });
-  window.location.href = "/signin"; // Redirect after logout
+  window.location.href = "/signin";
 };
 
 export default function CoursesPanel() {
@@ -21,14 +112,15 @@ export default function CoursesPanel() {
   const [loadingCourses, setLoadingCourses] = useState(true);
   const [errorFetching, setErrorFetching] = useState(null);
 
+  // NEW STATE: To hold the course object for the modal
+  const [courseToPlay, setCourseToPlay] = useState(null); 
+
   useEffect(() => {
-    // 1. Handle Redirect
     if (!loadingAuth && !user) {
       window.location.href = "/signin"; 
       return;
     }
 
-    // 2. Fetch Courses
     if (user?.email) {
       const fetchCourses = async () => {
         setLoadingCourses(true);
@@ -39,7 +131,6 @@ export default function CoursesPanel() {
             throw new Error(`Failed to fetch courses (Status: ${res.status})`);
           }
           const data = await res.json();
-          // Assume data structure is { purchasedCourses: [...] }
           setPurchasedCourses(data.purchasedCourses || []);
         } catch (err) {
           console.error("Failed to fetch courses:", err);
@@ -101,7 +192,6 @@ export default function CoursesPanel() {
 
       {/* Course List / Empty State */}
       {purchasedCourses.length === 0 ? (
-        // --- EMPTY STATE ---
         <div className="text-center p-12 bg-gray-50 rounded-2xl shadow-inner border border-dashed border-gray-300">
           <p className="text-2xl text-gray-600 font-bold mb-4">
             No Active Courses Found 📚
@@ -116,12 +206,24 @@ export default function CoursesPanel() {
           </a>
         </div>
       ) : (
-        // --- COURSE GRID ---
+        // --- COURSE GRID: Passes the setCourseToPlay function ---
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {purchasedCourses.map((course) => (
-            <CourseCard key={course.id} course={course} />
+            <CourseCard 
+                key={course.id} 
+                course={course} 
+                onPlayCourse={setCourseToPlay} // NEW PROP
+            />
           ))}
         </div>
+      )}
+
+      {/* ------------------ VIDEO MODAL ------------------ */}
+      {courseToPlay && (
+        <VideoModal 
+            course={courseToPlay} 
+            onClose={() => setCourseToPlay(null)} 
+        />
       )}
     </div>
   );
