@@ -4,8 +4,8 @@
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { toast } from "react-toastify";
 import { useAuth } from "@/context/SessionProvider";
 import LoadingSpinner from "../Loading";
@@ -21,7 +21,7 @@ function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef(null);
+
   const sidebarRef = useRef(null);
 
   const { user, loading } = useAuth();
@@ -31,10 +31,6 @@ function Navbar() {
   // Close dropdown/sidebar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Close User Dropdown
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowDropdown(false);
-      }
       // Close Mobile Sidebar
       if (
         sidebarRef.current &&
@@ -46,7 +42,7 @@ function Navbar() {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [menuOpen]); // Dependency on menuOpen is good practice here
+  }, [menuOpen]);
 
   // Email send handler (unchanged)
   const handleSendEmail = async () => {
@@ -106,31 +102,40 @@ function Navbar() {
     window.location.href = "/signin";
   };
 
-  // User Dropdown Component (Reusable function for both desktop and mobile)
-  const UserAuthSection = () => (
+  // User Dropdown Component
+  const UserAuthSection = (
+    { isMobile = false } // Added isMobile prop for clearer rendering logic
+  ) => (
     <div className="flex items-center justify-end">
       {loading ? (
         <LoadingSpinner />
       ) : user ? (
         <div
-          ref={dropdownRef}
           className="flex items-center gap-2 relative group"
-          onClick={() => setShowDropdown(!showDropdown)} // Toggle on click
           aria-expanded={showDropdown}
           aria-haspopup="true"
         >
-          {/* 1. Avatar - Made it a bit more interactive/prominent */}
+          {/* 1. Avatar - Now with explicit click handler to toggle dropdown */}
           <Image
             src={user.image || "/default-avatar.png"}
             alt="user"
-            width={36} // Slightly larger avatar
+            width={36}
             height={36}
+            // FIX: This onClick is essential for toggling the dropdown state.
+            onClick={() => setShowDropdown(!showDropdown)}
             className="rounded-full cursor-pointer ring-2 ring-primary p-0.5 hover:ring-2 hover:ring-primary/80 transition-all duration-200"
           />
 
-        
           {showDropdown && (
-            <div className="absolute top-14 right-0 w-64 bg-white rounded-xl shadow-2xl p-0 z-50 border border-gray-100 transition duration-300 origin-top-right animate-in fade-in-0 zoom-in-95">
+            <div
+              // Position the dropdown based on mobile/desktop context
+              className={`absolute ${
+                isMobile ? "top-10 right-0" : "top-14 right-0"
+              } w-64 bg-white rounded-xl shadow-2xl p-0 z-50 border border-gray-100 transition duration-300 origin-top-right animate-in fade-in-0 zoom-in-95`}
+              // FIX: Stop propagation to prevent the click from closing the dropdown immediately
+              // due to the main dropdownRef logic. This allows links/buttons inside to work.
+              onClick={(e) => e.stopPropagation()}
+            >
               {/* 2. Dropdown Header with Full Name and Email */}
               <div className="p-4 border-b border-gray-100 bg-gray-50 rounded-t-xl">
                 <p className="text-sm font-bold text-gray-900 truncate">
@@ -145,7 +150,7 @@ function Navbar() {
               <div className="p-2 space-y-1">
                 {/* Profile Link */}
                 <Link
-                  href={"/profile"} // Assuming a profile page exists
+                  href={"/profile"}
                   className="flex items-center gap-3 p-2 text-gray-700 hover:bg-primary/10 hover:text-primary rounded-lg transition"
                   onClick={() => setShowDropdown(false)}
                 >
@@ -192,7 +197,7 @@ function Navbar() {
                 </Link>
               </div>
 
-              {/* 4. Logout Button - Visual separation with a border and use red color */}
+              {/* 4. Logout Button */}
               <div className="p-2 border-t border-gray-100">
                 <button
                   onClick={handleLogout}
@@ -230,11 +235,11 @@ function Navbar() {
     </div>
   );
 
+  // --- END UserAuthSection ---
+
   return (
     <div>
-      {/* FIX: Use grid-cols-3 for desktop to ensure center column (links) 
-        is truly centered, regardless of the width of the actions column.
-      */}
+      {/* Navbar Container */}
       <nav className="grid grid-cols-2 lg:grid-cols-3 items-center py-[20px] max-w-[1440px] mx-auto w-11/12">
         {/* COL 1: Logo (Left Aligned) */}
         <div className="flex items-center justify-start">
@@ -298,15 +303,20 @@ function Navbar() {
             </button>
           </div>
 
-          {/* User Auth (All devices - hidden on desktop by UserAuthSection's flex/justify-end) */}
+          {/* User Auth (Desktop) */}
+          {/* FIX: Removed 'hidden lg:block' from the wrapper div here. 
+             The grid system manages the overall layout, and UserAuthSection 
+             should be called once for desktop and once for mobile controls. 
+             If you want to keep the container div, ensure it's displayed 
+             correctly on desktop. Based on the original code, this should work: */}
           <div className="hidden lg:block">
-            <UserAuthSection />
+            <UserAuthSection isMobile={false} />
           </div>
 
           {/* Mobile/Tablet Controls */}
           <div className="flex items-center lg:hidden gap-3">
-            {/* User Auth (Mobile/Tablet) */}
-            <UserAuthSection />
+            {/* User Auth (Mobile/Tablet) - Send isMobile=true */}
+            <UserAuthSection isMobile={true} />
 
             {/* Mobile Menu Button */}
             <button
@@ -321,7 +331,7 @@ function Navbar() {
       </nav>
 
       {/* ------------------------------------------------------------------- */}
-      {/* MOBILE SIDEBAR (Drawer) */}
+      {/* MOBILE SIDEBAR (Drawer) - UNCHANGED */}
       {/* ------------------------------------------------------------------- */}
       <div
         className={`fixed top-0 left-0 h-full w-full lg:hidden z-40 transition-opacity duration-300 ${

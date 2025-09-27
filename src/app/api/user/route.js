@@ -19,15 +19,23 @@ export async function GET(req) {
     const usersCol = db.collection("users");
 
     // 🔹 Fetch user from DB
-    const user = await usersCol.findOne({ email: decoded.email });
+    // Assuming the user document contains fields like name, email, image, phone, bio, memberSince, coursesEnrolled
+    const user = await usersCol.findOne({ email: decoded.email }, { 
+        projection: { password: 0 } // Exclude sensitive fields like password
+    });
+
+    // Close connection
+    await client.close();
 
     if (!user) {
       return NextResponse.json({ error: "User not found in DB" }, { status: 404 });
     }
 
-    // 🔹 Return fresh user data
+    // 🔹 Return fresh user data (HTTP 200 OK implied)
     return NextResponse.json({ user });
   } catch (err) {
-    return NextResponse.json({ error: err.message || "Invalid token" }, { status: 401 });
+    // This catches JWT errors (like expiration) or general server errors
+    console.error("API Error:", err);
+    return NextResponse.json({ error: "Authentication failed or server error" }, { status: 401 });
   }
 }

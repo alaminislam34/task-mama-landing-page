@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Mail, Phone, Calendar, BookOpen, User, Edit, Loader2 } from 'lucide-react';
 import { toast } from 'react-toastify';
-import LoadingSpinner from '../Loading'; // Assuming you have a standard LoadingSpinner component
+import LoadingSpinner from '../components/Loading';
 
 // Mock data structure for type hinting and initial state
 const initialUserData = {
@@ -21,31 +21,48 @@ function ProfilePage() {
   const [userData, setUserData] = useState(initialUserData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Custom utility function to format dates
+  const formatDate = (date) => {
+    if (!date) return 'N/A';
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
+      let data = {};
       try {
         const res = await fetch('/api/user');
-        const data = await res.json();
+        data = await res.json();
 
-        if (res.ok && data.success) {
-          // Destructure and set data, using defaults for safety
-          setUserData({
-            name: data.user.name || 'User Profile',
-            email: data.user.email || 'N/A',
-            image: data.user.image || '/default-avatar.png',
-            phone: data.user.phone || 'N/A',
-            bio: data.user.bio || 'No bio provided.',
-            memberSince: data.user.memberSince ? new Date(data.user.memberSince) : null,
-            coursesEnrolled: data.user.coursesEnrolled || 0,
-          });
+        // 🟢 FIX: Only check for res.ok (HTTP status 200-299)
+        if (res.ok) {
+          // Ensure data.user exists before setting state
+          if (data.user) {
+            // Destructure and set data, using defaults for safety
+            setUserData({
+              name: data.user.name || 'User Profile',
+              email: data.user.email || 'N/A',
+              image: data.user.image || '/default-avatar.png',
+              phone: data.user.phone || 'N/A',
+              bio: data.user.bio || 'No bio provided.',
+              memberSince: data.user.memberSince ? new Date(data.user.memberSince) : null,
+              coursesEnrolled: data.user.coursesEnrolled || 0,
+            });
+          } else {
+            // Handle case where res.ok but user object is missing (unlikely based on API code)
+            setError('Received successful response but user data is missing.');
+            toast.error('Could not load profile data: user object missing.');
+          }
         } else {
-          setError(data.error || 'Failed to fetch user data.');
+          // Handle API errors (401, 404, etc.)
+          setError(data.error || 'Failed to fetch user data. Please log in again.');
           toast.error(data.error || 'Could not load profile data.');
+          // Optional: Redirect to login if a specific error (e.g., 'Invalid token') is received
         }
       } catch (err) {
         console.error('Fetch user error:', err);
-        setError('Network error or server issue.');
+        setError('Network error or server issue. Check console.');
         toast.error('Network error. Check console.');
       } finally {
         setLoading(false);
@@ -108,8 +125,10 @@ function ProfilePage() {
                 <Image
                   src={userData.image}
                   alt={`${userData.name}'s avatar`}
-                  layout="fill"
-                  objectFit="cover"
+                  // Using inline style for Next.js Image component in this context is safer
+                  style={{ borderRadius: '9999px', objectFit: 'cover' }} 
+                  width={128}
+                  height={128}
                   className="rounded-full ring-4 ring-primary p-1 shadow-lg"
                 />
               </div>
@@ -132,7 +151,7 @@ function ProfilePage() {
                     Member Since:
                   </span>
                   <span className="text-sm font-semibold text-gray-800">
-                    {userData.memberSince ? userData.memberSince.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}
+                    {formatDate(userData.memberSince)}
                   </span>
                 </div>
               </div>
@@ -179,10 +198,10 @@ function ProfilePage() {
               <div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-4 border-b pb-2">Account Actions</h3>
                 <div className="flex flex-wrap gap-4">
-                  <button className="px-5 py-2 text-sm font-medium text-primary border border-primary rounded-full hover:bg-primary hover:text-white transition">
+                  <button onClick={() => toast.info('Password change coming soon!')} className="px-5 py-2 text-sm font-medium text-primary border border-primary rounded-full hover:bg-primary hover:text-white transition">
                     Change Password
                   </button>
-                  <button className="px-5 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-full hover:bg-gray-100 transition">
+                  <button onClick={() => toast.info('Notification management coming soon!')} className="px-5 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-full hover:bg-gray-100 transition">
                     Manage Notifications
                   </button>
                 </div>
