@@ -207,7 +207,7 @@ export default function CoursesPanel() {
         </div>
       ) : (
         // --- COURSE GRID: Passes the setCourseToPlay function ---
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 py-8 md:py-12">
           {purchasedCourses.map((course) => (
             <CourseCard 
                 key={course.id} 

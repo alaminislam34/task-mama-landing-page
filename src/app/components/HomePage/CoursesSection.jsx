@@ -101,16 +101,16 @@ export default function CourseSectionDemo() {
 
   return (
     <section className="py-12">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-[1440px] w-11/12 mx-auto py-6">
         <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-center mb-6">
           Our Courses
         </h2>
 
-        <div className="grid md:grid-cols-2 gap-10 justify-items-center py-6">
+        <div className="flex flex-col md:flex-row items-center gap-6 py-6">
           {courses.map((course) => (
             <div
               key={course.id}
-              className="w-full max-w-md bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 flex flex-col justify-between"
+              className="w-full max-w-md bg-white rounded-3xl shadow-lg hover:shadow-2xl border border-gray-100 transition-all duration-300 p-6 flex flex-col justify-between"
             >
               <Image
                 width={400}
