@@ -64,7 +64,7 @@ export default function SuccessPage() {
         {/* Call to Action Button */}
         <a
           href="/coursepanel"
-          className={`inline-flex items-center justify-center w-full px-8 py-3 text-lg font-semibold text-white transition duration-300 rounded-full shadow-lg transform hover:scale-[1.02] ${BUTTON_COLOR} focus:outline-none focus:ring-4 focus:ring-primary focus:ring-opacity-50`}
+          className={`inline-flex items-center justify-center w-full px-8 py-3 text-lg font-semibold text-black transition duration-300 rounded-full shadow-lg transform hover:scale-[1.02] ${BUTTON_COLOR} focus:outline-none focus:ring-4 focus:ring-primary focus:ring-opacity-50`}
         >
           Go to My Courses
           <svg
