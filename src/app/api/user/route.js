@@ -7,11 +7,28 @@ export async function GET(req) {
     const token = req.cookies.get("token")?.value;
 
     if (!token) {
-      return NextResponse.json({ error: "Not logged in" }, { status: 401 });
+      return NextResponse.json(
+        { error: "Not logged in" },
+        { status: 401 }
+      );
     }
 
-    // 🔹 JWT verify
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      // 🔹 JWT verify
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      if (err.name === "TokenExpiredError") {
+        return NextResponse.json(
+          { error: "Session expired. Please login again." },
+          { status: 401 }
+        );
+      }
+      return NextResponse.json(
+        { error: "Invalid token" },
+        { status: 401 }
+      );
+    }
 
     // 🔹 Connect MongoDB
     const client = await MongoClient.connect(process.env.MONGO_URI);
@@ -19,23 +36,28 @@ export async function GET(req) {
     const usersCol = db.collection("users");
 
     // 🔹 Fetch user from DB
-    // Assuming the user document contains fields like name, email, image, phone, bio, memberSince, coursesEnrolled
-    const user = await usersCol.findOne({ email: decoded.email }, { 
-        projection: { password: 0 } // Exclude sensitive fields like password
-    });
+    const user = await usersCol.findOne(
+      { email: decoded.email },
+      { projection: { password: 0 } } // Exclude sensitive fields
+    );
 
     // Close connection
     await client.close();
 
     if (!user) {
-      return NextResponse.json({ error: "User not found in DB" }, { status: 404 });
+      return NextResponse.json(
+        { error: "User not found in DB" },
+        { status: 404 }
+      );
     }
 
-    // 🔹 Return fresh user data (HTTP 200 OK implied)
+    // 🔹 Return fresh user data
     return NextResponse.json({ user });
   } catch (err) {
-    // This catches JWT errors (like expiration) or general server errors
     console.error("API Error:", err);
-    return NextResponse.json({ error: "Authentication failed or server error" }, { status: 401 });
+    return NextResponse.json(
+      { error: "Server error. Please try again later." },
+      { status: 500 }
+    );
   }
 }
