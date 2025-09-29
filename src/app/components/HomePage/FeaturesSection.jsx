@@ -5,7 +5,7 @@ import React from "react";
 const cards = [
   {
     path: "/icons/calender.png",
-    title: "All-in-one for Mompreneurs",
+    title: "All-in-one for Mom",
     des: "Family calendar , chores, meal planning, AND business tools like CRM and invoices - no more app juggling",
   },
   {
