@@ -5,13 +5,13 @@ import React from "react";
 const cards = [
   {
     path: "/icons/calender.png",
-    title: "All-in-one for Mom",
-    des: "Family calendar , chores, meal planning, AND business tools like CRM and invoices - no more app juggling",
+    title: "The Only App Moms Need",
+    des: "Seamlessly manage family calendars, chores, meal planning - plus business tools like CRM and invoices - all in one place. No more app juggling.",
   },
   {
     path: "/icons/light.png",
-    title: "AI Daily Balance",
-    des: "AI builds realistic days across school runs, client calls, and self-care.",
+    title: "Al Daily Balance",
+    des: "Let Al plan your day - school runs, work calls, and self-care included - so you can finally breathe.",
   },
   {
     path: "/icons/user.png",
@@ -36,7 +36,7 @@ function FeaturesSection() {
           {cards.map((card) => (
             <div
               key={card.path}
-            className="lg:min-w-[420px] lg:min-h-[302px] w-[350px] h-[280px] rounded-2xl shadow-[0px_40px_40px_0px_#00000030] py-6 px-[42px] flex flex-col justify-center bg-white mx-auto duration-300 hover:-translate-y-2"
+              className="lg:min-w-[420px] lg:min-h-[302px] w-[350px] h-[280px] rounded-2xl shadow-[0px_40px_40px_0px_#00000030] py-6 px-[42px] flex flex-col justify-center bg-white mx-auto duration-300 hover:-translate-y-2"
             >
               <Image
                 src={card.path}
