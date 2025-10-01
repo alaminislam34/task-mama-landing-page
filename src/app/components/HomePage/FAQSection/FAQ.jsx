@@ -15,7 +15,7 @@ const AccordionItem = ({ title, content, isOpen, onClick }) => {
         </span>
         <ChevronRight
           className={`w-5 h-5 transition-transform duration-300 ${
-            isOpen ? "rotate-90" : ""
+            isOpen ? "-rotate-90" : "rotate-90"
           }`}
         />
       </button>
