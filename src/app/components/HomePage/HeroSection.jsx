@@ -25,14 +25,14 @@ function HeroSection() {
 
       {/* heading */}
       <h1 className="text-[30px] md:text-4xl lg:text-[56px] font-bold font-lato mx-auto text-center lg:w-7/12 mb-7 leading-normal">
-        Less chaos. More breathing room Meet{" "}
-        <span className="text-primary">TaskMama</span>.
+        Less chaos. More breathing room. Meet{" "}
+        <span className="text-primary">TaskMama.</span>
       </h1>
 
       {/* sub title */}
       <p className="font-roboto text-center mb-10 text-lg lg:text-2xl text-[#4A4A4A]">
         Plan your day across roles with AI suggestions, shared family calendars,
-        and simple business tools
+        and simple business tools.
       </p>
       <div className="flex items-center justify-center">
         <div>
