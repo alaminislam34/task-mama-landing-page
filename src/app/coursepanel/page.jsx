@@ -147,7 +147,7 @@ export default function CoursesPanel() {
               the perfect course to kickstart your growth.
             </p>
             <a
-              href="/courses"
+              href="/"
               className="inline-block px-10 py-4 bg-primary text-white font-extrabold text-lg rounded-full shadow-xl hover:bg-primary transition transform hover:scale-105 hover:shadow-2xl"
             >
               Explore All Courses
