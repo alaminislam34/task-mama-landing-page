@@ -33,11 +33,11 @@ export async function POST(req) {
       const courses = {
         course1: {
           title: "Mom CEO Mode",
-          youtubeLink: 'https://youtu.be/qtw_FTnodvY',
+          youtubeLink: process.env.COURSE1_YOUTUBE,
         },
         course2: {
           title: "Time Mastery for Working Moms",
-          youtubeLink: 'https://youtu.be/G_dlMxuG5iI',
+          youtubeLink: process.env.COURSE2_YOUTUBE,
         },
       };
 
