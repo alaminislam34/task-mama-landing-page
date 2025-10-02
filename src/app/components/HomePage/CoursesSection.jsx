@@ -84,20 +84,28 @@ export default function CourseSectionDemo() {
     }
   };
 
-  // Google Login
-  async function handleGoogleLogin() {
+  const handleGoogleLogin = async () => {
     try {
-      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID; // make sure NEXT_PUBLIC
-      const redirectUri = `https://taskmama-landing-page.vercel.app/api/auth/callback/google`;
-      const scope = encodeURIComponent("email profile openid");
-      const responseType = "code";
-      const googleUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
+      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
-      window.location.href = googleUrl; // redirect to Google
-    } catch (err) {
-      console.error("Google login error:", err);
+      if (!clientId || !appUrl) {
+        console.error("Google Login environment variables missing!");
+        toast.error("Google login is not configured properly.");
+        return;
+      }
+
+      const redirectUri = `${appUrl}/api/auth/callback/google`;
+      const scope = encodeURIComponent("email profile openid");
+      const googleUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
+
+      // Redirect to Google OAuth
+      window.location.href = googleUrl;
+    } catch (error) {
+      console.error("Google login error:", error);
+      toast.error("Failed to initiate Google login. Please try again.");
     }
-  }
+  };
 
   return (
     <section className="py-12">

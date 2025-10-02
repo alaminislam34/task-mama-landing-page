@@ -1,75 +1,38 @@
-// /app/success/page.js
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { FaCheckCircle, FaSpinner } from "react-icons/fa"; // Import icons
-
-// Define the colors for the component
-const SUCCESS_COLOR = "text-green-500";
-const BUTTON_COLOR = "bg-primary/20 border border-primary hover:bg-primary hover:text-white";
-
 export default function SuccessPage() {
-  const searchParams = useSearchParams();
-  const sessionId = searchParams.get("session_id");
-
-  // State to manage the visual status
-  const [status, setStatus] = useState("Processing Payment...");
-  const [icon, setIcon] = useState(<FaSpinner className="animate-spin" />);
-  const [isSuccess, setIsSuccess] = useState(false);
-
-  useEffect(() => {
-    // In a real application, you would send the sessionId to your backend
-    // here to finalize the order and verify the payment status (e.g., Stripe API).
-
-    // For this example, we assume success if a sessionId is present.
-    if (sessionId) {
-      // Simulate a small processing delay for a more realistic feel
-      const timer = setTimeout(() => {
-        setStatus("Payment Successful!");
-        setIcon(<FaCheckCircle />);
-        setIsSuccess(true);
-      }, 1000);
-
-      return () => clearTimeout(timer); // Cleanup the timer
-    } else {
-      // Handle missing sessionId, which might indicate an error or direct access
-      setStatus("Verification Pending. Please check your email.");
-      setIcon(<FaSpinner className="animate-spin" />);
-    }
-  }, [sessionId]);
-
   return (
-    <div className="min-h-[70VH] flex items-center justify-center p-4">
+    <div className="min-h-[70vh] flex items-center justify-center p-4 bg-gray-50">
       <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full p-10 text-center border-t-8 border-primary">
-        {/* Icon Area */}
-        <div
-          className={`mx-auto mb-6 ${
-            isSuccess ? SUCCESS_COLOR : "text-gray-400"
-          }`}
-        >
-          <div className="text-6xl inline-block p-2">{icon}</div>
+        <div className="mx-auto mb-6 h-16 w-16 text-[#9071eb] text-6xl">
+          <svg
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            className="h-full w-full"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clipRule="evenodd"
+            />
+          </svg>
         </div>
 
-        {/* Status Message */}
-        <h1 className="text-3xl font-extrabold text-gray-800 mb-2">{status}</h1>
-
-        {/* Confirmation Text */}
+        <h1 className="text-3xl font-extrabold text-gray-800 mb-2">
+          Payment Successful!
+        </h1>
         <p className="text-gray-600 mb-8 text-lg">
-          {isSuccess
-            ? "Congratulations! Your order has been completed and your new course is now unlocked."
-            : "We are verifying your payment details. This usually takes just a moment."}
+          Congratulations! Your course is unlocked. Click below to go to your
+          dashboard.
         </p>
 
-        {/* Call to Action Button */}
         <a
           href="/coursepanel"
-          className={`inline-flex items-center justify-center w-full px-8 py-3 text-lg font-semibold text-black transition duration-300 rounded-full shadow-lg transform hover:scale-[1.02] ${BUTTON_COLOR} focus:outline-none focus:ring-4 focus:ring-primary focus:ring-opacity-50`}
+          className="inline-flex items-center justify-center w-full px-8 py-3 text-lg font-semibold transition duration-300 rounded-full shadow-lg bg-primary text-white hover:bg-[#9071eb]"
         >
           Go to My Courses
           <svg
             className="ml-2 h-5 w-5"
-            xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
