@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
-import { RiAppleFill, RiLoginBoxLine } from "react-icons/ri";
+import {  RiLoginBoxLine } from "react-icons/ri";
 import { toast } from "react-toastify";
 
 /**
@@ -38,15 +38,6 @@ export default function SignInPage() {
     }
   };
 
-  /**
-   * Placeholder for Apple Login
-   * Currently disabled in the UI.
-   */
-  const handleAppleLogin = () => {
-    console.log("Apple Login tapped - Implementation pending");
-    toast.info("Apple login is not implemented yet.");
-  };
-
   return (
     <div className="min-h-[70vh] flex items-center justify-center px-4 sm:px-6">
       <div className="w-full max-w-sm bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border border-gray-100">
@@ -70,18 +61,6 @@ export default function SignInPage() {
           >
             <FcGoogle className="text-2xl" />
             Continue with Google
-          </button>
-
-          {/* Apple Login Button (Disabled) */}
-          <button
-            onClick={handleAppleLogin}
-            disabled
-            className="w-full py-3 px-4 rounded-xl bg-black text-white font-semibold shadow-lg flex items-center justify-center gap-3 opacity-80 cursor-not-allowed transition duration-200"
-            aria-label="Continue with Apple (currently unavailable)"
-            title="Apple Sign-In is currently unavailable"
-          >
-            <RiAppleFill className="text-2xl text-white" />
-            Continue with Apple
           </button>
         </section>
 
