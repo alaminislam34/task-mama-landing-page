@@ -49,6 +49,36 @@ function Footer() {
                 />
               </a>
             </div>
+            <div className="flex flex-row gap-8 mt-6 md:mt-8 lg:mt-11">
+              {/* Todo */}
+              <a href="https://www.facebook.com/share/1Jo9bH967Z/?mibextid=wwXIfr">
+                <Image
+                  src={"/icons/facebook.jpg"}
+                  height={60}
+                  width={60}
+                  alt="Social icon"
+                  className="h-[34px] md:h-[34px] lg:h-[40px] w-[34px] md:w-[34px] lg:w-[40px] object-cover"
+                />
+              </a>
+              <a href="https://www.instagram.com/task_mama?igsh=NW5pcGU4aGlkNTkz&utm_source=qr">
+                <Image
+                  src={"/icons/instagram.jpg"}
+                  height={60}
+                  width={60}
+                  alt="Social icon"
+                  className="h-[34px] md:h-[34px] lg:h-[40px] w-[34px] md:w-[34px] lg:w-[40px] object-cover"
+                />
+              </a>
+              <a href="https://www.tiktok.com/@taskmama?_t=ZP-90KpvBisqad&_r=1">
+                <Image
+                  src={"/icons/tiktok.jpg"}
+                  height={60}
+                  width={60}
+                  alt="Social icon"
+                  className="h-[34px] md:h-[34px] lg:h-[40px] w-[34px] md:w-[34px] lg:w-[40px] object-cover"
+                />
+              </a>
+            </div>
           </div>
         </div>
       </div>

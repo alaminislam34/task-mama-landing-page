@@ -20,15 +20,7 @@ function PricingSection() {
               className="w-[80px] h-[80px] lg:w-[102px] lg:h-[102px]"
             />
           </div>
-          <div className="absolute -bottom-12 -z-10 right-0">
-            <Image
-              src={"/icons/star1.png"}
-              width={400}
-              height={400}
-              alt="Star icon"
-              className="w-[80px] h-[80px] lg:w-[102px] lg:h-[102px]"
-            />
-          </div>
+
           <div className="absolute top-6 right-0 -z-10">
             <Image
               src={"/icons/star1.png"}
@@ -40,7 +32,7 @@ function PricingSection() {
           </div>
         </div>
       </div>
-      
+
       {/* section title description */}
       <div className="relative bg-[#E3D8D8] rounded-[22px] shadow-[inner_2px_2px_2px_0px_rgb(0,0,0,0.1)] flex mx-auto max-w-sm my-12">
         {/* Animated Background Indicator */}
@@ -89,7 +81,7 @@ function PricingSection() {
             <ul className="font-poppins space-y-3 mt-28 px-4">
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   1 User Profile
@@ -97,7 +89,7 @@ function PricingSection() {
               </li>
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Basic task manager(Personal/ Family task){" "}
@@ -105,7 +97,7 @@ function PricingSection() {
               </li>
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Limited access on family mood
@@ -129,7 +121,7 @@ function PricingSection() {
             <ul className="font-poppins space-y-3 mt-28 px-4">
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Access multiple User Profile
@@ -137,7 +129,7 @@ function PricingSection() {
               </li>
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Unlock the Boss Mood feature{" "}
@@ -145,7 +137,7 @@ function PricingSection() {
               </li>
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Full access on family mood
@@ -153,7 +145,7 @@ function PricingSection() {
               </li>
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Full access on AI Chatbot
@@ -174,7 +166,7 @@ function PricingSection() {
             <ul className="font-poppins space-y-3 mt-28 px-4">
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Access multiple User Profile
@@ -182,7 +174,7 @@ function PricingSection() {
               </li>
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Unlock the Boss Mood feature{" "}
@@ -190,7 +182,7 @@ function PricingSection() {
               </li>
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Full access on family mood
@@ -198,7 +190,7 @@ function PricingSection() {
               </li>
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Full access on AI Chatbot
@@ -225,7 +217,7 @@ function PricingSection() {
             <ul className="font-poppins space-y-3 mt-28 px-4">
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Access multiple User Profile
@@ -233,7 +225,7 @@ function PricingSection() {
               </li>
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Unlock the Boss Mood feature{" "}
@@ -241,7 +233,7 @@ function PricingSection() {
               </li>
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Full access on Boss mood
@@ -249,7 +241,7 @@ function PricingSection() {
               </li>
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Full access on AI Chatbot
@@ -270,7 +262,7 @@ function PricingSection() {
             <ul className="font-poppins space-y-3 mt-28 px-4">
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Access multiple User Profile
@@ -278,7 +270,7 @@ function PricingSection() {
               </li>
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Unlock the scan features
@@ -286,7 +278,7 @@ function PricingSection() {
               </li>
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Full access on Boss mood
@@ -294,7 +286,7 @@ function PricingSection() {
               </li>
               <li className="flex flex-row gap-2 items-start">
                 <span className="mt-1.5">
-                  <FaCheck className="text-[#A009B9] text-lg" />
+                  <FaCheck className="text-white text-lg" />
                 </span>{" "}
                 <span className="text-sm md:text-base lg:text-xl">
                   Full access on AI Chatbot

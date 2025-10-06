@@ -45,7 +45,7 @@ function SupportSection() {
           </div>
           <div className="ml-14 flex flex-row items-center gap-14 lg:gap-[70px] mt-6 md:mt-8 lg:mt-11">
             {/* Todo */}
-            <a href="#">
+            <a href="https://www.facebook.com/share/1Jo9bH967Z/?mibextid=wwXIfr">
               <Image
                 src={"/icons/facebook.jpg"}
                 height={60}
@@ -54,7 +54,7 @@ function SupportSection() {
                 className="h-[34px] md:h-[44px] lg:h-[54px] w-[34px] md:w-[44px] lg:w-[54px] object-cover"
               />
             </a>
-            <a href="#">
+            <a href="https://www.instagram.com/task_mama?igsh=NW5pcGU4aGlkNTkz&utm_source=qr">
               <Image
                 src={"/icons/instagram.jpg"}
                 height={60}
@@ -63,7 +63,7 @@ function SupportSection() {
                 className="h-[34px] md:h-[44px] lg:h-[54px] w-[34px] md:w-[44px] lg:w-[54px] object-cover"
               />
             </a>
-            <a href="#">
+            <a href="https://www.tiktok.com/@taskmama?_t=ZP-90KpvBisqad&_r=1">
               <Image
                 src={"/icons/tiktok.jpg"}
                 height={60}
