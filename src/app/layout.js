@@ -9,10 +9,21 @@ export const metadata = {
   title: "TaskMama",
   description: "Less chaos. More breathing room Meet TaskMama",
   icons: {
-    icon: "/favicon.ico",
+    shortcut: "/favicon.ico", // Google + browser tab friendly
+  },
+  openGraph: {
+    title: "TaskMama",
+    description: "Less chaos. More breathing room Meet TaskMama",
+    images: [
+      {
+        url: "/icons/favicon.jpg",
+        width: 1200,
+        height: 630,
+        type: "image/jpeg",
+      },
+    ],
   },
 };
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
