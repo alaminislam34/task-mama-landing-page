@@ -43,6 +43,7 @@ function SupportSection() {
               </div>
             </div>
           </div>
+          
           <div className="ml-14 flex flex-row items-center gap-14 lg:gap-[70px] mt-6 md:mt-8 lg:mt-11">
             {/* Todo */}
             <a target="_blank" href="https://www.facebook.com/share/1Jo9bH967Z/?mibextid=wwXIfr">

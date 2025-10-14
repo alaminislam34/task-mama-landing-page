@@ -1,24 +1,19 @@
-// /app/api/auth/callback/google/route.js
 import { NextResponse } from "next/server";
-import { MongoClient } from "mongodb";
 import jwt from "jsonwebtoken";
+import clientPromise from "@/lib/Mongodb"; 
 
-/**
- * Google OAuth Callback Route
- * Exchanges authorization code for access token,
- * fetches user profile, upserts user in MongoDB,
- * and returns a JWT cookie for authentication.
- */
 export async function GET(req) {
   try {
     const url = new URL(req.url);
     const code = url.searchParams.get("code");
-
+    console.log(url);
     if (!code) {
-      return NextResponse.json({ error: "No authorization code provided." }, { status: 400 });
-    }
+      return NextResponse.json(
+        { error: "No authorization code provided." },
+        { status: 400 }
+      );
+    } // 🔹 Exchange authorization code for access token
 
-    // 🔹 Exchange authorization code for access token
     const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -34,34 +29,33 @@ export async function GET(req) {
     const tokenData = await tokenResponse.json();
 
     if (tokenData.error) {
-      console.error("Google Token Error:", tokenData);
       return NextResponse.json(
         { error: tokenData.error_description || tokenData.error },
         { status: 500 }
       );
-    }
+    } 
 
-    // 🔹 Fetch user's Google profile
-    const profileResponse = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
-      headers: { Authorization: `Bearer ${tokenData.access_token}` },
-    });
+    const profileResponse = await fetch(
+      "https://www.googleapis.com/oauth2/v2/userinfo",
+      {
+        headers: { Authorization: `Bearer ${tokenData.access_token}` },
+      }
+    );
 
     const profile = await profileResponse.json();
 
     if (!profile.email) {
-      return NextResponse.json({ error: "Failed to fetch user profile from Google." }, { status: 500 });
-    }
+      console.error("❌ No email in profile!");
+      return NextResponse.json(
+        { error: "Failed to fetch user profile from Google." },
+        { status: 500 }
+      );
+    } 
 
-    // 🔹 Connect to MongoDB
-    const client = await MongoClient.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
+    const client = await clientPromise;
     const db = client.db("TaskMamaDB");
-    const usersCol = db.collection("users");
+    const usersCol = db.collection("users"); // 🔹 Upsert user data
 
-    // 🔹 Upsert user data (create if not exists)
     const filter = { email: profile.email };
     const update = {
       $set: {
@@ -76,41 +70,41 @@ export async function GET(req) {
       },
     };
 
-    await usersCol.updateOne(filter, update, { upsert: true });
+    await usersCol.updateOne(filter, update, { upsert: true }); // 🔹 Fetch user document
 
-    // 🔹 Fetch the user document after upsert
-    const user = await usersCol.findOne(filter);
+    const user = await usersCol.findOne(filter); // Added a check in case user creation failed somehow
 
-    // 🔹 Generate JWT for authentication
+    if (!user) {
+      throw new Error("Failed to retrieve user data after successful upsert.");
+    } 
+
     const jwtToken = jwt.sign(
       {
-        id: user._id,
+        id: user._id.toString(),
         email: user.email,
         name: user.name,
         image: user.image,
         hasPaid: user.hasPaid,
       },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" } // JWT expiration
-    );
+      process.env.NEXTAUTH_SECRET,
+      { expiresIn: "7d" }
+    ); 
 
-    // 🔹 Set JWT as HttpOnly cookie and redirect to home
-    const response = NextResponse.redirect(new URL("/", req.url));
+    const response = NextResponse.redirect("https://www.taskmama.app");
     response.cookies.set("token", jwtToken, {
-      httpOnly: true, // cannot be accessed by JS
-      secure: process.env.NODE_ENV === "production", // only HTTPS in production
-      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60,
       path: "/",
-      sameSite: "lax", // CSRF protection
-    });
-
-    // Close MongoDB connection
-    await client.close();
+      sameSite: "lax",
+    }); 
 
     return response;
-
   } catch (err) {
     console.error("❌ Google OAuth Callback Error:", err);
-    return NextResponse.json({ error: err.message || "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: err.message || "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

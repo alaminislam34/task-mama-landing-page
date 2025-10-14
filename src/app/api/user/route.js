@@ -16,7 +16,7 @@ export async function GET(req) {
     let decoded;
     try {
       // 🔹 JWT verify
-      decoded = jwt.verify(token, process.env.JWT_SECRET);
+      decoded = jwt.verify(token, process.env.NEXTAUTH_SECRET);
     } catch (err) {
       if (err.name === "TokenExpiredError") {
         return NextResponse.json(

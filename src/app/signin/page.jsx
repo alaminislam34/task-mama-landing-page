@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
-import {  RiLoginBoxLine } from "react-icons/ri";
+import { RiLoginBoxLine } from "react-icons/ri";
 import { toast } from "react-toastify";
 
 /**
@@ -19,7 +19,7 @@ export default function SignInPage() {
     try {
       const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
       const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-
+      console.log("google client id:", clientId);
       if (!clientId || !appUrl) {
         console.error("Google Login environment variables missing!");
         toast.error("Google login is not configured properly.");
@@ -29,7 +29,7 @@ export default function SignInPage() {
       const redirectUri = `${appUrl}/api/auth/callback/google`;
       const scope = encodeURIComponent("email profile openid");
       const googleUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
-
+      console.log(redirectUri);
       // Redirect to Google OAuth
       window.location.href = googleUrl;
     } catch (error) {
