@@ -10,7 +10,7 @@ export async function middleware(req) {
   }
 
   try {
-    await jwtVerify(token, new TextEncoder().encode(process.env.NEXTAUTH_SECRET));
+    await jwtVerify(token, new TextEncoder().encode(process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET));
 
     return NextResponse.next();
   } catch (err) {

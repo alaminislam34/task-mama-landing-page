@@ -9,7 +9,7 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      allowDangerousEmailAccountLinking: true, // 👈 important
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
 
@@ -21,7 +21,7 @@ export const authOptions = {
     strategy: "jwt",
   },
 
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET,
 
   callbacks: {
     async redirect({ url, baseUrl }) {
@@ -65,10 +65,10 @@ export const authOptions = {
           if (!existingUser.providers?.includes(account.provider)) {
             await usersCol.updateOne(
               { email: user.email },
-              { $addToSet: { providers: account.provider } } // $addToSet prevents duplicates
+              { $addToSet: { providers: account.provider } }, // $addToSet prevents duplicates
             );
             console.log(
-              `✅ Linked new provider [${account.provider}] to existing user ${user.email}`
+              `✅ Linked new provider [${account.provider}] to existing user ${user.email}`,
             );
           }
           return true; // allow login

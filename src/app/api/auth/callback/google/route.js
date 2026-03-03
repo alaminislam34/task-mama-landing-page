@@ -86,11 +86,15 @@ export async function GET(req) {
         image: user.image,
         hasPaid: user.hasPaid,
       },
-      process.env.NEXTAUTH_SECRET,
+      process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET,
       { expiresIn: "7d" }
     ); 
 
-    const response = NextResponse.redirect("https://www.taskmama.app");
+    // todo: change to production url before deploy
+
+    // const response = NextResponse.redirect("https://www.taskmama.app");
+    // const response = NextResponse.redirect("http://localhost:3000");
+    const response = NextResponse.redirect("https://task-mama.vercel.app");
     response.cookies.set("token", jwtToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
