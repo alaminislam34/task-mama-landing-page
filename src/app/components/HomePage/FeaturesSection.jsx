@@ -5,18 +5,18 @@ import React from "react";
 const cards = [
   {
     path: "/icons/calender.png",
-    title: "The Only App Moms Need",
-    des: "Seamlessly manage family calendars, chores, meal planning - plus business tools like CRM and invoices - all in one place. No more app juggling.",
+    title: "The one place moms stop carrying everything",
+    des: "Family life. Home. Mental load. Even your business. Everything has a place — so your mind can finally rest. Support line Calendar, meals, family coordination, and simple business tools — together, calm, and easy to live with. ",
   },
   {
     path: "/icons/light.png",
     title: "Al Daily Balance",
-    des: "Let Al plan your day - school runs, work calls, and self-care included - so you can finally breathe.",
+    des: "Let AI gently organize your day — school, work, home, and you — so your mind can finall slow down",
   },
   {
     path: "/icons/user.png",
-    title: "Role-switch Mode",
-    des: "Flip between ‘Mama Mode’ and ‘Boss Mode’ to focus without overwhelm",
+    title: "Role-Switch Mode",
+    des: "Move gently between family and work - without carrying everything at once. ",
   },
 ];
 function FeaturesSection() {
@@ -27,8 +27,8 @@ function FeaturesSection() {
       <div className="max-w-[1440px] mx-auto w-11/12">
         {/* heading */}
         <h1 className="font-lato font-bold text-[32px] md:text-4xl lg:text-5xl text-center leading-normal">
-          Everything you need in <br />{" "}
-          <span className="text-primary">one place</span>{" "}
+          Where everything finally has <br />{" "}
+          <span className="text-primary">a place </span>{" "}
         </h1>
 
         {/* Card */}

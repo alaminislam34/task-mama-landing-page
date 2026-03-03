@@ -1,301 +1,194 @@
 "use client";
 
-import Image from "next/image";
 import React, { useState } from "react";
 import { FaCheck } from "react-icons/fa";
 
 function PricingSection() {
-  const [isMamaMood, setIsMamaMood] = useState(false);
+  const [isMamaMood, setIsMamaMood] = useState(true);
+
+  // Clean, minimal feature item
+  const FeatureItem = ({ text, isDark = false }) => (
+    <li className="flex gap-3 items-start">
+      <div
+        className={`mt-1 shrink-0 ${isDark ? "text-[#8674bb]" : "text-[#8674bb]"}`}
+      >
+        <FaCheck size={12} />
+      </div>
+      <span
+        className={`text-sm leading-tight ${isDark ? "text-gray-200" : "text-gray-600"}`}
+      >
+        {text}
+      </span>
+    </li>
+  );
+
   return (
-    <div className="relative pb-14">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 h-full max-w-[1440px] w-11/12 mx-auto">
-        <div className="w-full h-full relative mx-auto">
-          {/* star icon */}
-          <div className="absolute -bottom-12 -z-10 left-0">
-            <Image
-              src={"/icons/star1.png"}
-              width={400}
-              height={400}
-              alt="Star icon"
-              className="w-[80px] h-[80px] lg:w-[102px] lg:h-[102px]"
-            />
-          </div>
+    <div className="bg-white py-16 md:py-24 font-sans">
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Simple Header */}
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 tracking-tight uppercase">
+            Pricing <span className="text-[#8674bb]">Plans</span>
+          </h2>
+          <p className="text-gray-500 max-w-xl mx-auto">
+            Simple, steady support for your home and mental load.
+          </p>
+        </div>
 
-          <div className="absolute top-6 right-0 -z-10">
-            <Image
-              src={"/icons/star1.png"}
-              width={400}
-              height={400}
-              alt="Star icon"
-              className="w-[80px] h-[80px] lg:w-[102px] lg:h-[102px]"
-            />
+        {/* Clean Toggle */}
+        <div className="flex justify-center mb-16">
+          <div className="inline-flex p-1 bg-gray-100 rounded-xl border border-gray-200">
+            <button
+              onClick={() => setIsMamaMood(true)}
+              className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all uppercase tracking-wider ${
+                isMamaMood
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Home Mood
+            </button>
+            <button
+              onClick={() => setIsMamaMood(false)}
+              className={`px-6 py-2.5 text-xs font-bold rounded-lg transition-all uppercase tracking-wider ${
+                !isMamaMood
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Work Mood
+            </button>
           </div>
         </div>
-      </div>
 
-      {/* section title description */}
-      <div className="relative bg-[#E3D8D8] rounded-[22px] shadow-[inner_2px_2px_2px_0px_rgb(0,0,0,0.1)] flex mx-auto max-w-sm my-12">
-        {/* Animated Background Indicator */}
+        {/* Pricing Grid */}
         <div
-          className={`absolute top-1 left-1 h-[calc(100%-8px)] w-[calc(50%-4px)] rounded-[22px] bg-[#B0A2DA] transition-transform duration-300 ease-in-out`}
-          style={{
-            transform: isMamaMood ? "translateX(0)" : "translateX(100%)",
-          }}
-        />
-
-        {/* Mama Mood */}
-        <button
-          onClick={() => setIsMamaMood(true)}
-          className={`relative z-10 cursor-pointer py-[14px] px-7 font-poppins text-xs w-1/2 transition-colors duration-300 ${
-            isMamaMood ? "font-semibold text-white" : "text-[#3B3472]"
-          }`}
+          className={`grid grid-cols-1 gap-8 items-stretch ${isMamaMood ? "md:grid-cols-2 max-w-5xl mx-auto" : "max-w-xl mx-auto"}`}
         >
-          Mama Mood
-        </button>
+          {isMamaMood ? (
+            <>
+              {/* STARTER — BEGIN LIGHTLY */}
+              <div className="flex flex-col p-8 rounded-2xl border border-gray-200 bg-white hover:border-gray-300 transition-colors">
+                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
+                  Starter — Begin Lightly
+                </h3>
+                <div className="mb-4">
+                  <span className="text-4xl font-bold text-gray-900">Free</span>
+                </div>
+                <p className="text-sm text-gray-500 mb-6 font-medium italic">
+                  A gentle place to begin.
+                </p>
+                <div className="text-[10px] font-bold text-[#8674bb] bg-[#8674bb]/10 px-3 py-1 rounded-full w-fit mb-8 uppercase tracking-tighter">
+                  Try full calm for 7 days
+                </div>
+                <ul className="space-y-4 mb-8 flex-grow">
+                  <FeatureItem text="One profile" />
+                  <FeatureItem text="Personal & family task support" />
+                  <FeatureItem text="Gentle daily flow guidance" />
+                  <FeatureItem text="Limited Family Mood check-ins" />
+                </ul>
+                <button className="w-full py-3 px-6 rounded-xl border border-gray-200 text-gray-900 font-bold hover:bg-gray-50 transition-all uppercase text-xs tracking-widest">
+                  Get Started
+                </button>
+              </div>
 
-        {/* Boss Mood */}
-        <button
-          onClick={() => setIsMamaMood(false)}
-          className={`relative z-10 cursor-pointer py-[14px] px-7 font-poppins text-xs w-1/2 transition-colors duration-300 ${
-            !isMamaMood ? "font-semibold text-white" : "text-[#3B3472]"
-          }`}
-        >
-          Boss Mood
-        </button>
+              {/* CALM — FAMILY SUPPORT */}
+              <div className="flex flex-col p-8 rounded-2xl border-2 border-[#8674bb] bg-[#242430] shadow-xl relative z-10">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#8674bb] text-white text-[10px] font-bold uppercase px-4 py-1 rounded-full tracking-widest">
+                  Most Chosen
+                </div>
+                <h3 className="text-xs font-bold text-[#8674bb] uppercase tracking-widest mb-2">
+                  Calm — Family Support
+                </h3>
+                <div className="mb-2">
+                  <span className="text-4xl font-bold text-white">$14.99</span>
+                  <span className="text-gray-400 text-lg"> / month</span>
+                </div>
+                <div className="mb-6">
+                  <span className="text-lg font-bold text-[#FDF6E3FD]">
+                    $149.99
+                  </span>
+                  <span className="text-gray-400 text-sm"> / year</span>
+                  <span className="ml-2 text-[10px] text-green-400 font-bold uppercase">
+                    Best value - save $30
+                  </span>
+                </div>
+                <p className="text-xs text-gray-300 mb-6 italic border-l-2 border-[#8674bb] pl-3">
+                  Simple, steady support for home and mental load.
+                </p>
+                <ul className="space-y-4 mb-8 flex-grow">
+                  <FeatureItem text="Multiple profiles (family + you)" isDark />
+                  <FeatureItem text="Full Family Mood support" isDark />
+                  <FeatureItem
+                    text="Full AI support (Unload • Lighten Day • Calm)"
+                    isDark
+                  />
+                  <FeatureItem text="Complete daily flow guidance" isDark />
+                </ul>
+                <div className="mt-auto pt-6 border-t border-white/10">
+                  <p className="text-[10px] text-gray-400 text-center mb-4 uppercase tracking-tighter">
+                    Less than $0.50/day for steady calm and daily support
+                  </p>
+                  <button className="w-full bg-[#8674bb] text-white py-3 px-6 rounded-xl font-bold hover:bg-[#7465a3] transition-all uppercase text-xs tracking-widest">
+                    Start Family Support
+                  </button>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* FULL SUPPORT — FAMILY + WORK */}
+              <div className="flex flex-col p-10 rounded-2xl border-2 border-[#8674bb] bg-[#242430] shadow-2xl relative">
+                <h3 className="text-xs font-bold text-[#8674bb] uppercase tracking-widest mb-2">
+                  Full Support — Family + Work
+                </h3>
+                <div className="mb-2">
+                  <span className="text-5xl font-bold text-white">$24.99</span>
+                  <span className="text-gray-400 text-lg"> / month</span>
+                  <span className="ml-2 text-[10px] text-gray-400 font-bold uppercase">
+                    (Flexible)
+                  </span>
+                </div>
+                <div className="mb-8">
+                  <span className="text-2xl font-bold text-[#FDF6E3FD]">
+                    $249.99
+                  </span>
+                  <span className="text-gray-400 text-lg"> / year</span>
+                  <span className="ml-2 text-[10px] text-green-400 font-bold uppercase">
+                    Best value- save $50
+                  </span>
+                </div>
+                <p className="text-sm text-gray-300 mb-8 font-medium">
+                  Complete support for your whole life.
+                </p>
+                <ul className="space-y-5 mb-10 flex-grow">
+                  <FeatureItem text="Everything in Calm plan" isDark />
+                  <FeatureItem text="Work / Business Mode unlocked" isDark />
+                  <FeatureItem text="Scan & organization tools" isDark />
+                  <FeatureItem
+                    text="Full AI guidance across home + work"
+                    isDark
+                  />
+                  <FeatureItem text="Complete daily balance system" isDark />
+                </ul>
+                <div className="mt-auto pt-6 border-t border-white/10">
+                  <p className="text-[10px] text-gray-400 text-center mb-4 uppercase tracking-tighter">
+                    Less than $0.70/day for full daily support
+                  </p>
+                  <button className="w-full bg-[#8674bb] text-white py-4 px-6 rounded-xl font-bold hover:bg-[#7465a3] transition-all uppercase text-xs tracking-widest">
+                    Start Full Support
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Minimal Footer */}
+        <p className="mt-12 text-center text-[10px] text-gray-400 uppercase tracking-widest">
+          Everything your mind needs — in one calm system.
+        </p>
       </div>
-
-      {isMamaMood ? (
-        <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-0 max-w-[1440px] w-11/12 mx-auto py-12 lg:py-20">
-          <div className="bg-[#242430] rounded-[20px] text-white p-5 lg:p-6 md:-mr-4 z-0 lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
-            <p className="text-base md:text-lg lg:text-[25px] font-medium tracking-tight mb-4">
-              Starter
-            </p>
-            <div className="flex items-center gap-2.5">
-              <h1 className="font-bold text-2xl md:text-4xl lg:text-[50px] font-poppins text-[#FDF6E3FD]">
-                Free
-              </h1>{" "}
-              <p className="text-xs p-[10px] rounded-[5px] font-medium border border-primary">
-                7 days Free Trial
-              </p>
-            </div>
-            <ul className="font-poppins space-y-3 mt-28 px-4">
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  1 User Profile
-                </span>
-              </li>
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Basic task manager(Personal/ Family task){" "}
-                </span>
-              </li>
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Limited access on family mood
-                </span>
-              </li>
-            </ul>
-          </div>
-          <div className="bg-[#242430] rounded-[20px] text-white p-5 lg:p-6 z-10 bg-gradient-to-b from-[#B0A2DA] to-[#9E8CD4] lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
-            <p className="text-base md:text-lg lg:text-[25px] font-medium tracking-tight mb-4">
-              Monthly Premium plan
-            </p>
-            <div className="flex items-center gap-2.5 relative">
-              <h1 className="font-bold text-2xl md:text-4xl lg:text-[50px] font-poppins text-[#FDF6E3FD]">
-                $14.99
-                <span className="text-xs md:text-sm text-white">/Month</span>
-              </h1>{" "}
-              <span className="text-xs md:text-sm font-bold absolute top-0 right-0">
-                (Recommended)
-              </span>
-            </div>
-            <ul className="font-poppins space-y-3 mt-28 px-4">
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Access multiple User Profile
-                </span>
-              </li>
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Unlock the Boss Mood feature{" "}
-                </span>
-              </li>
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Full access on family mood
-                </span>
-              </li>
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Full access on AI Chatbot
-                </span>
-              </li>
-            </ul>
-          </div>
-          <div className="bg-[#71678a] rounded-[20px] text-white p-5 lg:p-6 md:-ml-4 z-0 lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
-            <p className="text-base md:text-lg lg:text-[25px] font-medium tracking-tight mb-4">
-              Yearly Premium plan
-            </p>
-            <div className="flex items-center gap-2.5">
-              <h1 className="font-bold text-2xl md:text-4xl lg:text-[50px] font-poppins">
-                <span className="text-[#FDF6E3FD]">$149.99</span>
-                <span className="text-xs md:text-sm font-bold">/Year</span>
-              </h1>{" "}
-            </div>
-            <ul className="font-poppins space-y-3 mt-28 px-4">
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Access multiple User Profile
-                </span>
-              </li>
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Unlock the Boss Mood feature{" "}
-                </span>
-              </li>
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Full access on family mood
-                </span>
-              </li>
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Full access on AI Chatbot
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col md:flex-row items-center justify-center gap-6 max-w-[1440px] w-11/12 mx-auto py-12 lg:py-20">
-          <div className="bg-[#242430] rounded-[20px] text-white p-5 lg:p-6 z-10 bg-gradient-to-b from-[#B0A2DA] to-[#9E8CD4] lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
-            <p className="text-base md:text-lg lg:text-[25px] font-medium tracking-tight mb-4">
-              Monthly Premium plan
-            </p>
-            <div className="flex items-center gap-2.5 relative">
-              <h1 className="font-bold text-2xl md:text-4xl lg:text-[50px] font-poppins text-[#FDF6E3FD]">
-                $24.99
-                <span className="text-xs md:text-sm text-white">/Month</span>
-              </h1>{" "}
-              <span className="text-xs md:text-sm font-bold absolute top-0 right-0">
-                (Recommended)
-              </span>
-            </div>
-            <ul className="font-poppins space-y-3 mt-28 px-4">
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Access multiple User Profile
-                </span>
-              </li>
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Unlock the Boss Mood feature{" "}
-                </span>
-              </li>
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Full access on Boss mood
-                </span>
-              </li>
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Full access on AI Chatbot
-                </span>
-              </li>
-            </ul>
-          </div>
-          <div className="bg-[#71678a] rounded-[20px] text-white p-5 lg:p-6 z-0 lg:h-[574px] h-[500px] w-[350px] md:w-[364px]">
-            <p className="text-base md:text-lg lg:text-[25px] font-medium tracking-tight mb-4">
-              Yearly Premium plan
-            </p>
-            <div className="flex items-center gap-2.5">
-              <h1 className="font-bold text-2xl md:text-4xl lg:text-[50px] font-poppins">
-                <span className="text-[#FDF6E3FD]">$249.99</span>
-                <span className="text-xs md:text-sm font-bold">/Year</span>
-              </h1>{" "}
-            </div>
-            <ul className="font-poppins space-y-3 mt-28 px-4">
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Access multiple User Profile
-                </span>
-              </li>
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Unlock the scan features
-                </span>
-              </li>
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Full access on Boss mood
-                </span>
-              </li>
-              <li className="flex flex-row gap-2 items-start">
-                <span className="mt-1.5">
-                  <FaCheck className="text-white text-lg" />
-                </span>{" "}
-                <span className="text-sm md:text-base lg:text-xl">
-                  Full access on AI Chatbot
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -16,24 +16,24 @@ function WhatWeStandFor() {
           className="absolute h-[80px] md:h-[90px] lg:h-[102px] w-[80px] md:w-[90px] lg:w-[102px] bottom-0 right-0"
         />
 
-       <div className="w-full flex items-center justify-center lg:justify-start lg:items-start">
-         <div className="relative">
-          <Image
-            src={"/images/smily.jpg"}
-            height={800}
-            width={800}
-            alt="Mom Image"
-            className="absolute top-0 left-0 h-[300px] md:h-[353px] w-[300px] md:w-[460px] object-cover mx-auto rounded-[45px] -mt-6 lg:-mt-9 blur -z-10 "
-          />
-          <Image
-            src={"/images/smily.jpg"}
-            height={800}
-            width={800}
-            alt="Mom Image"
-            className=" h-[300px] md:h-[353px] w-[300px] md:w-[460px] object-cover mx-auto rounded-[45px] ml-6 md:ml-10 lg:ml-16"
-          />
+        <div className="w-full flex items-center justify-center lg:justify-start lg:items-start">
+          <div className="relative">
+            <Image
+              src={"/images/smily.jpg"}
+              height={800}
+              width={800}
+              alt="Mom Image"
+              className="absolute top-0 left-0 h-[300px] md:h-[353px] w-[300px] md:w-[460px] object-cover mx-auto rounded-[45px] -mt-6 lg:-mt-9 blur -z-10 "
+            />
+            <Image
+              src={"/images/smily.jpg"}
+              height={800}
+              width={800}
+              alt="Mom Image"
+              className=" h-[300px] md:h-[353px] w-[300px] md:w-[460px] object-cover mx-auto rounded-[45px] ml-6 md:ml-10 lg:ml-16"
+            />
+          </div>
         </div>
-       </div>
 
         <div className="lg:max-w-3xl">
           <h1 className="text-[30px] md:text-4xl lg:text-[56px] font-bold font-lato mb-5 md:mb-7 lg:mb-10 leading-normal">
@@ -41,12 +41,11 @@ function WhatWeStandFor() {
             <span className="text-primary"> Stand For</span>
           </h1>
           <p className="font-roboto mb-10 text-lg lg:text-2xl text-[#4A4A4A]">
-            At TaskMama, we believe moms deserve tools that truly support their
-            daily lives. That means building with empathy, designing with
-            simplicity, and always keeping balance at the heart of everything we
-            do. We’re not just creating another productivity app — we’re
-            creating a space where family, business, and self-care can live in
-            harmony.
+            At TaskMama, we believe moms deserve real support — not more
+            pressure. Everything we design is meant to feel simple, calm, and
+            human — so your mind has a safe place to put what it’s carrying.
+            We’re not here to make you more productive. We’re here to help you
+            carry less — in family, work, and everyday life.
           </p>
         </div>
       </div>

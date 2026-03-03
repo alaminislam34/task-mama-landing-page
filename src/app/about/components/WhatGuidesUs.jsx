@@ -5,18 +5,18 @@ import React from "react";
 const cards = [
   {
     path: "/icons/image (2).png",
-    title: "Balance First",
-    des: "Moms deserve time for family, business, and themselves — without constant sacrifice.",
+    title: "Balance Begins with Less Load ",
+    des: "When moms don’t have to carry everything alone, family, work, and everyday life can exist with more calm and less strain",
   },
   {
     path: "/icons/image (1).png",
     title: "Simplicity Always",
-    des: " Technology should make life calmer, not more complicated. Every feature is designed to be clear, easy, and intuitive.",
+    des: " Support should feel simple and calm — never overwhelming. Everything in TaskMama is designed to be clear, gentle, and easy to use, so your mind can rest instead of working harder. ",
   },
   {
     path: "/icons/image.png",
-    title: "Built for Every Mom",
-    des: "We focus on the real challenges of motherhood, running a home, building a career, and raising a family, because no one else was creating tools made just for you.",
+    title: "Built for Real Moms",
+    des: "TaskMama is shaped by the real weight of motherhood — running a home, managing life, caring for family, and carrying more than anyone sees. Because moms deserve support that truly understands what they hold every day.",
   },
 ];
 function WhatGuides() {
@@ -38,8 +38,10 @@ function WhatGuides() {
           <span className="text-primary"> Every Day</span>
         </h1>
         <p className="font-roboto text-lg lg:text-2xl text-[#4A4A4A] text-center lg:text-left max-w-2xl leading-normal">
-          TaskMama isn’t just an app — it’s built on values that reflect what
-          moms truly need to thrive.
+          TaskMama isn’t just an app — it’s built on one simple belief: moms
+          don’t need more pressure, they need real support. Everything we create
+          is designed to help you carry less, feel calmer, and know you don’t
+          have to hold everything alone.
         </p>
 
         {/* Card */}

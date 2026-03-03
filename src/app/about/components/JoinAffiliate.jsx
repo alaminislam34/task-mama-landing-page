@@ -17,14 +17,15 @@ function JoinAffiliate() {
         />
         <div className="lg:max-w-3xl">
           <h1 className="text-[30px] md:text-4xl lg:text-[56px] font-bold font-lato mb-5 md:mb-7 lg:mb-10 leading-normal">
-            Join the Movement:
-            <span className="text-primary"> TaskMama Ambassador Program</span>
+            Join the
+            <span className="text-primary"> TaskMama Ambassador Circle</span>
           </h1>
           <p className="font-roboto text-lg lg:text-2xl text-[#4A4A4A]">
-            This isn’t just about earning commission (though that’s a perk).
-            It’s about becoming part of a supportive movement of moms who are
-            juggling family and business, while lifting each other up along the
-            way." Let me know if you'd like any further changes!
+            This isn’t about selling — it’s about sharing real support. Be part
+            of a group of moms who understand the mental load, support each
+            other, and help more women feel calmer, lighter, and less alone.
+            Yes, there’s a reward — but the real value is helping other moms
+            carry less. Share support. Help moms carry less. Join the Circle.
           </p>
           <div>
             <button>

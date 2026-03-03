@@ -12,20 +12,20 @@ import { FaStar } from "react-icons/fa";
 const slides = [
   {
     name: "Sophia R",
-    location: "Boston, USA",
-    text: "TaskMama is the first app that actually understands my day. The AI balances school drop-offs, client calls, and even reminds me to breathe. Total lifesaver",
+    location: "Boston, USA ",
+    text: "“For the first time, my mind feels quieter. I’m not trying to remember everything anymore — TaskMama holds it for me. My days feel lighter, calmer, and finally manageable.”",
     image: "/images/t1.jpg",
   },
   {
     name: "Rachel K.",
     location: "Boston, USA",
-    text: "Before TaskMama, I had five different apps for work and family. Now everything — chores, invoices, and meal plans — is in one place. I finally feel organized",
+    text: "“Before TaskMama, everything lived in my head and across too many apps. Now there’s one calm place for my home, work, and family — and my mind finally feels lighter.”",
     image: "/images/t2.jpg",
   },
   {
     name: "Alicia M",
     location: "Boston, USA",
-    text: "My kids love the rewards for finishing chores, and I love flipping into Boss Mode to focus on my business. It’s like having a personal assistant in my pocket.",
+    text: "“My kids stay on track, and I finally have space to focus. Home runs smoother, work feels clearer — and I’m not carrying it all in my head anymore.” ",
     image: "/images/t3.jpg",
   },
   // add more slides if needed
@@ -52,7 +52,7 @@ export default function TestimonialSlider() {
     <section className="py-12">
       <div className="pb-14">
         <h1 className="font-lato font-bold text-2xl md:text-4xl lg:text-[54px] text-center lg:py-6">
-          Reviews / <span className="text-primary"> testimonials</span>
+          Real Relief From Real Moms
         </h1>
       </div>
       <div className="relative max-w-[1440px] w-11/12 mx-auto lg:py-12">
@@ -70,7 +70,7 @@ export default function TestimonialSlider() {
                 className="keen-slider__slide flex justify-center pt-14 px-4 pb-4"
               >
                 <div
-                  className={`flex flex-col items-center gap-2 rounded-3xl shadow-[4px_4px_4px_0px_#00000025] px-6 py-4 transition-all duration-500 ease-in-out w-full max-w-[338px] scale-90 opacity-90 ${ isCenter ? "lg:max-w-[396px] lg:min-h-[242px] lg:scale-100 lg:opacity-100" : "" } `}
+                  className={`flex flex-col items-center gap-2 rounded-3xl shadow-[4px_4px_4px_0px_#00000025] px-6 py-4 transition-all duration-500 ease-in-out w-full max-w-[338px] scale-90 opacity-90 ${isCenter ? "lg:max-w-[396px] lg:min-h-[242px] lg:scale-100 lg:opacity-100" : ""} `}
                 >
                   <Image
                     src={slide.image}

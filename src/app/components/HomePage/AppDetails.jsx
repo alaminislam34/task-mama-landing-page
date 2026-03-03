@@ -3,20 +3,18 @@
 import Image from "next/image";
 import React from "react";
 
-
 const details = [
   {
-    bold: "Shared Family Calendar —",
-    det: "Color-coded family members + Google sync",
-  },
-  { bold: "Tasks & Chores —", det: "Assign, track, and reward kids’ chores" },
-  {
-    bold: "Meal & Pantry Planner —",
-    det: "Plan meals, track groceries & expiry dates",
+    bold: "Share the load, don’t carry it alone  —",
+    det: "Assign and track family responsibilities — even for kids — so everything doesn’t live only in your mind. ",
   },
   {
-    bold: "Shared Family Calendar —",
-    det: "Snap items, add QR labels, searchable",
+    bold: "Stop remembering everything —",
+    det: "Plan meals, track groceries, and know what’s already there — without mental effort. ",
+  },
+  {
+    bold: " Find what you need, without searching in your head —",
+    det: "Scan items, label with QR, and keep everything easy to find — calm, clear, simple. ",
   },
 ];
 
@@ -57,6 +55,11 @@ function AppDetails() {
           </div>
         </div>
         <div>
+          <p className="font-roboto mb-10 text-lg lg:text-2xl text-[#4A4A4A]">
+            See everything without holding it in your head Color-coded family
+            flow with Google sync - so nothing slips, and your mind stays
+            lighter.{" "}
+          </p>
           <ol className="list-disc space-y-[30px] lg:space-y-[36px] mx-auto w-11/12 ">
             {details.map(({ bold, det }, i) => (
               <li key={i} className="text-base md:text-lg lg:text-2xl">

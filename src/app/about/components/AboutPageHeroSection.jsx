@@ -12,14 +12,13 @@ function AboutPageHeroSection() {
         <div className="text-center lg:text-left flex flex-col items-center justify-center lg:justify-start lg:items-start">
           {/* about us page title */}
           <h1 className="text-[30px] md:text-4xl lg:text-[56px] font-bold font-lato mb-7 leading-normal">
-            Built by Moms, for <span className="text-primary">Moms</span>
+            Built by a mom, for <span className="text-primary">Moms</span>
           </h1>
 
           {/* about us page subtitle */}
           <p className="font-roboto lg:max-w-2/3 mb-10 text-lg lg:text-2xl text-[#4A4A4A]">
-            TaskMama was created to help every mom turn the beautiful chaos of
-            family, work, and life into balance - all in one calming, empowering
-            app.
+            TaskMama was created to hold what your mind has been carrying — so
+            life can feel calmer, lighter, and easier to move through.
           </p>
 
           {/* app link */}

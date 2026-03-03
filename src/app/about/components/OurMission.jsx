@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import Image from "next/image";
 import React from "react";
@@ -20,13 +20,14 @@ function OurMission() {
             <span className="text-primary"> Mission & Vision</span>
           </h1>
           <p className="font-roboto text-lg lg:text-2xl text-[#4A4A4A]">
-            At TaskMama, our mission is to give moms the tools they need to stay
-            organized, confident, and balanced every day. We’re driven by a
-            vision of a world where moms never have to choose between family and
-            business — where both can thrive together in harmony. By simplifying
-            the chaos of daily life with smart, empathetic design, TaskMama
-            empowers mompreneurs to grow their dreams while cherishing time with
-            loved ones.
+            Our mission is simple: help moms carry less. TaskMama was created to
+            give your mind a safe place to put what it’s holding — so life can
+            feel calmer, clearer, and easier to move through. We believe in a
+            world where moms don’t have to silently carry everything alone —
+            where family, work, and real life can coexist without constant
+            mental overload. Through simple, human design and real emotional
+            support, TaskMama helps moms move through daily life with more ease,
+            more clarity, and less weight on their minds.
           </p>
         </div>
         <div className="w-full flex items-center justify-center lg:justify-end lg:items-end">

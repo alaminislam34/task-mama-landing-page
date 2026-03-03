@@ -16,15 +16,31 @@ function SuperMom() {
         />
         <div>
           <h1 className="text-[30px] md:text-4xl lg:text-[56px] font-bold font-lato mb-5 md:mb-7 lg:mb-10 leading-normal">
-            For Moms Who Do It All—
-            <span className="text-primary">and Own It</span>
+            Built by a mom. For{" "}
+            <span className="text-primary"> real life. </span>
           </h1>
           <p className="font-roboto mb-10 text-lg lg:text-2xl text-[#4A4A4A]">
-            TaskMama is created by a mom, for moms—to help you organize your
-            life, reclaim your time and energy, and focus on what matters most.
-            It’s more than just an app; it’s a supportive community where moms
-            encourage each other, celebrate every win, and redefine what it
-            means to thrive in motherhood.
+            TaskMama was created from real motherhood — the invisible mental
+            load, the constant remembering, the quiet pressure to hold
+            everything together.
+          </p>
+          <p className="font-roboto mb-10 text-lg lg:text-2xl text-[#4A4A4A]">
+            We didn’t build another productivity app.{" "}
+          </p>
+          <p className="font-roboto mb-10 text-lg lg:text-2xl text-[#4A4A4A]">
+            We built a calm system — a place where everything has somewhere to
+            go.{" "}
+          </p>
+          <p className="font-roboto mb-10 text-lg lg:text-2xl text-[#4a4a4a]">
+            TaskMama helps you:{" "}
+          </p>
+          <ul className="flex flex-col gap-2 mb-10 text-lg lg:text-2xl text-[#4A4A4A]">
+            <li>• carry less</li>
+            <li>• think clearer</li>
+            <li>• move through your day with more ease</li>
+          </ul>
+          <p className="font-roboto mb-10 text-lg lg:text-2xl text-[#4A4A4A]">
+            This is not about doing more. It’s about holding less.
           </p>
         </div>
         <div className="relative">

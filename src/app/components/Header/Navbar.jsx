@@ -12,9 +12,9 @@ import LoadingSpinner from "../Loading";
 
 const links = [
   { name: "Home", href: "/" },
-  { name: "About us", href: "/about" },
-  { name: "Contact", href: "/contact" },
-  { name: "Products", href: "/products" },
+  { name: "Why TaskMama", href: "/about" },
+  { name: "Support", href: "/contact" },
+  { name: "Relief Programs", href: "/products" },
 ];
 
 function Navbar() {
@@ -104,7 +104,7 @@ function Navbar() {
 
   // User Dropdown Component
   const UserAuthSection = (
-    { isMobile = false } // Added isMobile prop for clearer rendering logic
+    { isMobile = false }, // Added isMobile prop for clearer rendering logic
   ) => (
     <div className="flex items-center justify-end">
       {loading ? (
@@ -115,28 +115,22 @@ function Navbar() {
           aria-expanded={showDropdown}
           aria-haspopup="true"
         >
-          {/* 1. Avatar - Now with explicit click handler to toggle dropdown */}
           <Image
-            src={user.image || "/default-avatar.png"}
+            src={user.image}
             alt="user"
             width={36}
             height={36}
-            // FIX: This onClick is essential for toggling the dropdown state.
             onClick={() => setShowDropdown(!showDropdown)}
             className="rounded-full cursor-pointer ring-2 ring-primary p-0.5 hover:ring-2 hover:ring-primary/80 transition-all duration-200"
           />
 
           {showDropdown && (
             <div
-              // Position the dropdown based on mobile/desktop context
               className={`absolute ${
                 isMobile ? "top-10 right-0" : "top-14 right-0"
               } w-64 bg-white rounded-xl shadow-2xl p-0 z-50 border border-gray-100 transition duration-300 origin-top-right animate-in fade-in-0 zoom-in-95`}
-              // FIX: Stop propagation to prevent the click from closing the dropdown immediately
-              // due to the main dropdownRef logic. This allows links/buttons inside to work.
               onClick={(e) => e.stopPropagation()}
             >
-              {/* 2. Dropdown Header with Full Name and Email */}
               <div className="p-4 border-b border-gray-100 bg-gray-50 rounded-t-xl">
                 <p className="text-sm font-bold text-gray-900 truncate">
                   {user.name || "User Profile"}
@@ -146,9 +140,7 @@ function Navbar() {
                 </p>
               </div>
 
-              {/* 3. Dropdown Links with Icons */}
               <div className="p-2 space-y-1">
-                {/* Profile Link */}
                 <Link
                   href={"/profile"}
                   className="flex items-center gap-3 p-2 text-gray-700 hover:bg-primary/10 hover:text-primary rounded-lg transition"
@@ -171,7 +163,6 @@ function Navbar() {
                   <span className="text-sm font-medium">Profile Settings</span>
                 </Link>
 
-                {/* My Courses Link (as originally intended) */}
                 <Link
                   href={"/coursepanel"}
                   className="flex items-center gap-3 p-2 text-gray-700 hover:bg-primary/10 hover:text-primary rounded-lg transition"
@@ -197,7 +188,6 @@ function Navbar() {
                 </Link>
               </div>
 
-              {/* 4. Logout Button */}
               <div className="p-2 border-t border-gray-100">
                 <button
                   onClick={handleLogout}
@@ -274,51 +264,43 @@ function Navbar() {
           </ul>
         </div>
 
-        {/* COL 3: Right Side (Download & User Auth) */}
         <div className="flex items-center justify-end gap-2">
-          {/* Download Input Section (Desktop only) */}
-          <div className="hidden lg:flex items-center gap-2">
-            <div className="relative">
-              <Image
-                src={"/icons/mail.png"}
-                height={14}
-                width={14}
-                alt="Email icon"
-                className="absolute left-4 top-1/2 -translate-y-1/2"
-              />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your mail..."
-                className="py-[9px] px-4 pl-[35px] focus:ring-2 focus:ring-primary focus:outline-none rounded-xl bg-secondary text-xs font-normal w-52"
-              />
+          <div className="hidden lg:flex items-start mt-3.5 gap-2">
+            <div>
+              <div className="relative">
+                <Image
+                  src={"/icons/mail.png"}
+                  height={14}
+                  width={14}
+                  alt="Email icon"
+                  className="absolute left-4 top-1/2 -translate-y-1/2"
+                />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Where should we send your link?"
+                  className="py-[9px] px-4 pl-[35px] focus:ring-2 focus:ring-primary focus:outline-none rounded-xl bg-secondary text-xs font-normal w-52"
+                />
+              </div>
+              <p className="text-[10px]">“No noise. Just support.”</p>
             </div>
             <button
               disabled={loadingEmail}
               onClick={handleSendEmail}
               className="py-[9px] px-[20px] rounded-xl bg-primary cursor-pointer text-white text-xs border border-primary hover:bg-primary/90 duration-300 font-semibold disabled:opacity-50"
             >
-              {loadingEmail ? "Sending..." : "Get Download Link"}
+              {loadingEmail ? "Sending..." : "Get your calm space"}
             </button>
           </div>
 
-          {/* User Auth (Desktop) */}
-          {/* FIX: Removed 'hidden lg:block' from the wrapper div here. 
-             The grid system manages the overall layout, and UserAuthSection 
-             should be called once for desktop and once for mobile controls. 
-             If you want to keep the container div, ensure it's displayed 
-             correctly on desktop. Based on the original code, this should work: */}
           <div className="hidden lg:block">
             <UserAuthSection isMobile={false} />
           </div>
 
-          {/* Mobile/Tablet Controls */}
           <div className="flex items-center lg:hidden gap-3">
-            {/* User Auth (Mobile/Tablet) - Send isMobile=true */}
             <UserAuthSection isMobile={true} />
 
-            {/* Mobile Menu Button */}
             <button
               className="bg-primary p-2 rounded-xl text-white cursor-pointer transition hover:bg-primary/90"
               onClick={() => setMenuOpen(true)}
@@ -330,9 +312,6 @@ function Navbar() {
         </div>
       </nav>
 
-      {/* ------------------------------------------------------------------- */}
-      {/* MOBILE SIDEBAR (Drawer) - UNCHANGED */}
-      {/* ------------------------------------------------------------------- */}
       <div
         className={`fixed top-0 left-0 h-full w-full lg:hidden z-40 transition-opacity duration-300 ${
           menuOpen
@@ -351,7 +330,6 @@ function Navbar() {
           }`}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Header and Close Button */}
           <div className="flex justify-between items-center mb-10 border-b pb-4">
             <Link href={"/"} onClick={() => setMenuOpen(false)}>
               <Image
@@ -371,7 +349,6 @@ function Navbar() {
             </button>
           </div>
 
-          {/* Mobile Nav Links */}
           <ul className="flex flex-col gap-5 text-lg font-semibold mb-10">
             {links.map((link) => (
               <li key={link.href}>
@@ -390,7 +367,6 @@ function Navbar() {
             ))}
           </ul>
 
-          {/* Download Input Section (Mobile) */}
           <div className="mt-8 pt-4 border-t border-gray-200">
             <h4 className="text-md font-bold mb-3 text-gray-800">
               Get the App Link
@@ -403,20 +379,23 @@ function Navbar() {
                 alt="Email icon"
                 className="absolute left-4 top-1/2 -translate-y-1/2"
               />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your mail..."
-                className="w-full py-3 px-4 pl-[35px] focus:ring-2 focus:ring-primary focus:outline-none rounded-xl bg-secondary text-sm font-normal"
-              />
+              <div>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email..."
+                  className="w-full py-3 px-4 pl-[35px] focus:ring-2 focus:ring-primary focus:outline-none rounded-xl bg-secondary text-sm font-normal"
+                />
+                <p className="text-xs">“No noise. Just support.”</p>
+              </div>
             </div>
             <button
               disabled={loadingEmail}
               onClick={handleSendEmail}
               className="w-full py-3 px-4 rounded-xl bg-primary text-white text-sm border border-primary hover:bg-primary/90 duration-300 font-semibold disabled:opacity-50"
             >
-              {loadingEmail ? "Sending..." : "Get Download Link"}
+              {loadingEmail ? "Sending..." : "Send My Link"}
             </button>
           </div>
         </div>

@@ -1,4 +1,4 @@
-// src/components/Product.jsx or app/Product/page.jsx (or similar)
+// src/components/Product.jsx or app/Product/page.jsx
 "use client";
 
 import { useEffect, useState, useMemo, useCallback } from "react";
@@ -33,12 +33,29 @@ export default function Product() {
         return res.json();
       })
       .then((data) => {
-        setProducts(data);
+        // Map original product data to include renamed categories for filtering
+        const renamedData = data.map((item) => {
+          let type = item.node.productType;
+          if (type === "Paper products") type = "Planners & Journals";
+          if (type === "Mug") type = "Mugs";
+          if (type === "T-Shirt") type = "Tees";
 
-        // Extract and set unique categories
+          return {
+            ...item,
+            node: { ...item.node, productType: type },
+          };
+        });
+
+        setProducts(renamedData);
+
+        // Extract and set unique renamed categories
         const cats = new Set();
-        data.forEach(({ node }) => node.productType && cats.add(node.productType));
-        setCategories(["All", ...Array.from(cats)].filter(c => c)); // Filter out any empty strings
+        renamedData.forEach(
+          ({ node }) => node.productType && cats.add(node.productType),
+        );
+
+        // Define the required display order or simply set from the Set
+        setCategories(["All", ...Array.from(cats)].filter((c) => c));
       })
       .catch((err) => {
         console.error("Error fetching products:", err);
@@ -69,11 +86,15 @@ export default function Product() {
   }, [selectedProduct]);
 
   const goToPrev = useCallback(() => {
-    setActiveIndex(prevIndex => (prevIndex === 0 ? totalImages - 1 : prevIndex - 1));
+    setActiveIndex((prevIndex) =>
+      prevIndex === 0 ? totalImages - 1 : prevIndex - 1,
+    );
   }, [totalImages]);
 
   const goToNext = useCallback(() => {
-    setActiveIndex(prevIndex => (prevIndex === totalImages - 1 ? 0 : prevIndex + 1));
+    setActiveIndex((prevIndex) =>
+      prevIndex === totalImages - 1 ? 0 : prevIndex + 1,
+    );
   }, [totalImages]);
 
   const redirectToShopify = (productHandle) => {
@@ -84,16 +105,14 @@ export default function Product() {
 
   return (
     <div className="max-w-[1440px] w-11/12 mx-auto py-10">
-      
       {/* ---------------- Title & Subtitle ---------------- */}
       <div className="text-center mb-14 lg:mb-16">
         <h1 className="text-[30px] md:text-4xl lg:text-[56px] font-bold font-lato mb-5 md:mb-7 lg:mb-10 leading-normal text-gray-900 lg:max-w-5xl mx-auto">
           Grab your favorite tee, hoodie, or mug today and remind yourself
         </h1>
         <p className="text-base md:text-xl lg:text-[32px] font-medium leading-normal text-[#5C5C5C]">
-          Show off your TaskMama pride! You're balancing smarter - not harder.{" "}
-          <br className="hidden sm:block" />
-          Shop now and wear your power!
+          These pieces are small anchors for your day — a quiet reminder to slow
+          down, breathe, and carry less.
         </p>
       </div>
 
@@ -107,11 +126,13 @@ export default function Product() {
       {/* ---------------- Loader / Error / Products Grid ---------------- */}
       <div className="py-12">
         {loading && <SkeletonGrid />}
-        
+
         {error && !loading && (
           <div className="text-center py-20 text-red-500 font-semibold text-lg border border-red-300 bg-red-50 rounded-lg p-6">
             <p>An error occurred: {error}</p>
-            <p className="text-sm text-red-400 mt-2">Please try refreshing the page.</p>
+            <p className="text-sm text-red-400 mt-2">
+              Please try refreshing the page.
+            </p>
           </div>
         )}
 
@@ -133,7 +154,7 @@ export default function Product() {
           </div>
         )}
       </div>
-      
+
       {/* ---------------- Product Modal Component ---------------- */}
       {selectedProduct && (
         <ProductModal

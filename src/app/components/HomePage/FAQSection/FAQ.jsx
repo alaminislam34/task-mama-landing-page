@@ -34,19 +34,19 @@ export default function Accordion() {
   const faqs = [
     {
       q: "1. How does TaskMama’s AI help me plan my day?",
-      a: "TaskMama’s AI looks at your family tasks, business to-dos, and personal goals, then suggests a realistic schedule you can adjust anytime.",
+      a: "TaskMama gently organizes what’s on your mind — family needs, daily tasks, and priorities — into a realistic, flexible plan. You can adjust anytime, so your day feels guided, not pressured.",
     },
     {
       q: "2. Can my kids use the app too?",
-      a: "Yes! Task Mama is designed for the whole family. Kids can log in with their own profiles, see their chores— all in a safe, parent-controlled environment.",
+      a: "Yes. TaskMama is designed for the whole family. Kids can have their own simple profiles to see chores and small responsibilities, all within a safe, parent-guided space. ",
     },
     {
-      q: "3. Do I need multiple apps to use all the features?",
-      a: "Nope — everything is built into Task Mama. From the family calendar to chores, meal planning, and inventory tracking, you get all the tools in one simple app.",
+      q: "3. Do I need multiple apps to use all the features? ",
+      a: "No. Everything lives inside TaskMama — family calendar, tasks, meals, home flow, and work space — in one calm, simple system. ",
     },
     {
-      q: "4. Which devices does Task Mama work on?",
-      a: "Task Mama works on both iOS and Android devices, including smartphones and tablets. This means every family member can stay connected and organized, no matter what device they use.",
+      q: "4. Which devices does TaskMama work on? ",
+      a: "TaskMama works on iPhone and Android, giving you steady support wherever life happens — home, work, or in between. ",
     },
   ];
 

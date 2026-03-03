@@ -18,10 +18,10 @@ function Footer() {
             className="mb-7"
           />
           <p className="text-[#ADADAD] text-sm md:text-lg lg:text-xl">
-            TaskMama is the all-in-one app for every mom - from stay-at-home to
-            working, new to seasoned - combining family calendars, chores, meal
-            planning, and business tools with Al Daily Balance to keep life
-            organized and stress-free.
+            TaskMama is one calm place for everything your mind has been
+            carrying. From family life to work and meals — gently organized with
+            AI Daily Balance so life feels lighter, not heavier. <br /> Download
+            TaskMama. Feel the difference.
           </p>
         </div>
 
@@ -51,7 +51,10 @@ function Footer() {
             </div>
             <div className="flex flex-row gap-8 mt-6 md:mt-8 lg:mt-11">
               {/* Todo */}
-              <a target="_blank" href="https://www.facebook.com/share/1Jo9bH967Z/?mibextid=wwXIfr">
+              <a
+                target="_blank"
+                href="https://www.facebook.com/share/1Jo9bH967Z/?mibextid=wwXIfr"
+              >
                 <Image
                   src={"/icons/facebook.jpg"}
                   height={60}
@@ -60,7 +63,10 @@ function Footer() {
                   className="h-[34px] md:h-[34px] lg:h-[40px] w-[34px] md:w-[34px] lg:w-[40px] object-cover"
                 />
               </a>
-              <a target="_blank" href="https://www.instagram.com/task_mama?igsh=NW5pcGU4aGlkNTkz&utm_source=qr">
+              <a
+                target="_blank"
+                href="https://www.instagram.com/task_mama?igsh=NW5pcGU4aGlkNTkz&utm_source=qr"
+              >
                 <Image
                   src={"/icons/instagram.jpg"}
                   height={60}
@@ -69,7 +75,10 @@ function Footer() {
                   className="h-[34px] md:h-[34px] lg:h-[40px] w-[34px] md:w-[34px] lg:w-[40px] object-cover"
                 />
               </a>
-              <a target="_blank" href="https://www.tiktok.com/@taskmama?_t=ZP-90KpvBisqad&_r=1">
+              <a
+                target="_blank"
+                href="https://www.tiktok.com/@taskmama?_t=ZP-90KpvBisqad&_r=1"
+              >
                 <Image
                   src={"/icons/tiktok.jpg"}
                   height={60}

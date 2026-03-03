@@ -8,11 +8,12 @@ function ChatbotSection() {
     <div>
       <div className="text-center max-w-6xl w-11/12 mx-auto py-12 lg:py-20 space-y-6 lg:space-y-10">
         <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold font-lato leading-normal">
-          Meet Your <span className="text-primary">AI Assistant</span>
+          Meet Your
+          <span className="text-primary">AI Support</span>
         </h1>
         <p className="text-base md:text-xl lg:text-[32px] font-medium leading-normal text-[#5C5C5C]">
-          TaskMama’s AI builds balanced daily plans, suggests priorities, and
-          helps you stay on track
+          A gentle guide that helps your day feel lighter — organizing what
+          matters, easing the mental load, and keeping life steady.
         </p>
       </div>
       <div className="relative">
@@ -28,7 +29,6 @@ function ChatbotSection() {
             />
           </div>
         </div>
-
       </div>
     </div>
   );
