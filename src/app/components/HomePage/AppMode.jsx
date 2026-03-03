@@ -50,11 +50,11 @@ function AppMode() {
               Home Mode
             </h1>
             <Image
-              src={"/images/mamaMode.png"}
+              src={"/images/homeMode.png"}
               height={1200}
               width={1200}
               alt="Home Mode"
-              className="lg:w-[350px] lg:h-[680px] w-[300px] h-[580px] bg-center bg-cover  object-fitt"
+              className="lg:w-[350px] lg:h-[680px] rounded-[50px] w-[300px] h-[580px] bg-center bg-cover  object-fitt"
             />
           </div>
           <div className="flex flex-col gap-12 items-center justify-center">
@@ -62,11 +62,11 @@ function AppMode() {
               Work Mode - do this in app too
             </h1>
             <Image
-              src={"/images/businessMode.png"}
+              src={"/images/work.png"}
               height={1200}
               width={1200}
               alt="Work Mode - do this in app too"
-              className="lg:w-[350px] lg:h-[680px] w-[300px] h-[580px] bg-center bg-cover object-fitt"
+              className="lg:w-[350px] lg:h-[680px] rounded-[50px] w-[300px] h-[580px] bg-center bg-cover object-fitt"
             />
           </div>
         </div>

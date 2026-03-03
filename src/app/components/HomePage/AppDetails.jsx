@@ -29,7 +29,7 @@ function AppDetails() {
               backgroundPosition: "center",
               backgroundSize: "cover",
             }}
-            className="w-[250px] h-[400px] lg:w-[380px] lg:h-[680px] relative lg:ml-20 mx-auto lg:mx-0"
+            className="w-[300px] h-[450px] lg:w-[380px] lg:h-[680px] relative lg:ml-20 mx-auto lg:mx-0"
           >
             <Image
               src={"/images/addItem.png"}

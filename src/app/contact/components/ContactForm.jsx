@@ -65,7 +65,7 @@ function ContactForm() {
     <section className="relative py-12 lg:pb-20">
       <div className="absolute top-0 left-0 w-full h-full  bg-[#B0A2DA]/10 blur-xl -z-10"></div>
       <div className="max-w-[1440px] w-11/12 mx-auto flex flex-col lg:flex-row gap-12 items-center justify-between">
-        <div className="w-full max-w-[490px]">
+        <div className="w-full">
           <form
             onSubmit={handleSubmitForm}
             className="space-y-4 lg:space-y-5 flex flex-col"
@@ -99,6 +99,7 @@ function ContactForm() {
                 {error}
               </span>
             )}
+            <small className="">We usually reply within 24 hours.</small>
             <div className="flex justify-start items-center">
               <button
                 disabled={loading}
@@ -117,7 +118,7 @@ function ContactForm() {
             height={600}
             width={800}
             alt="Map Image"
-            className="lg:w-[782px] lg:h-[500px] object-center"
+            className="lg:w-[782px] lg:h-[500px] object-contain object-center"
           />
         </div>
       </div>

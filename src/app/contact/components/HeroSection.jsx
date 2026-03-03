@@ -30,18 +30,19 @@ function HeroSection() {
 
         {/* heading */}
         <h1 className="text-[30px] md:text-4xl lg:text-[56px] font-bold font-lato mx-auto text-center lg:max-w-[853px] max-w-[420px] sm:max-w-xl md:max-w-2xl mb-7 leading-normal">
-          We’d Love to Hear
-          <span className="text-primary"> From You</span>.
+          We’re here.
+          <span className="text-primary"> Really</span>.
         </h1>
 
         {/* sub title */}
         <p className="font-roboto lg:max-w-[900px] max-w-[450px] sm:max-w-2xl md:max-w-3xl mx-auto text-center mb-10 text-lg lg:text-2xl text-[#4A4A4A]">
-          Have a question, idea, or need support?
+          Have a question, an idea, or something that feels heavy?
         </p>
         <p className="font-roboto lg:max-w-[900px] max-w-[450px] sm:max-w-2xl md:max-w-3xl mx-auto text-center text-lg lg:text-2xl text-[#4A4A4A]">
-          We’re here to listen and help — whether it’s about the app, your daily
-          balance, or getting started. You don’t have to figure it out alone.
-          Carry Less. Live Lighter
+          TaskMama exists to support real life — and we listen. Whether it’s
+          about the app, your experience, or something you wish existed, we want
+          to hear from you. You’re not messaging a company. You’re reaching a
+          system built to help you carry less.
         </p>
       </div>
     </div>
