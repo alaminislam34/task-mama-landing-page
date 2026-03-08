@@ -93,7 +93,7 @@ export async function GET(req) {
     // todo: change to production url before deploy
 
     // const response = NextResponse.redirect("https://www.taskmama.app");
-    // const response = NextResponse.redirect("http://localhost:3000");
+    // const response = NextResponse.redirect("http://localhost:3001");
     const response = NextResponse.redirect("https://task-mama.vercel.app");
     response.cookies.set("token", jwtToken, {
       httpOnly: true,
