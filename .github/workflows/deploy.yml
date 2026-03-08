@@ -1,0 +1,51 @@
+name: Deploy task-mama-landing-page to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: deploy-task-mama-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy on EC2 via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -e
+
+            cd /home/ubuntu/task-mama-landing-page
+
+            git fetch --all
+            git checkout main
+            git reset --hard origin/main
+
+            if ! command -v node >/dev/null 2>&1; then
+              echo "Node.js is not installed on EC2. Please install Node.js 20 first."
+              exit 1
+            fi
+
+            if ! command -v pm2 >/dev/null 2>&1; then
+              sudo npm install -g pm2
+            fi
+
+            npm install
+            npm run build
+
+            if pm2 describe task-mama >/dev/null 2>&1; then
+              pm2 restart task-mama --update-env
+            else
+              pm2 start npm --name "task-mama" -- start
+            fi
+
+            pm2 save
