@@ -36,7 +36,7 @@ function FeaturesSection() {
           {cards.map((card) => (
             <div
               key={card.path}
-              className="rounded-2xl shadow-[0px_40px_40px_0px_#00000030] p-4 md:p-6 flex flex-col justify-start bg-white mx-auto duration-300 hover:-translate-y-2"
+              className="rounded-2xl shadow-[0px_40px_40px_0px_#00000030] h-full p-4 md:p-6 flex flex-col justify-start bg-white mx-auto duration-300 hover:-translate-y-2"
             >
               <Image
                 src={card.path}
