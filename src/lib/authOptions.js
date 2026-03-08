@@ -61,20 +61,18 @@ export const authOptions = {
         const existingUser = await usersCol.findOne({ email: user.email });
 
         if (existingUser) {
-          // link new provider if not already linked
           if (!existingUser.providers?.includes(account.provider)) {
             await usersCol.updateOne(
               { email: user.email },
-              { $addToSet: { providers: account.provider } }, // $addToSet prevents duplicates
+              { $addToSet: { providers: account.provider } },
             );
             console.log(
               `✅ Linked new provider [${account.provider}] to existing user ${user.email}`,
             );
           }
-          return true; // allow login
+          return true;
         }
 
-        // new user → insert into DB
         await usersCol.insertOne({
           name: user.name,
           email: user.email,
