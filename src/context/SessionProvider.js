@@ -10,21 +10,21 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      setLoading(true); // loading শুরু
+      setLoading(true);
 
       try {
-        const res = await fetch("/api/user"); 
+        const res = await fetch("/api/user");
         if (res.ok) {
           const data = await res.json();
-          setUser(data.user); // fresh user data
+          setUser(data.user);
         } else {
-          setUser(null); // login নাই
+          setUser(null);
         }
       } catch (err) {
         console.error("Auth fetch error:", err);
         setUser(null);
       } finally {
-        setLoading(false); // loading শেষ
+        setLoading(false);
       }
     };
 
