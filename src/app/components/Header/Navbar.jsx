@@ -306,7 +306,7 @@ function Navbar() {
               onClick={() => setMenuOpen(true)}
               aria-label="Toggle navigation menu"
             >
-              <Menu size={24} />
+              <Menu size={20} />
             </button>
           </div>
         </div>

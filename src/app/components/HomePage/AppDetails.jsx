@@ -23,14 +23,16 @@ function AppDetails() {
     <div className="max-w-[1440px] mx-auto w-11/12 py-6 md:py-8 lg:py-12">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
         <div className="w-full mx-auto lg:mx-0">
-          <div
-            style={{
-              backgroundImage: "url('/images/app2.png')",
-              backgroundPosition: "center",
-              backgroundSize: "cover",
-            }}
-            className="w-[300px] h-[450px] lg:w-[380px] lg:h-[680px] relative lg:ml-20 mx-auto lg:mx-0"
-          >
+          <div className="w-[300px] h-[450px] md:h-[500px] lg:w-[380px] lg:h-[680px] relative lg:ml-20 mx-auto lg:mx-0">
+            <div className="bg-white w-full h-full">
+              <Image
+                src={"/images/family.png"}
+                width={400}
+                height={800}
+                alt="App image"
+                className="object-contain w-full h-full"
+              />
+            </div>
             <Image
               src={"/images/addItem.png"}
               height={200}

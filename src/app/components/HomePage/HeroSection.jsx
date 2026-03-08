@@ -107,7 +107,7 @@ function HeroSection() {
       </div>
       <div className="mt-10 lg:mt-12 mx-auto">
         <Image
-          src={"/images/appImage.png"}
+          src={"/images/GroupScreen.png"}
           height={800}
           width={1227}
           alt="App Image"

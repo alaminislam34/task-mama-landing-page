@@ -49,7 +49,7 @@ function WhatGuides() {
           {cards.map((card) => (
             <div
               key={card.path}
-              className="lg:min-w-[420px] lg:min-h-[302px] w-[350px] h-[280px] rounded-2xl shadow-[0px_40px_40px_0px_#00000030] py-6 px-[42px] flex flex-col justify-center bg-white mx-auto"
+              className="rounded-2xl shadow-[0px_40px_40px_0px_#00000030] p-4 md:p-6 flex flex-col justify-start h-full bg-white mx-auto"
             >
               <Image
                 src={card.path}

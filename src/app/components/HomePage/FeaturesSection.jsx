@@ -32,25 +32,27 @@ function FeaturesSection() {
         </h1>
 
         {/* Card */}
-        <div className="flex flex-wrap justify-center gap-6 space-y-6 mt-8 md:mt-10 lg:mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 space-y-6 mt-8 md:mt-10 lg:mt-12">
           {cards.map((card) => (
             <div
               key={card.path}
-              className="lg:min-w-[420px] lg:min-h-[302px] w-[350px] h-[280px] rounded-2xl shadow-[0px_40px_40px_0px_#00000030] py-6 px-[42px] flex flex-col justify-center bg-white mx-auto duration-300 hover:-translate-y-2"
+              className="rounded-2xl shadow-[0px_40px_40px_0px_#00000030] p-4 md:p-6 flex flex-col justify-start bg-white mx-auto duration-300 hover:-translate-y-2"
             >
               <Image
                 src={card.path}
                 height={100}
                 width={100}
                 alt="Calender icon"
-                className="w-12 h-12 lg:w-16 lg:h-16 mb-6 md:mb-8 lg:mb-10 mx-auto"
+                className="w-12 h-12 lg:w-16 lg:h-16 mb-6 mx-auto"
               />
-              <h1 className="font-bold text-lg md:text-xl lg:text-[25px] font-lato mb-4">
-                {card.title}
-              </h1>
-              <p className="text-sm md:text-base lg:text-lg font-normal text-[#555555]">
-                {card.des}
-              </p>
+              <div>
+                <h1 className="font-bold text-lg md:text-xl lg:text-[25px] font-lato mb-4">
+                  {card.title}
+                </h1>
+                <p className="text-sm md:text-base lg:text-lg font-normal text-[#555555]">
+                  {card.des}
+                </p>
+              </div>
             </div>
           ))}
         </div>

@@ -21,7 +21,7 @@ function ChatbotSection() {
         <div>
           <div className="max-w-[1440px] w-11/12 mx-auto py-12 lg:py-20">
             <Image
-              src={"/images/groupApp.png"}
+              src={"/images/aipart.png"}
               height={1500}
               width={1800}
               alt="Chatbot Screenshot"
