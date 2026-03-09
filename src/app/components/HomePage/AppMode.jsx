@@ -50,7 +50,7 @@ function AppMode() {
               Home Mode
             </h1>
             <Image
-              src={"/images/Home(Mode).png"}
+              src={"/images/Work(Mode).png"}
               height={1200}
               width={1200}
               alt="Home Mode"

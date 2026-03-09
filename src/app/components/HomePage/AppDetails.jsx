@@ -26,7 +26,7 @@ function AppDetails() {
           <div className="w-[300px] h-[450px] md:h-[500px] lg:w-[380px] lg:h-[680px] relative lg:ml-20 mx-auto lg:mx-0">
             <div className="bg-white w-full h-full">
               <Image
-                src={"/images/family.png"}
+                src={"/images/Home(Mode).png"}
                 width={400}
                 height={800}
                 alt="App image"
