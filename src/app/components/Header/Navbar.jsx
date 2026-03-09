@@ -275,7 +275,7 @@ function Navbar() {
                   className="py-[9px] px-4 pl-[35px] focus:ring-2 focus:ring-primary focus:outline-none rounded-xl bg-secondary text-xs font-normal w-52"
                 />
               </div>
-              {/* <p className="text-[10px]">“No noise. Just support.”</p> */}
+              <p className="text-[10px]">“No noise. Just support.”</p>
             </div>
             <button
               disabled={loadingEmail}
