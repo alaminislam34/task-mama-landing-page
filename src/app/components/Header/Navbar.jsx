@@ -102,10 +102,7 @@ function Navbar() {
     window.location.href = "/signin";
   };
 
-  // User Dropdown Component
-  const UserAuthSection = (
-    { isMobile = false }, // Added isMobile prop for clearer rendering logic
-  ) => (
+  const UserAuthSection = ({ isMobile = false }) => (
     <div className="flex items-center justify-end">
       {loading ? (
         <LoadingSpinner />
@@ -225,13 +222,9 @@ function Navbar() {
     </div>
   );
 
-  // --- END UserAuthSection ---
-
   return (
     <div>
-      {/* Navbar Container */}
       <nav className="grid grid-cols-2 lg:grid-cols-3 items-center py-[20px] max-w-[1440px] mx-auto w-11/12">
-        {/* COL 1: Logo (Left Aligned) */}
         <div className="flex items-center justify-start">
           <Link href={"/"}>
             <Image
@@ -244,7 +237,6 @@ function Navbar() {
           </Link>
         </div>
 
-        {/* COL 2: Desktop Nav Links (CENTER ALIGNED) */}
         <div className="hidden lg:flex items-center justify-center">
           <ul className="flex items-center gap-[43px]">
             {links.map((link) => (
@@ -283,7 +275,7 @@ function Navbar() {
                   className="py-[9px] px-4 pl-[35px] focus:ring-2 focus:ring-primary focus:outline-none rounded-xl bg-secondary text-xs font-normal w-52"
                 />
               </div>
-              <p className="text-[10px]">“No noise. Just support.”</p>
+              {/* <p className="text-[10px]">“No noise. Just support.”</p> */}
             </div>
             <button
               disabled={loadingEmail}
