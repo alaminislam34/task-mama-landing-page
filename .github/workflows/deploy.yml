@@ -32,36 +32,42 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script_stop: true
-          # নিচে দেখুন, script এখন with এর ভেতরে এবং সঠিক স্পেসিংয়ে আছে
           script: |
             set -e
 
-            # ফোল্ডারে ঢোকা
+            # ১. প্রজেক্ট ফোল্ডারে ঢোকা
             cd /home/ubuntu/task-mama-landing-page
 
-            # কোড আপডেট করা
+            # ২. লেটেস্ট কোড পুল করা
             git fetch --all
             git checkout main
             git reset --hard origin/main
 
-            # nvm ও node পাথ লোড করা
+            # ৩. এনভায়রনমেন্ট (Node, pnpm, pm2) পাথ লোড করা
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-            # pnpm চেক ও ইনস্টল
+            # ৪. pnpm চেক ও ইনস্টল নিশ্চিত করা
             if ! command -v pnpm >/dev/null 2>&1; then
               npm install -g pnpm
             fi
 
-            # ডিপ্লয়মেন্ট
+            # ৫. ডিপেন্ডেন্সি ইনস্টল ও প্রজেক্ট বিল্ড
             pnpm install
             pnpm build
 
-            # PM2 ম্যানেজমেন্ট
-            if pm2 describe taskmama-landing >/dev/null 2>&1; then
-              pm2 restart taskmama-landing --update-env
+            # ৬. PM2 পাথ ডিটেক্ট করা (যাতে ১২৭ এরর না আসে)
+            # অনেক সময় pnpm global bin সরাসরি পাথে থাকে না
+            PM2_BIN=$(which pm2 || echo "$HOME/.local/share/pnpm/pm2")
+
+            # ৭. PM2 দিয়ে প্রজেক্ট রিস্টার্ট বা স্টার্ট করা
+            if $PM2_BIN describe taskmama-landing >/dev/null 2>&1; then
+              echo "Restarting existing process..."
+              $PM2_BIN restart taskmama-landing --update-env
             else
-              pm2 start node_modules/next/dist/bin/next --name "taskmama-landing" -- start
+              echo "Starting new process..."
+              $PM2_BIN start node_modules/next/dist/bin/next --name "taskmama-landing" -- start
             fi
 
-            pm2 save
+            # ৮. রিবুট হলেও যেন অটো-স্টার্ট হয়
+            $PM2_BIN save
