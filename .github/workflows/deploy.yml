@@ -32,35 +32,36 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script_stop: true
-        script: |
-          set -e
+          # নিচে দেখুন, script এখন with এর ভেতরে এবং সঠিক স্পেসিংয়ে আছে
+          script: |
+            set -e
 
-          # ফোল্ডারে ঢোকা
-          cd /home/ubuntu/task-mama-landing-page
+            # ফোল্ডারে ঢোকা
+            cd /home/ubuntu/task-mama-landing-page
 
-          # কোড আপডেট করা
-          git fetch --all
-          git checkout main
-          git reset --hard origin/main
+            # কোড আপডেট করা
+            git fetch --all
+            git checkout main
+            git reset --hard origin/main
 
-          # pnpm পাথ ঠিক করা (যেহেতু আপনি nvm ব্যবহার করছেন)
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            # nvm ও node পাথ লোড করা
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-          # pnpm ও pm2 চেক করা
-          if ! command -v pnpm >/dev/null 2>&1; then
-            npm install -g pnpm
-          fi
+            # pnpm চেক ও ইনস্টল
+            if ! command -v pnpm >/dev/null 2>&1; then
+              npm install -g pnpm
+            fi
 
-          # ডিপ্লয়মেন্ট শুরু
-          pnpm install
-          pnpm build
+            # ডিপ্লয়মেন্ট
+            pnpm install
+            pnpm build
 
-          # সঠিক নামে PM2 রিস্টার্ট (আগে আমরা taskmama-landing নাম দিয়েছিলাম)
-          if pm2 describe taskmama-landing >/dev/null 2>&1; then
-            pm2 restart taskmama-landing --update-env
-          else
-            pm2 start node_modules/next/dist/bin/next --name "taskmama-landing" -- start
-          fi
+            # PM2 ম্যানেজমেন্ট
+            if pm2 describe taskmama-landing >/dev/null 2>&1; then
+              pm2 restart taskmama-landing --update-env
+            else
+              pm2 start node_modules/next/dist/bin/next --name "taskmama-landing" -- start
+            fi
 
-          pm2 save
+            pm2 save
