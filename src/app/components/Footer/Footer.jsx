@@ -32,7 +32,11 @@ function Footer() {
               Download it now
             </h2>
             <div className="flex gap-2">
-              <a href="#" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://play.google.com/store/apps/details?id=app.taskmama.taskmama&pcampaignid=web_share"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Image
                   src="/icons/playstore.png"
                   alt="Google Play"
@@ -40,7 +44,11 @@ function Footer() {
                   height={40}
                 />
               </a>
-              <a href="#" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://apps.apple.com/tr/app/task-mama/id6752669243"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Image
                   src="/icons/applestore.png"
                   alt="App Store"

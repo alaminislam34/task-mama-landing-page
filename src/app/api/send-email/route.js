@@ -31,8 +31,10 @@ export async function POST(req) {
         });
       }
 
-      const appStoreLink = "YOUR_APPLE_STORE_LINK";
-      const playStoreLink = "YOUR_GOOGLE_PLAY_LINK";
+      const appStoreLink =
+        "https://apps.apple.com/tr/app/task-mama/id6752669243";
+      const playStoreLink =
+        "https://play.google.com/store/apps/details?id=app.taskmama.taskmama&pcampaignid=web_share";
       const appleIconUrl =
         "https://taskmama-landing-page.vercel.app/icons/applestore.png";
       const playIconUrl =
@@ -40,7 +42,7 @@ export async function POST(req) {
 
       mailOptions = {
         from: `"TaskMama App" <${process.env.SMTP_USER}>`,
-        to: email, // <-- Sends to the user who requested the link
+        to: email,
         subject: "Download TaskMama App",
 
         text: `
@@ -95,7 +97,7 @@ export async function POST(req) {
       if (!email || !subject || !message) {
         return new Response(
           JSON.stringify({ error: "All fields are required" }),
-          { status: 400 }
+          { status: 400 },
         );
       }
 
@@ -104,7 +106,7 @@ export async function POST(req) {
 
       mailOptions = {
         from: `"Contact Form" <${process.env.SMTP_USER}>`,
-        to: recipientEmail, // <-- Sends to your administrative email
+        to: recipientEmail,
         subject: `Contact Form: ${subject}`,
 
         text: `
@@ -160,12 +162,11 @@ export async function POST(req) {
       });
     }
 
-    // 2. Send Email
     await transporter.sendMail(mailOptions);
 
     return new Response(
       JSON.stringify({ message: "Email sent successfully!" }),
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error(error);

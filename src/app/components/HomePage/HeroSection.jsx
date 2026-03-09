@@ -81,7 +81,11 @@ function HeroSection() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <a href="">
+                  <a
+                    href="https://play.google.com/store/apps/details?id=app.taskmama.taskmama&pcampaignid=web_share"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Image
                       src={"/icons/playstore.png"}
                       width={500}
@@ -90,7 +94,11 @@ function HeroSection() {
                       className="w-[100px] h-[32px] lg:w-[120px] lg:h-[40px]"
                     />
                   </a>
-                  <a href="">
+                  <a
+                    href="https://apps.apple.com/tr/app/task-mama/id6752669243"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Image
                       src={"/icons/applestore.png"}
                       width={500}

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Modal from "react-modal";
 import Image from "next/image";
 import { FcGoogle } from "react-icons/fc";
-import { useAuth } from "@/context/SessionProvider"; // তোমার Auth context
+import { useAuth } from "@/context/SessionProvider";
 
 const courses = [
   {
@@ -24,23 +24,21 @@ const courses = [
 
 export default function CourseSectionDemo() {
   const router = useRouter();
-  const { user, loading } = useAuth(); // ✅ Auth context
+  const { user } = useAuth(); 
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [purchasedCourses, setPurchasedCourses] = useState([]);
 
-  // Fetch user's purchased courses
   useEffect(() => {
     if (user?.email) {
       fetch(`/api/my-courses?email=${user.email}`)
         .then((res) => res.json())
         .then((data) =>
-          setPurchasedCourses(data.purchasedCourses?.map((c) => c.id) || [])
+          setPurchasedCourses(data.purchasedCourses?.map((c) => c.id) || []),
         );
     }
   }, [user]);
 
-  // Trigger purchase after login
   useEffect(() => {
     if (user && selectedCourse) {
       handlePurchase(selectedCourse);
@@ -72,7 +70,7 @@ export default function CourseSectionDemo() {
 
       if (res.ok && data.id) {
         const stripe = (await import("@stripe/stripe-js")).loadStripe(
-          process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+          process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
         );
         (await stripe).redirectToCheckout({ sessionId: data.id });
       } else {
