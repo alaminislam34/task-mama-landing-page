@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import clientPromise from "@/lib/Mongodb"; 
+import clientPromise from "@/lib/Mongodb";
 
 export async function GET(req) {
   try {
@@ -10,9 +10,9 @@ export async function GET(req) {
     if (!code) {
       return NextResponse.json(
         { error: "No authorization code provided." },
-        { status: 400 }
+        { status: 400 },
       );
-    } // 🔹 Exchange authorization code for access token
+    }
 
     const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
@@ -31,15 +31,15 @@ export async function GET(req) {
     if (tokenData.error) {
       return NextResponse.json(
         { error: tokenData.error_description || tokenData.error },
-        { status: 500 }
+        { status: 500 },
       );
-    } 
+    }
 
     const profileResponse = await fetch(
       "https://www.googleapis.com/oauth2/v2/userinfo",
       {
         headers: { Authorization: `Bearer ${tokenData.access_token}` },
-      }
+      },
     );
 
     const profile = await profileResponse.json();
@@ -48,13 +48,13 @@ export async function GET(req) {
       console.error("❌ No email in profile!");
       return NextResponse.json(
         { error: "Failed to fetch user profile from Google." },
-        { status: 500 }
+        { status: 500 },
       );
-    } 
+    }
 
     const client = await clientPromise;
     const db = client.db("TaskMamaDB");
-    const usersCol = db.collection("users"); // 🔹 Upsert user data
+    const usersCol = db.collection("users");
 
     const filter = { email: profile.email };
     const update = {
@@ -70,13 +70,13 @@ export async function GET(req) {
       },
     };
 
-    await usersCol.updateOne(filter, update, { upsert: true }); // 🔹 Fetch user document
+    await usersCol.updateOne(filter, update, { upsert: true });
 
-    const user = await usersCol.findOne(filter); // Added a check in case user creation failed somehow
+    const user = await usersCol.findOne(filter);
 
     if (!user) {
       throw new Error("Failed to retrieve user data after successful upsert.");
-    } 
+    }
 
     const jwtToken = jwt.sign(
       {
@@ -87,8 +87,8 @@ export async function GET(req) {
         hasPaid: user.hasPaid,
       },
       process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET,
-      { expiresIn: "7d" }
-    ); 
+      { expiresIn: "7d" },
+    );
 
     // todo: change to production url before deploy
 
@@ -101,14 +101,14 @@ export async function GET(req) {
       maxAge: 7 * 24 * 60 * 60,
       path: "/",
       sameSite: "lax",
-    }); 
+    });
 
     return response;
   } catch (err) {
     console.error("❌ Google OAuth Callback Error:", err);
     return NextResponse.json(
       { error: err.message || "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
