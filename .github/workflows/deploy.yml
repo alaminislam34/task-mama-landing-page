@@ -32,31 +32,35 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script_stop: true
-          script: |
-            set -e
+        script: |
+          set -e
 
-            cd /home/ubuntu/task-mama-landing-page
+          # ফোল্ডারে ঢোকা
+          cd /home/ubuntu/task-mama-landing-page
 
-            git fetch --all
-            git checkout main
-            git reset --hard origin/main
+          # কোড আপডেট করা
+          git fetch --all
+          git checkout main
+          git reset --hard origin/main
 
-            if ! command -v node >/dev/null 2>&1; then
-              echo "Node.js is not installed on EC2. Please install Node.js 20 first."
-              exit 1
-            fi
+          # pnpm পাথ ঠিক করা (যেহেতু আপনি nvm ব্যবহার করছেন)
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-            if ! command -v pm2 >/dev/null 2>&1; then
-              sudo npm install -g pm2
-            fi
+          # pnpm ও pm2 চেক করা
+          if ! command -v pnpm >/dev/null 2>&1; then
+            npm install -g pnpm
+          fi
 
-            npm install
-            npm run build
+          # ডিপ্লয়মেন্ট শুরু
+          pnpm install
+          pnpm build
 
-            if pm2 describe task-mama >/dev/null 2>&1; then
-              pm2 restart task-mama --update-env
-            else
-              pm2 start npm --name "task-mama" -- start
-            fi
+          # সঠিক নামে PM2 রিস্টার্ট (আগে আমরা taskmama-landing নাম দিয়েছিলাম)
+          if pm2 describe taskmama-landing >/dev/null 2>&1; then
+            pm2 restart taskmama-landing --update-env
+          else
+            pm2 start node_modules/next/dist/bin/next --name "taskmama-landing" -- start
+          fi
 
-            pm2 save
+          pm2 save
