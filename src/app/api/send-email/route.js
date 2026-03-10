@@ -1,177 +1,278 @@
 import nodemailer from "nodemailer";
+import {
+  isValidEmail,
+  sanitizeText,
+  validateLength,
+  checkRateLimit,
+} from "./utils";
+import { getDownloadEmailTemplate, getContactEmailTemplate } from "./templates";
 
+// Constants
+const MAX_EMAIL_LENGTH = 254;
+const MAX_SUBJECT_LENGTH = 200;
+const MAX_MESSAGE_LENGTH = 5000;
+const RATE_LIMIT_REQUESTS = 5; // Max requests per window
+const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute
+
+/**
+ * Get client IP address from request
+ */
+function getClientIp(req) {
+  const forwarded = req.headers.get("x-forwarded-for");
+  const realIp = req.headers.get("x-real-ip");
+
+  if (forwarded) {
+    return forwarded.split(",")[0].trim();
+  }
+  if (realIp) {
+    return realIp;
+  }
+  return "unknown";
+}
+
+/**
+ * Create nodemailer transporter with error handling
+ */
+function createTransporter() {
+  const requiredEnvVars = ["SMTP_HOST", "SMTP_USER", "SMTP_PASS"];
+  const missingVars = requiredEnvVars.filter(
+    (varName) => !process.env[varName],
+  );
+
+  if (missingVars.length > 0) {
+    throw new Error(
+      `Missing required environment variables: ${missingVars.join(", ")}`,
+    );
+  }
+
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT) || 587,
+    secure: false,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+    // Connection timeout
+    connectionTimeout: 10000, // 10 seconds
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
+    // Add debug logging in development
+    debug: process.env.NODE_ENV === "development",
+    logger: process.env.NODE_ENV === "development",
+  });
+}
+
+/**
+ * Send email with retry logic
+ */
+async function sendEmailWithRetry(transporter, mailOptions, maxRetries = 2) {
+  let lastError;
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      return info;
+    } catch (error) {
+      lastError = error;
+
+      // Don't retry on authentication errors
+      if (error.code === "EAUTH" || error.responseCode === 535) {
+        throw error;
+      }
+
+      // Wait before retrying (exponential backoff)
+      if (attempt < maxRetries) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, 1000 * (attempt + 1)),
+        );
+      }
+    }
+  }
+
+  throw lastError;
+}
+
+/**
+ * Main POST handler for email sending
+ */
 export async function POST(req) {
-  try {
-    const { type, email, subject, message } = await req.json();
+  const startTime = Date.now();
+  let emailType = "unknown";
 
-    if (!type) {
-      return new Response(JSON.stringify({ error: "Email type is required" }), {
-        status: 400,
-      });
+  try {
+    // Parse request body with timeout protection
+    const body = await Promise.race([
+      req.json(),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Request timeout")), 5000),
+      ),
+    ]);
+
+    const { type, email, subject, message } = body;
+    emailType = type || "unknown";
+
+    // Validate email type
+    const validTypes = ["download", "contact"];
+    if (!type || !validTypes.includes(type)) {
+      return new Response(
+        JSON.stringify({
+          error: "Invalid email type",
+          validTypes,
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
     }
 
-    // 1. Nodemailer Transporter Setup
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT || 587,
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER, // Your full email address
-        pass: process.env.SMTP_PASS, // This MUST be the Google App Password (ensure this is correct!)
-      },
-    });
+    // Rate limiting
+    const clientIp = getClientIp(req);
+    const rateLimitKey = `${clientIp}-${type}`;
+    const rateLimit = checkRateLimit(
+      rateLimitKey,
+      RATE_LIMIT_REQUESTS,
+      RATE_LIMIT_WINDOW_MS,
+    );
+
+    if (!rateLimit.allowed) {
+      console.warn(`Rate limit exceeded for IP: ${clientIp}, type: ${type}`);
+      return new Response(
+        JSON.stringify({
+          error: "Too many requests. Please try again later.",
+          retryAfter: rateLimit.retryAfter,
+        }),
+        {
+          status: 429,
+          headers: {
+            "Content-Type": "application/json",
+            "Retry-After": rateLimit.retryAfter.toString(),
+            "X-RateLimit-Remaining": "0",
+          },
+        },
+      );
+    }
 
     let mailOptions;
 
-    // --- DOWNLOAD EMAIL LOGIC (Sends to the user's provided 'email') ---
     if (type === "download") {
       if (!email) {
         return new Response(JSON.stringify({ error: "Email is required" }), {
           status: 400,
+          headers: { "Content-Type": "application/json" },
         });
       }
 
-      const appStoreLink =
-        "https://apps.apple.com/tr/app/task-mama/id6752669243";
-      const playStoreLink =
-        "https://play.google.com/store/apps/details?id=app.taskmama.taskmama&pcampaignid=web_share";
-      const appleIconUrl =
-        "https://taskmama-landing-page.vercel.app/icons/applestore.png";
-      const playIconUrl =
-        "https://taskmama-landing-page.vercel.app/icons/playstore.png";
+      validateLength(email, MAX_EMAIL_LENGTH, "Email");
 
-      mailOptions = {
-        from: `"TaskMama App" <${process.env.SMTP_USER}>`,
-        to: email,
-        subject: "Download TaskMama App",
+      if (!isValidEmail(email)) {
+        return new Response(JSON.stringify({ error: "Invalid email format" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
 
-        text: `
-          Hello there!
-          
-          Thank you for your interest in TaskMama. Download the app using the links below:
-          
-          Apple Store: ${appStoreLink}
-          Google Play: ${playStoreLink}
-          
-          Enjoy TaskMama App!
-        `,
-        html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; color: #333; line-height: 1.5; max-width: 600px; margin: 40px auto; background-color: #f9f9f9; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-            
-            <div style="padding: 30px 40px 20px; text-align: center; border-bottom: 3px solid #B0A2DA;">
-              <h1 style="color: #333; font-size: 24px; margin: 0 0 10px;">Your TaskMama Download Link</h1>
-              <p style="font-size: 16px; color: #555; margin: 0;">Hello there!</p>
-            </div>
-
-            <div style="padding: 30px 40px; text-align: center;">
-              <p style="font-size: 17px; color: #555; margin-bottom: 35px;">
-                  Thank you for your interest in <strong>TaskMama</strong>. Click on your preferred store below to download the app and get started!
-              </p>
-
-              <!-- BUTTON CONTAINER (FIXED: Removed redundant nested div) -->
-              <div style="text-align: center; margin-bottom: 30px; padding: 10px 0;">
-                <div style="display: inline-block; white-space: nowrap;">
-                    <a href="${appStoreLink}" target="_blank" rel="noopener noreferrer" style="margin: 0 10px; display: inline-block;">
-                        <img src="${appleIconUrl}" alt="Apple Store Download" style="width: 135px; height: auto; border: none; display: block;"> 
-                    </a>
-                    <a href="${playStoreLink}" target="_blank" rel="noopener noreferrer" style="margin: 0 10px; display: inline-block;">
-                        <img src="${playIconUrl}" alt="Google Play Download" style="width: 135px; height: auto; border: none; display: block;">
-                    </a>
-                </div>
-              </div>
-
-              <p style="font-size: 14px; color: #777; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
-                  If the links do not work, copy and paste this URL into your browser: [Link Placeholder]
-              </p>
-            </div>
-
-            <div style="padding: 15px 40px; background-color: #B0A2DA; border-radius: 0 0 12px 12px; text-align: center;">
-              <p style="font-size: 14px; color: #ffffff; margin: 0;">
-                  Enjoy <strong>TaskMama App</strong>!
-              </p>
-            </div>
-          </div>
-        `,
-      };
+      mailOptions = getDownloadEmailTemplate(email);
     } else if (type === "contact") {
+      // Validate all required fields
       if (!email || !subject || !message) {
         return new Response(
           JSON.stringify({ error: "All fields are required" }),
-          { status: 400 },
+          { status: 400, headers: { "Content-Type": "application/json" } },
         );
       }
 
-      const recipientEmail =
-        process.env.CONTACT_RECIPIENT_EMAIL || process.env.SMTP_USER;
+      // Validate lengths
+      validateLength(email, MAX_EMAIL_LENGTH, "Email");
+      validateLength(subject, MAX_SUBJECT_LENGTH, "Subject");
+      validateLength(message, MAX_MESSAGE_LENGTH, "Message");
 
-      mailOptions = {
-        from: `"Contact Form" <${process.env.SMTP_USER}>`,
-        to: recipientEmail,
-        subject: `Contact Form: ${subject}`,
+      // Validate email format
+      if (!isValidEmail(email)) {
+        return new Response(JSON.stringify({ error: "Invalid email format" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
 
-        text: `
-            New Contact Form Submission:
-            From: ${email}
-            Subject: ${subject}
-            Message:
-            ${message}
-        `,
-        html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
-            
-            <div style="background-color: #B0A2DA; padding: 25px 30px; border-radius: 12px 12px 0 0; text-align: center;">
-                <h2 style="color: #ffffff; font-size: 22px; margin: 0;">TaskMama Contact Submission</h2>
-            </div>
+      // Sanitize inputs to prevent XSS
+      const sanitizedEmail = sanitizeText(email);
+      const sanitizedSubject = sanitizeText(subject);
+      const sanitizedMessage = sanitizeText(message);
 
-            <div style="padding: 30px 40px;">
-                <p style="font-size: 16px; color: #444; margin-bottom: 25px;">
-                    A new submission has been received from the website contact form.
-                </p>
-
-                <div style="margin-bottom: 25px;">
-                    <div style="margin-bottom: 15px; border-left: 3px solid #E6E0F4; padding-left: 15px;">
-                        <strong style="display: block; font-size: 14px; color: #B0A2DA; text-transform: uppercase; letter-spacing: 0.5px;">Sender Email</strong>
-                        <p style="font-size: 17px; color: #333; margin: 4px 0 0;">${email}</p>
-                    </div>
-
-                    <div style="border-left: 3px solid #E6E0F4; padding-left: 15px;">
-                        <strong style="display: block; font-size: 14px; color: #B0A2DA; text-transform: uppercase; letter-spacing: 0.5px;">Subject</strong>
-                        <p style="font-size: 17px; color: #333; margin: 4px 0 0;">${subject}</p>
-                    </div>
-                </div>
-
-                <h3 style="font-size: 18px; color: #333; margin-top: 0; margin-bottom: 10px;">Message Details:</h3>
-                <div style="font-size: 16px; background-color: #f0f0f0; padding: 15px; border-radius: 8px; border: 1px solid #ddd; white-space: pre-wrap; word-wrap: break-word;">
-                    ${message}
-                </div>
-                
-            </div>
-
-            <div style="padding: 15px 40px; text-align: center; border-top: 1px solid #eee;">
-                <p style="font-size: 12px; color: #999; margin: 0;">
-                    (This is an automated notification.)
-                </p>
-            </div>
-
-          </div>
-        `,
-      };
-    } else {
-      return new Response(JSON.stringify({ error: "Invalid email type" }), {
-        status: 400,
-      });
+      mailOptions = getContactEmailTemplate(
+        sanitizedEmail,
+        sanitizedSubject,
+        sanitizedMessage,
+      );
     }
 
-    await transporter.sendMail(mailOptions);
+    // Create transporter
+    const transporter = createTransporter();
+
+    // Send email with retry logic
+    const info = await sendEmailWithRetry(transporter, mailOptions);
+
+    // Log success with detailed information
+    const duration = Date.now() - startTime;
+    console.log(
+      `✅ Email sent successfully - Type: ${type}, Duration: ${duration}ms, MessageID: ${info.messageId}, To: ${mailOptions.to}, Response: ${info.response}`,
+    );
 
     return new Response(
-      JSON.stringify({ message: "Email sent successfully!" }),
-      { status: 200 },
+      JSON.stringify({
+        message: "Email sent successfully!",
+        messageId: info.messageId,
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "X-RateLimit-Remaining": rateLimit.remaining.toString(),
+        },
+      },
     );
   } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify({ error: "Failed to send email" }), {
-      status: 500,
+    const duration = Date.now() - startTime;
+
+    // Log error with details
+    console.error("❌ Email send error:", {
+      type: emailType,
+      error: error.message,
+      code: error.code,
+      duration: `${duration}ms`,
+      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
+
+    // Determine appropriate error response
+    let statusCode = 500;
+    let errorMessage = "Failed to send email. Please try again later.";
+
+    if (error.message === "Request timeout") {
+      statusCode = 408;
+      errorMessage = "Request timeout. Please try again.";
+    } else if (error.code === "EAUTH" || error.responseCode === 535) {
+      statusCode = 500;
+      errorMessage = "Email service configuration error.";
+      console.error("🔴 SMTP Authentication failed - check credentials");
+    } else if (error.code === "ECONNECTION" || error.code === "ETIMEDOUT") {
+      statusCode = 503;
+      errorMessage = "Email service temporarily unavailable.";
+    } else if (error.message.includes("environment variables")) {
+      statusCode = 500;
+      errorMessage = "Email service configuration error.";
+    }
+
+    return new Response(
+      JSON.stringify({
+        error: errorMessage,
+        ...(process.env.NODE_ENV === "development" && {
+          details: error.message,
+          code: error.code,
+        }),
+      }),
+      {
+        status: statusCode,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 }
