@@ -33,10 +33,6 @@ export function validateLength(text, maxLength, fieldName) {
   return true;
 }
 
-/**
- * Rate limiting storage (in-memory for simplicity)
- * For production, use Redis or similar
- */
 const rateLimitStore = new Map();
 
 /**
