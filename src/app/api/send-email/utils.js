@@ -23,9 +23,6 @@ export function sanitizeText(text) {
     .replace(/\//g, "&#x2F;");
 }
 
-/**
- * Validates input length
- */
 export function validateLength(text, maxLength, fieldName) {
   if (!text || typeof text !== "string") {
     throw new Error(`${fieldName} is required`);
