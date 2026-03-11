@@ -93,7 +93,6 @@ function Navbar() {
     }
   };
 
-  // Logout handler (unchanged)
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
     window.location.href = "/signin";
