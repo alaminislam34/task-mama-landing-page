@@ -69,34 +69,41 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script_stop: true
           script: |
-            set -e
+            set -Eeuo pipefail
 
             APP_NAME="taskmama-app-prod"
             APP_IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/taskmama-app:latest"
             APP_PORT="3000"
+            ENV_FILE="/home/ubuntu/task-mama-landing-page/.env"
 
             if ! command -v docker >/dev/null 2>&1; then
               echo "Docker is not installed on EC2. Please install Docker first."
               exit 1
             fi
 
-            if [ ! -f /home/ubuntu/task-mama-landing-page/.env ]; then
-              echo "Missing /home/ubuntu/task-mama-landing-page/.env on EC2"
+            if [ ! -f "$ENV_FILE" ]; then
+              echo "Missing $ENV_FILE on EC2"
               exit 1
             fi
 
             docker pull "$APP_IMAGE"
             docker rm -f "$APP_NAME" 2>/dev/null || true
 
-            PORT_CONTAINERS="$(docker ps -q --filter "publish=${APP_PORT}")"
+            PORT_CONTAINERS="$(docker ps -aq --filter "publish=${APP_PORT}")"
             if [ -n "$PORT_CONTAINERS" ]; then
               docker rm -f $PORT_CONTAINERS || true
             fi
 
+            LISTEN_PIDS="$(sudo lsof -t -iTCP:${APP_PORT} -sTCP:LISTEN 2>/dev/null || true)"
+            if [ -n "$LISTEN_PIDS" ]; then
+              echo "Killing processes using port ${APP_PORT}: $LISTEN_PIDS"
+              sudo kill -9 $LISTEN_PIDS || true
+            fi
+
             sleep 2
 
-            if command -v ss >/dev/null 2>&1 && ss -ltn | grep -q ":${APP_PORT} "; then
-              echo "Port ${APP_PORT} is still in use."
+            if ss -ltn | grep -q ":${APP_PORT} "; then
+              echo "Port ${APP_PORT} is still in use after cleanup."
               docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}" || true
               sudo lsof -iTCP:${APP_PORT} -sTCP:LISTEN || true
               exit 1
@@ -106,8 +113,21 @@ jobs:
               --name "$APP_NAME" \
               --restart unless-stopped \
               -p ${APP_PORT}:3000 \
-              --env-file /home/ubuntu/task-mama-landing-page/.env \
+              --env-file "$ENV_FILE" \
               "$APP_IMAGE"
+
+            for i in 1 2 3 4 5 6 7 8 9 10; do
+              if curl -fsS "http://127.0.0.1:${APP_PORT}" >/dev/null 2>&1; then
+                echo "App is healthy on port ${APP_PORT}"
+                break
+              fi
+              if [ "$i" -eq 10 ]; then
+                echo "App did not become healthy in time."
+                docker logs "$APP_NAME" --tail 200 || true
+                exit 1
+              fi
+              sleep 3
+            done
 
             docker image prune -f || true
             sudo systemctl restart nginx || true
