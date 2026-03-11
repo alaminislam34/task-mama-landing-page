@@ -28,10 +28,8 @@ function Navbar() {
   const [email, setEmail] = useState("");
   const [loadingEmail, setLoadingEmail] = useState(false);
 
-  // Close dropdown/sidebar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Close Mobile Sidebar
       if (
         sidebarRef.current &&
         !sidebarRef.current.contains(event.target) &&
@@ -44,7 +42,6 @@ function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpen]);
 
-  // Email send handler (unchanged)
   const handleSendEmail = async () => {
     if (!email) {
       toast.error("Please Enter your email!", {
