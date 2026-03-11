@@ -152,8 +152,8 @@ jobs:
               sleep 3
             done
 
-            echo "Cleaning unused Docker resources..."
-            docker image prune -af --filter "until=24h" || true
+            echo "Cleaning up old taskmama-app images (keeping only latest)..."
+            docker images | grep "taskmama-app" | grep -v "latest" | awk '{print $3}' | xargs -r docker rmi -f 2>/dev/null || true
 
             echo "Restarting nginx..."
             sudo systemctl restart nginx || true
