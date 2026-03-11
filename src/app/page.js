@@ -9,7 +9,6 @@ import FeaturesSection from "./components/HomePage/FeaturesSection";
 import HeroSection from "./components/HomePage/HeroSection";
 import PricingSection from "./components/HomePage/PricingSection";
 import SliderSection from "./components/HomePage/Sldier/SliderSection";
-// import Testimonial from "./components/HomePage/Testimonial";
 
 export default function Home() {
   return (
