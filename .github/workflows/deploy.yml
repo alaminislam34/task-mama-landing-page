@@ -102,19 +102,33 @@ jobs:
             echo "Stopping old container..."
             docker rm -f "$APP_NAME" 2>/dev/null || true
 
-            echo "Cleaning port ${APP_PORT}..."
+            echo "Removing any container using port ${APP_PORT}..."
             PORT_CONTAINERS="$(docker ps -aq --filter "publish=${APP_PORT}")"
             if [ -n "$PORT_CONTAINERS" ]; then
               docker rm -f $PORT_CONTAINERS || true
             fi
 
+            echo "Killing any non-docker process on port ${APP_PORT}..."
             LISTEN_PIDS="$(sudo lsof -t -iTCP:${APP_PORT} -sTCP:LISTEN 2>/dev/null || true)"
             if [ -n "$LISTEN_PIDS" ]; then
-              echo "Killing processes using port ${APP_PORT}"
+              echo "Killing PIDs: $LISTEN_PIDS"
               sudo kill -9 $LISTEN_PIDS || true
             fi
 
-            sleep 2
+            echo "Waiting for port ${APP_PORT} to be fully released..."
+            for i in $(seq 1 20); do
+              if ! ss -ltn | grep -q ":${APP_PORT} "; then
+                echo "Port ${APP_PORT} is free after ${i}s."
+                break
+              fi
+              if [ "$i" -eq 20 ]; then
+                echo "Port ${APP_PORT} still busy after 20s. Aborting."
+                docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}" || true
+                sudo lsof -iTCP:${APP_PORT} -sTCP:LISTEN || true
+                exit 1
+              fi
+              sleep 1
+            done
 
             echo "Starting new container..."
             docker run -d \
@@ -124,25 +138,22 @@ jobs:
               --env-file "$ENV_FILE" \
               "$APP_IMAGE"
 
-            echo "Waiting for app health check..."
-
-            for i in {1..10}; do
+            echo "Waiting for app to become healthy..."
+            for i in $(seq 1 10); do
               if curl -fsS "http://127.0.0.1:${APP_PORT}" >/dev/null 2>&1; then
                 echo "App is healthy!"
                 break
               fi
-
               if [ "$i" -eq 10 ]; then
                 echo "App failed to start."
                 docker logs "$APP_NAME" --tail 200
                 exit 1
               fi
-
               sleep 3
             done
 
             echo "Cleaning unused Docker resources..."
-            docker system prune -af || true
+            docker image prune -af --filter "until=24h" || true
 
             echo "Restarting nginx..."
             sudo systemctl restart nginx || true
