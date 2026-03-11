@@ -81,6 +81,10 @@ jobs:
               exit 1
             fi
 
+            docker container prune -f || true
+            docker image prune -af || true
+            docker builder prune -af || true
+
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/taskmama-app:latest
 
             docker stop taskmama-app-prod || true
@@ -92,3 +96,5 @@ jobs:
               -p 3000:3000 \
               --env-file /home/ubuntu/task-mama-landing-page/.env \
               ${{ secrets.DOCKERHUB_USERNAME }}/taskmama-app:latest
+
+            docker image prune -f || true
