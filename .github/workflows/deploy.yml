@@ -98,4 +98,4 @@ jobs:
               ${{ secrets.DOCKERHUB_USERNAME }}/taskmama-app:latest
 
             docker image prune -f || true
-            # sudo systemctl restart nginx || true
+            sudo systemctl restart nginx || true
