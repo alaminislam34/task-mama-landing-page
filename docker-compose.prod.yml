@@ -1,0 +1,11 @@
+services:
+  app:
+    image: alaminislam34/taskmama-app:latest
+    container_name: taskmama-app-prod
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production

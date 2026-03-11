@@ -1,26 +1,33 @@
 import { MongoClient } from "mongodb";
 
-const uri = process.env.MONGO_URI;
-if (!uri) throw new Error("Add MONGO_URI to your environment variables");
+const options = {
+  maxPoolSize: 10,
+  serverSelectionTimeoutMS: 5000,
+};
 
 let client;
 let clientPromise;
 
-const options = {
-  maxPoolSize: 10, // connection pool for production
-  serverSelectionTimeoutMS: 5000,
-  // useNewUrlParser and useUnifiedTopology are default in latest drivers
-};
+export function getMongoClientPromise() {
+  const uri = process.env.MONGO_URI;
 
-if (process.env.NODE_ENV === "development") {
-  if (!global._mongoClientPromise) {
-    client = new MongoClient(uri, options);
-    global._mongoClientPromise = client.connect();
+  if (!uri) {
+    throw new Error("Add MONGO_URI to your environment variables");
   }
-  clientPromise = global._mongoClientPromise;
-} else {
-  client = new MongoClient(uri, options);
-  clientPromise = client.connect();
-}
 
-export default clientPromise;
+  if (process.env.NODE_ENV === "development") {
+    if (!global._mongoClientPromise) {
+      client = new MongoClient(uri, options);
+      global._mongoClientPromise = client.connect();
+    }
+
+    return global._mongoClientPromise;
+  }
+
+  if (!clientPromise) {
+    client = new MongoClient(uri, options);
+    clientPromise = client.connect();
+  }
+
+  return clientPromise;
+}

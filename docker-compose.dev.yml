@@ -1,0 +1,19 @@
+services:
+  app:
+    image: alaminislam34/taskmama-app:dev
+    build:
+      context: .
+      target: dev
+    container_name: taskmama-app-dev
+    restart: unless-stopped
+    command: pnpm dev --hostname 0.0.0.0
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.local
+    environment:
+      WATCHPACK_POLLING: "true"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next

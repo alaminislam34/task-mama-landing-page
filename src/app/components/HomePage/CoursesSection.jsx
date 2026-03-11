@@ -24,7 +24,7 @@ const courses = [
 
 export default function CourseSectionDemo() {
   const router = useRouter();
-  const { user } = useAuth(); 
+  const { user } = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [purchasedCourses, setPurchasedCourses] = useState([]);
@@ -68,16 +68,35 @@ export default function CourseSectionDemo() {
 
       const data = await res.json();
 
-      if (res.ok && data.id) {
-        const stripe = (await import("@stripe/stripe-js")).loadStripe(
-          process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-        );
-        (await stripe).redirectToCheckout({ sessionId: data.id });
-      } else {
-        alert("Something went wrong with checkout!");
+      if (!res.ok) {
+        console.error("Checkout API error:", data);
+        alert(data.error || "Something went wrong with checkout!");
+        return;
+      }
+
+      if (!data.id) {
+        console.error("Checkout session ID missing:", data);
+        alert("Stripe session ID was not returned.");
+        return;
+      }
+
+      const stripe = await (
+        await import("@stripe/stripe-js")
+      ).loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+
+      if (!stripe) {
+        alert("Stripe failed to initialize.");
+        return;
+      }
+
+      const result = await stripe.redirectToCheckout({ sessionId: data.id });
+
+      if (result?.error) {
+        console.error("Stripe redirect error:", result.error);
+        alert(result.error.message || "Failed to redirect to Stripe checkout.");
       }
     } catch (err) {
-      console.error(err);
+      console.error("Checkout failed:", err);
       alert("Checkout failed!");
     }
   };

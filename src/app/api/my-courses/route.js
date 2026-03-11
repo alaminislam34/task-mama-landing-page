@@ -1,4 +1,4 @@
-import clientPromise from "@/lib/Mongodb";
+import { getMongoClientPromise } from "@/lib/Mongodb";
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
@@ -10,11 +10,8 @@ export async function GET(req) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
-    const db = (await clientPromise).db("TaskMamaDB");
-
+    const db = (await getMongoClientPromise()).db("TaskMamaDB");
     const user = await db.collection("users").findOne({ email });
-
-    // শুধুমাত্র purchased courses return করবো
     const purchasedCourses = user?.purchasedCourses || [];
 
     return NextResponse.json({ purchasedCourses });

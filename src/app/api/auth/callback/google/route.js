@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import clientPromise from "@/lib/Mongodb";
+import { getMongoClientPromise } from "@/lib/Mongodb";
 
 export async function GET(req) {
   try {
     const url = new URL(req.url);
     const code = url.searchParams.get("code");
-    console.log(url);
+
     if (!code) {
       return NextResponse.json(
         { error: "No authorization code provided." },
@@ -45,14 +45,13 @@ export async function GET(req) {
     const profile = await profileResponse.json();
 
     if (!profile.email) {
-      console.error("❌ No email in profile!");
       return NextResponse.json(
         { error: "Failed to fetch user profile from Google." },
         { status: 500 },
       );
     }
 
-    const client = await clientPromise;
+    const client = await getMongoClientPromise();
     const db = client.db("TaskMamaDB");
     const usersCol = db.collection("users");
 
@@ -90,11 +89,8 @@ export async function GET(req) {
       { expiresIn: "7d" },
     );
 
-    // todo: change to production url before deploy
-
     const response = NextResponse.redirect("https://www.taskmama.app");
-    // const response = NextResponse.redirect("http://localhost:3000");
-    // const response = NextResponse.redirect("https://task-mama.vercel.app");
+
     response.cookies.set("token", jwtToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -105,7 +101,7 @@ export async function GET(req) {
 
     return response;
   } catch (err) {
-    console.error("❌ Google OAuth Callback Error:", err);
+    console.error("Google OAuth Callback Error:", err);
     return NextResponse.json(
       { error: err.message || "Internal Server Error" },
       { status: 500 },
