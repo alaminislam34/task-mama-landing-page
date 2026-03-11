@@ -148,4 +148,3 @@ jobs:
             sudo systemctl restart nginx || true
 
             echo "Deployment completed successfully!"
-```
