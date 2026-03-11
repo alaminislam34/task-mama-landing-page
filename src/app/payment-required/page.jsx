@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 export default function PaymentRequired() {
   return (
@@ -8,7 +8,7 @@ export default function PaymentRequired() {
         You need to complete payment before accessing your courses.
       </p>
       <a
-        href="/pricing" // redirect to your payment page
+        href="/pricing"
         className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition"
       >
         Pay Now
