@@ -211,7 +211,7 @@ function Navbar() {
           href={"/signin"}
           className="py-[9px] px-[18px] rounded-xl bg-primary text-white text-xs border border-primary hover:bg-primary/90 duration-300 font-semibold"
         >
-          Login test
+          Login
         </Link>
       )}
     </div>
