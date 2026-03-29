@@ -1,71 +1,61 @@
-# FROM node:20-alpine AS deps
-# WORKDIR /app
-# RUN npm install -g pnpm
-# COPY package.json pnpm-lock.yaml* ./
-# RUN pnpm install
+# -----------------------
+# Base Image
+# -----------------------
+FROM node:20-alpine AS base
 
-# FROM deps AS builder
-# ARG NEXT_PUBLIC_APP_URL
-# ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-# ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
-# ENV NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=$NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-# ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_CLIENT_ID
-
-# COPY . .
-# RUN pnpm build
-
-# FROM deps AS dev
-# WORKDIR /app
-# COPY . .
-# CMD ["pnpm", "dev", "--hostname", "0.0.0.0"]
-
-# FROM node:20-alpine AS runner
-# WORKDIR /app
-# RUN npm install -g pnpm
-# COPY --from=builder /app ./
-# EXPOSE 3000
-# CMD ["pnpm", "start"]
-
-# Install dependencies
-FROM node:20-alpine AS deps
+# -----------------------
+# Dependencies
+# -----------------------
+FROM base AS deps
 WORKDIR /app
-RUN npm install -g pnpm
-COPY package.json pnpm-lock.yaml* ./
-RUN pnpm install --frozen-lockfile
 
-# Build stage
-FROM node:20-alpine AS builder
+RUN apk add --no-cache libc6-compat
+
+COPY package.json pnpm-lock.yaml ./
+RUN corepack enable && pnpm install --frozen-lockfile --prod
+
+# -----------------------
+# Builder
+# -----------------------
+FROM base AS builder
 WORKDIR /app
-RUN npm install -g pnpm
 
-ARG NEXT_PUBLIC_APP_URL
-ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
-
-ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
-ENV NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=$NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_CLIENT_ID
-
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN pnpm build
+# Reinstall full deps for build
+RUN corepack enable && pnpm install --frozen-lockfile
 
-# Production runner
-FROM node:20-alpine AS runner
+# Build app
+RUN pnpm exec next build
+
+# -----------------------
+# Runner (Production)
+# -----------------------
+FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
+ENV PORT=3000
 
-RUN npm install -g pnpm
+# Non-root user (SECURITY)
+RUN addgroup -S nodejs -g 1001 && adduser -S nextjs -u 1001
 
-COPY --from=builder /app/package.json ./
+# Copy only required files
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+# Ownership fix
+RUN chown -R nextjs:nodejs /app
+
+USER nextjs
 
 EXPOSE 3000
 
-CMD ["pnpm", "start"]
+# Health check (PRO LEVEL)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s \
+  CMD wget -qO- http://localhost:3000 || exit 1
+
+CMD ["node", "server.js"]

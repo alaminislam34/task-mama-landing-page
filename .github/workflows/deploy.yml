@@ -1,161 +1,37 @@
-name: Deploy task-mama-landing-page to EC2
+name: Build and Push Docker Image
 
 on:
   push:
     branches:
       - main
 
-concurrency:
-  group: deploy-task-mama-production
-  cancel-in-progress: true
-
 jobs:
-  deploy:
+  docker:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Validate secrets
-      - name: Validate required secrets
-        env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USER: ${{ secrets.EC2_USER }}
-          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
-          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
-          NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-        run: |
-          set -e
-          [ -n "$EC2_HOST" ] || { echo "Missing GitHub secret: EC2_HOST"; exit 1; }
-          [ -n "$EC2_USER" ] || { echo "Missing GitHub secret: EC2_USER"; exit 1; }
-          [ -n "$EC2_SSH_KEY" ] || { echo "Missing GitHub secret: EC2_SSH_KEY"; exit 1; }
-          [ -n "$DOCKERHUB_USERNAME" ] || { echo "Missing GitHub secret: DOCKERHUB_USERNAME"; exit 1; }
-          [ -n "$DOCKERHUB_TOKEN" ] || { echo "Missing GitHub secret: DOCKERHUB_TOKEN"; exit 1; }
-          [ -n "$NEXT_PUBLIC_APP_URL" ] || { echo "Missing GitHub secret: NEXT_PUBLIC_APP_URL"; exit 1; }
-          [ -n "$NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY" ] || { echo "Missing GitHub secret: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY"; exit 1; }
-          [ -n "$NEXT_PUBLIC_GOOGLE_CLIENT_ID" ] || { echo "Missing GitHub secret: NEXT_PUBLIC_GOOGLE_CLIENT_ID"; exit 1; }
-
-      # 2️⃣ Checkout repo
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      # 3️⃣ Setup Docker Buildx
+      - name: Set image name
+        id: vars
+        run: echo "image=docker.io/${{ secrets.DOCKER_USERNAME }}/taskmama-landing" >> "$GITHUB_OUTPUT"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # 4️⃣ Login to Docker Hub
-      - name: Log in to Docker Hub
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 5️⃣ Build & Push Docker image (with cache)
-      - name: Build and push production image
+      - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
-          target: runner
+          file: ./Dockerfile
           push: true
+          tags: ${{ steps.vars.outputs.image }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/taskmama-app:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/taskmama-app:${{ github.sha }}
-          build-args: |
-            NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}
-            NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
-            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-
-      # 6️⃣ Deploy to EC2
-      - name: Deploy Docker container on EC2 via SSH
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script_stop: true
-          script: |
-            set -Eeuo pipefail
-
-            APP_NAME="taskmama-app-prod"
-            APP_IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/taskmama-app:latest"
-            APP_PORT="3000"
-            ENV_FILE="/home/ubuntu/task-mama-landing-page/.env"
-
-            echo "Checking Docker..."
-            if ! command -v docker >/dev/null 2>&1; then
-              echo "Docker is not installed on EC2."
-              exit 1
-            fi
-
-            echo "Checking .env file..."
-            if [ ! -f "$ENV_FILE" ]; then
-              echo "Missing $ENV_FILE on EC2"
-              exit 1
-            fi
-
-            echo "Pulling latest image..."
-            docker pull "$APP_IMAGE"
-
-            echo "Stopping old container..."
-            docker rm -f "$APP_NAME" 2>/dev/null || true
-
-            echo "Removing any container using port ${APP_PORT}..."
-            PORT_CONTAINERS="$(docker ps -aq --filter "publish=${APP_PORT}")"
-            if [ -n "$PORT_CONTAINERS" ]; then
-              docker rm -f $PORT_CONTAINERS || true
-            fi
-
-            echo "Killing any non-docker process on port ${APP_PORT}..."
-            LISTEN_PIDS="$(sudo lsof -t -iTCP:${APP_PORT} -sTCP:LISTEN 2>/dev/null || true)"
-            if [ -n "$LISTEN_PIDS" ]; then
-              echo "Killing PIDs: $LISTEN_PIDS"
-              sudo kill -9 $LISTEN_PIDS || true
-            fi
-
-            echo "Waiting for port ${APP_PORT} to be fully released..."
-            for i in $(seq 1 20); do
-              if ! ss -ltn | grep -q ":${APP_PORT} "; then
-                echo "Port ${APP_PORT} is free after ${i}s."
-                break
-              fi
-              if [ "$i" -eq 20 ]; then
-                echo "Port ${APP_PORT} still busy after 20s. Aborting."
-                docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}" || true
-                sudo lsof -iTCP:${APP_PORT} -sTCP:LISTEN || true
-                exit 1
-              fi
-              sleep 1
-            done
-
-            echo "Starting new container..."
-            docker run -d \
-              --name "$APP_NAME" \
-              --restart unless-stopped \
-              -p ${APP_PORT}:3000 \
-              --env-file "$ENV_FILE" \
-              "$APP_IMAGE"
-
-            echo "Waiting for app to become healthy..."
-            for i in $(seq 1 10); do
-              if curl -fsS "http://127.0.0.1:${APP_PORT}" >/dev/null 2>&1; then
-                echo "App is healthy!"
-                break
-              fi
-              if [ "$i" -eq 10 ]; then
-                echo "App failed to start."
-                docker logs "$APP_NAME" --tail 200
-                exit 1
-              fi
-              sleep 3
-            done
-
-            echo "Cleaning up old taskmama-app images (keeping only latest)..."
-            docker images | grep "taskmama-app" | grep -v "latest" | awk '{print $3}' | xargs -r docker rmi -f 2>/dev/null || true
-
-            echo "Restarting nginx..."
-            sudo systemctl restart nginx || true
-
-            echo "Deployment completed successfully!"
