@@ -1,17 +1,30 @@
 services:
   app:
-    image: alaminislam34/taskmama-app:dev
+    image: alaminislam34/taskmama-landing:latest
     build:
       context: .
       target: dev
-    container_name: taskmama-app-dev
+    container_name: taskmama-landing
     restart: unless-stopped
-    command: pnpm dev --hostname 0.0.0.0
+    command: sh -c "corepack pnpm install && corepack pnpm dev --hostname 0.0.0.0"
     ports:
       - "3000:3000"
     env_file:
       - .env.local
     environment:
+      NODE_ENV: development
+      PORT: 3000
+      HOST: 0.0.0.0
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      MONGO_URI: ${MONGO_URI}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      CI: "true"
       WATCHPACK_POLLING: "true"
     volumes:
       - .:/app
