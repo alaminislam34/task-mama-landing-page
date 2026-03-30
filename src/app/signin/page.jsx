@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { RiLoginBoxLine } from "react-icons/ri";
@@ -11,27 +12,28 @@ import { toast } from "react-toastify";
  * Currently supports Google OAuth; Apple login placeholder included.
  */
 export default function SignInPage() {
+  const searchParams = useSearchParams();
+
+  const buildNextPath = () => {
+    const next = searchParams.get("next") || "/";
+    const courseId = searchParams.get("courseId");
+
+    if (!courseId) {
+      return next;
+    }
+
+    const separator = next.includes("?") ? "&" : "?";
+    return `${next}${separator}courseId=${encodeURIComponent(courseId)}`;
+  };
+
   /**
    * Handle Google OAuth Login
    * Redirects user to Google's OAuth consent page.
    */
   const handleGoogleLogin = async () => {
     try {
-      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-      console.log("google client id:", clientId);
-      if (!clientId || !appUrl) {
-        console.error("Google Login environment variables missing!");
-        toast.error("Google login is not configured properly.");
-        return;
-      }
-
-      const redirectUri = `${appUrl}/api/auth/callback/google`;
-      const scope = encodeURIComponent("email profile openid");
-      const googleUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
-      console.log(redirectUri);
-      // Redirect to Google OAuth
-      window.location.href = googleUrl;
+      const nextPath = buildNextPath();
+      window.location.href = `/api/auth/google?next=${encodeURIComponent(nextPath)}`;
     } catch (error) {
       console.error("Google login error:", error);
       toast.error("Failed to initiate Google login. Please try again.");

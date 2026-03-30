@@ -2,9 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Modal from "react-modal";
 import Image from "next/image";
-import { FcGoogle } from "react-icons/fc";
 import { useAuth } from "@/context/SessionProvider";
 
 const courses = [
@@ -25,8 +23,6 @@ const courses = [
 export default function CourseSectionDemo() {
   const router = useRouter();
   const { user } = useAuth();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState(null);
   const [purchasedCourses, setPurchasedCourses] = useState([]);
 
   useEffect(() => {
@@ -39,18 +35,13 @@ export default function CourseSectionDemo() {
     }
   }, [user]);
 
-  useEffect(() => {
-    if (user && selectedCourse) {
-      handlePurchase(selectedCourse);
-      setModalOpen(false);
-      setSelectedCourse(null);
-    }
-  }, [user]);
-
   const handlePurchase = async (course) => {
     if (!user) {
-      setSelectedCourse(course);
-      setModalOpen(true);
+      const query = new URLSearchParams({
+        next: "/coursepanel",
+        courseId: course.id,
+      }).toString();
+      router.push(`/signin?${query}`);
       return;
     }
 
@@ -101,29 +92,6 @@ export default function CourseSectionDemo() {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-
-      if (!clientId || !appUrl) {
-        console.error("Google Login environment variables missing!");
-        toast.error("Google login is not configured properly.");
-        return;
-      }
-
-      const redirectUri = `${appUrl}/api/auth/callback/google`;
-      const scope = encodeURIComponent("email profile openid");
-      const googleUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
-
-      // Redirect to Google OAuth
-      window.location.href = googleUrl;
-    } catch (error) {
-      console.error("Google login error:", error);
-      toast.error("Failed to initiate Google login. Please try again.");
-    }
-  };
-
   return (
     <section className="py-12">
       <div className="max-w-[1440px] w-11/12 mx-auto py-6">
@@ -167,40 +135,6 @@ export default function CourseSectionDemo() {
           ))}
         </div>
       </div>
-
-      {/* Login Modal */}
-      <Modal
-        isOpen={modalOpen}
-        onRequestClose={() => setModalOpen(false)}
-        ariaHideApp={false}
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
-      >
-        <div className="max-w-xl w-full mx-auto bg-white p-8 rounded-2xl shadow-2xl relative">
-          <h2 className="text-2xl font-semibold mb-4 text-center text-gray-800">
-            Welcome Back 👋
-          </h2>
-          <p className="text-sm text-gray-500 text-center mb-6">
-            Please login to continue
-          </p>
-
-          <div className="flex flex-col gap-4">
-            <button
-              onClick={handleGoogleLogin}
-              className="w-full py-3 rounded-xl flex items-center justify-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 shadow-sm transition cursor-pointer"
-            >
-              <FcGoogle className="w-5 h-5" />
-              <span className="text-gray-700">Continue with Google</span>
-            </button>
-          </div>
-
-          <button
-            onClick={() => setModalOpen(false)}
-            className="w-full mt-6 py-2 text-sm text-gray-600 border border-gray-300 rounded-xl hover:bg-gray-50 transition cursor-pointer"
-          >
-            Cancel
-          </button>
-        </div>
-      </Modal>
     </section>
   );
 }

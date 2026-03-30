@@ -6,6 +6,27 @@ export async function GET(req) {
   try {
     const url = new URL(req.url);
     const code = url.searchParams.get("code");
+    const encodedState = url.searchParams.get("state");
+    let postLoginPath = "/";
+
+    if (encodedState) {
+      try {
+        const parsedState = JSON.parse(
+          Buffer.from(encodedState, "base64url").toString("utf8"),
+        );
+        const nextPath = parsedState?.next;
+
+        if (
+          typeof nextPath === "string" &&
+          nextPath.startsWith("/") &&
+          !nextPath.startsWith("//")
+        ) {
+          postLoginPath = nextPath;
+        }
+      } catch {
+        postLoginPath = "/";
+      }
+    }
 
     if (!code) {
       return NextResponse.json(
@@ -14,14 +35,28 @@ export async function GET(req) {
       );
     }
 
+    const appUrl = process.env.NEXTAUTH_URL;
+    const googleClientId = process.env.GOOGLE_CLIENT_ID;
+    const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+
+    if (!appUrl || !googleClientId || !googleClientSecret) {
+      return NextResponse.json(
+        {
+          error:
+            "OAuth server env is missing (NEXTAUTH_URL / GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET).",
+        },
+        { status: 500 },
+      );
+    }
+
     const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
         code,
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
-        redirect_uri: `${process.env.NEXTAUTH_URL}/api/auth/callback/google`,
+        client_id: googleClientId,
+        client_secret: googleClientSecret,
+        redirect_uri: `${appUrl}/api/auth/callback/google`,
         grant_type: "authorization_code",
       }),
     });
@@ -89,7 +124,7 @@ export async function GET(req) {
       { expiresIn: "7d" },
     );
 
-    const response = NextResponse.redirect("https://www.taskmama.app");
+    const response = NextResponse.redirect(new URL(postLoginPath, appUrl));
 
     response.cookies.set("token", jwtToken, {
       httpOnly: true,
