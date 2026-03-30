@@ -4,7 +4,6 @@
 FROM node:20-alpine AS base
 
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_ENV=production
 
 # -----------------------
 # Dependencies
@@ -37,7 +36,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 # Default command for dev stage when used directly
-CMD ["corepack", "pnpm", "dev", "--hostname", "0.0.0.0"]
+CMD ["corepack", "pnpm", "exec", "next", "dev", "--hostname", "0.0.0.0"]
 
 # -----------------------
 # Builder
@@ -46,6 +45,12 @@ FROM base AS builder
 WORKDIR /app
 
 RUN corepack enable
+
+ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
+ARG NEXT_PUBLIC_APP_URL
+
+ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
 
 COPY . .
 

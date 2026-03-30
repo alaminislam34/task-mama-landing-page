@@ -1,7 +1,7 @@
 services:
   app:
-    image: alaminislam34/taskmama-app:latest
-    container_name: taskmama-app-prod
+    image: docker.io/alaminislam34/taskmama-landing:latest
+    container_name: taskmama-landing-prod
     restart: unless-stopped
     ports:
       - "3000:3000"
