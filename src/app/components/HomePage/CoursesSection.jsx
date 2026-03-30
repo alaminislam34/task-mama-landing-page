@@ -71,9 +71,20 @@ export default function CourseSectionDemo() {
         return;
       }
 
+      const stripePublishableKey =
+        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+
+      if (!stripePublishableKey) {
+        console.error(
+          "Missing NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY in client build.",
+        );
+        alert("Payment is temporarily unavailable. Please try again later.");
+        return;
+      }
+
       const stripe = await (
         await import("@stripe/stripe-js")
-      ).loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+      ).loadStripe(stripePublishableKey);
 
       if (!stripe) {
         alert("Stripe failed to initialize.");
